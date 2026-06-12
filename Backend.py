@@ -41,3 +41,25 @@ class Gorev:
             zorluk=data["zorluk"],
             son_tarih=data["son_tarih"]
         )
+    
+class GorevYoneticisi:
+    """GorevYoneticisi sınıfı görevleri yönetmek için gerekli metodları içerir"""
+    def __init__(self, dosya_adi="gorevler.json"):
+        self.dosya_adi = dosya_adi
+        self.gorevler = self.gorevleri_yukle()
+
+    def gorevleri_yukle(self):
+        """Görevleri JSON dosyasından yükler"""
+        if os.path.exists(self.dosya_adi):
+            with open(self.dosya_adi, "r") as f:
+                data = json.load(f)
+                return [Gorev.from_dict(gorev) for gorev in data]
+        return []
+
+    def gorevleri_kaydet(self):
+        """Görevleri JSON dosyasına kaydeder"""
+        try:
+            with open(self.dosya_adi, "w") as f:
+                json.dump([gorev.to_dict() for gorev in self.gorevler], f, indent=4)
+        except Exception as e:
+            print(f"Hata oluştu: {e}")
