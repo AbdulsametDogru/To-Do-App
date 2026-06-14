@@ -54,31 +54,30 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* 🎨 DİNAMİK RENKLİ KART CONTAINER ALGORİTMASI */
-    /* Streamlit Container'larını zorluk sınıflarına göre boyuyoruz */
+    /* 🎨 DİNAMİK VE GÖRÜNÜR KART ARKA PLANLARI (CSS Ezme Uygulandı) */
     
-    /* 🔴 ZOR GÖREVLER: Koyu Kırmızı ve Kor Işıltı */
-    .card-Zor [data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.07) 0%, rgba(19, 11, 15, 0.9) 100%) !important;
-        border: 1px solid rgba(239, 68, 68, 0.25) !important;
-        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.05) !important;
+    /* 🔴 ZOR GÖREVLER: Belirgin Koyu Kırmızı */
+    div.card-Zor div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, #1c1316 100%) !important;
+        border: 1px solid rgba(239, 68, 68, 0.4) !important;
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1) !important;
     }
     
-    /* 🟡 ORTA GÖREVLER: Koyu Kehribar/Turuncu */
-    .card-Orta [data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, rgba(17, 13, 11, 0.9) 100%) !important;
-        border: 1px solid rgba(245, 158, 11, 0.22) !important;
-        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.04) !important;
+    /* 🟡 ORTA GÖREVLER: Belirgin Kehribar/Kahve */
+    div.card-Orta div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, #1a1612 100%) !important;
+        border: 1px solid rgba(245, 158, 11, 0.35) !important;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08) !important;
     }
     
-    /* 🟢 KOLAY GÖREVLER: Koyu Zümrüt Yeşili */
-    .card-Kolay [data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(11, 16, 14, 0.9) 100%) !important;
-        border: 1px solid rgba(16, 185, 129, 0.2) !important;
-        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.03) !important;
+    /* 🟢 KOLAY GÖREVLER: Belirgin Koyu Yeşil */
+    div.card-Kolay div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, #111614 100%) !important;
+        border: 1px solid rgba(16, 185, 129, 0.3) !important;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.06) !important;
     }
     
-    /* Ortak Kart İçerik Alanı */
+    /* Ortak Kart Ayarları */
     [data-testid="stVerticalBlockBorderWrapper"] {
         border-radius: 14px !important;
         margin-bottom: 14px !important;
@@ -86,11 +85,11 @@ st.markdown("""
         transition: transform 0.2s ease, border-color 0.2s ease !important;
     }
     [data-testid="stVerticalBlockBorderWrapper"]:hover {
-        transform: translateY(-2px) !important;
+        transform: translateY(-3px) !important;
     }
-    .card-Zor [data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(239, 68, 68, 0.6) !important; }
-    .card-Orta [data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(245, 158, 11, 0.5) !important; }
-    .card-Kolay [data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(16, 185, 129, 0.5) !important; }
+    div.card-Zor div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(239, 68, 68, 0.8) !important; }
+    div.card-Orta div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(245, 158, 11, 0.7) !important; }
+    div.card-Kolay div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(16, 185, 129, 0.6) !important; }
 
     .task-card-content {
         padding: 15px 15px 4px 15px;
@@ -106,14 +105,14 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Rozetler (İç Arka Planları Uyumlu Hale Getirildi) */
+    /* Rozetler */
     .badge { padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; }
-    .badge-Zor { background: rgba(239, 68, 68, 0.18); color: #f87171; }
-    .badge-Orta { background: rgba(245, 158, 11, 0.16); color: #fbbf24; }
-    .badge-Kolay { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .badge-Zor { background: rgba(239, 68, 68, 0.25); color: #f87171; }
+    .badge-Orta { background: rgba(245, 158, 11, 0.22); color: #fbbf24; }
+    .badge-Kolay { background: rgba(16, 185, 129, 0.2); color: #34d399; }
     
     .task-time-area {
-        color: #9ca3af;
+        color: #e5e7eb;
         font-size: 13px;
         display: flex;
         justify-content: space-between;
@@ -124,8 +123,8 @@ st.markdown("""
     .stButton > button {
         width: 100% !important;
         border-radius: 8px !important;
-        background-color: rgba(255, 255, 255, 0.02) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
         color: #e5e7eb !important;
         transition: all 0.2s !important;
     }
@@ -134,12 +133,12 @@ st.markdown("""
     div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
         border-color: #3b82f6 !important;
         color: #3b82f6 !important;
-        background-color: rgba(59, 130, 246, 0.08) !important;
+        background-color: rgba(59, 130, 246, 0.15) !important;
     }
     div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
         border-color: #ef4444 !important;
         color: #ef4444 !important;
-        background-color: rgba(239, 68, 68, 0.08) !important;
+        background-color: rgba(239, 68, 68, 0.15) !important;
     }
     
     /* Kenar Çubuğu Form Elemanları */
@@ -194,7 +193,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #525876; margin: 0; font-size: 13px;'>Zorluk seviyelerine göre renk kodlu neon kart mimarisine geçiş yapıldı.</p>
+        <p style='color: #525876; margin: 0; font-size: 13px;'>Zorluk seviyelerine ait belirgin renkli kart arka planları aktifleştirildi.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -262,7 +261,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # 🎯 HTML sarmalayıcısı ile Streamlit container'ına renk sınıfı enjekte ediyoruz
+            # Dinamik sınıf enjeksiyonu
             st.markdown(f'<div class="card-{g.zorluk}">', unsafe_allow_html=True)
             
             with st.container(border=True):
@@ -275,7 +274,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                         </div>
                         <div class="task-time-area">
                             <span>📅 {g.son_tarih}</span>
-                            <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#9ca3af'}">{kalan_metin}</span>
+                            <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#a3a9b6'}">{kalan_metin}</span>
                         </div>
                     </div>
                 """, unsafe_allow_html=True)
@@ -290,5 +289,4 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                         gorev_yoneticisi.gorev_sil(g.id)
                         st.rerun()
             
-            # Etiketi kapatıyoruz
             st.markdown('</div>', unsafe_allow_html=True)
