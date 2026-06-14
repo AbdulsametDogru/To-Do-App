@@ -5,15 +5,43 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- CSS: SADECE ANA SÜTUNLARI VE KARTLARI HEDEF ALAN GÜVENLİ TASARIM ---
+# Oturum yönetimi hafıza kontrolü
+if "yonetici" not in st.session_state:
+    st.session_state.yonetici = GorevYoneticisi()
+
+gorev_yoneticisi = st.session_state.yonetici
+
+# --- 🎯 HTML BUTONLARININ AKSİYONLARINI YAKALAMA ALGORİTMASI ---
+# Kart içindeki HTML elementlerine tıklandığında URL parametreleri üzerinden veri güncellenir
+params = st.query_params
+
+if "action" in params and "id" in params:
+    aksiyon = params["action"]
+    gorev_id = params["id"]
+    
+    if aksiyon == "delete":
+        gorev_yoneticisi.gorev_sil(gorev_id)
+        st.query_params.clear()  # URL'i temizle
+        st.rerun()
+        
+    elif aksiyon == "move" and "target" in params:
+        hedef_durum = params["target"]
+        for g in gorev_yoneticisi.gorevler:
+            if g.id == gorev_id:
+                g.durum = hedef_durum
+                gorev_yoneticisi.gorevleri_kaydet()
+                break
+        st.query_params.clear()  # URL'i temizle
+        st.rerun()
+
+# --- 🎨 KUSURSUZ INTERACTIVE KANBAN CSS mimarisi ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* Yalnızca en üst seviyedeki 3 ana Kanban panosunu gri kutu yapıyoruz.
-       İçerideki alt sütunların tetiklenmesini engellemek için sadece ilk seviyeyi (> div) hedefledik. */
+    /* 3 Ana Pano Sütunu */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         background: rgba(255, 255, 255, 0.02) !important;
         backdrop-filter: blur(10px) !important;
@@ -24,7 +52,7 @@ st.markdown("""
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
     }
     
-    /* Sütun Başlıkları */
+    /* Pano Başlıkları */
     .column-header {
         font-size: 14px;
         font-weight: 700;
@@ -39,72 +67,81 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Tek Parça Görev Kartı (Üst Kısım) */
-    .task-card-top {
-        background: #131520 !important;
-        border-top: 1px solid #1f2235 !important;
-        border-left: 1px solid #1f2235 !important;
-        border-right: 1px solid #1f2235 !important;
-        border-top-left-radius: 14px !important;
-        border-top-right-radius: 14px !important;
-        padding: 18px 18px 8px 18px !important;
+    /* TASARIMI ASLA KOPMAYAN TEK PARÇA KART YAPISI */
+    .premium-task-card {
+        background: #131520;
+        border: 1px solid #1f2235;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 16px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, border-color 0.2s;
+    }
+    .premium-task-card:hover {
+        border-color: #3b82f6;
+        transform: translateY(-2px);
     }
     
-    /* Tek Parça Görev Kartı (Butonların Durduğu Alt Kısım) */
-    .task-card-bottom {
-        background: #131520 !important;
-        border-bottom: 1px solid #1f2235 !important;
-        border-left: 1px solid #1f2235 !important;
-        border-right: 1px solid #1f2235 !important;
-        border-bottom-left-radius: 14px !important;
-        border-bottom-right-radius: 14px !important;
-        padding: 0px 18px 18px 18px !important;
-        margin-bottom: 20px !important;
-    }
-    
+    /* Sol Öncelik Çizgileri */
     .indicator-Zor { background: #ef4444; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     .indicator-Orta { background: #f59e0b; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     .indicator-Kolay { background: #10b981; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     
-    .task-title { color: #f3f4f6; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    .task-title { color: #f3f4f6; font-size: 15px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; }
     
-    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 6px; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 8px; }
     .badge-Zor { background: rgba(239, 68, 68, 0.12); color: #f87171; }
     .badge-Orta { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
     .badge-Kolay { background: rgba(16, 185, 129, 0.12); color: #34d399; }
     
-    .task-time { color: #9ca3af; font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .task-time { color: #9ca3af; font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 16px; }
     
-    /* Kart İçindeki Streamlit Bileşenlerinin Tasarımı */
-    .stSelectbox div[data-baseweb="select"] {
-        background-color: #1a1d2e !important;
-        border: 1px solid #2d314e !important;
-        border-radius: 8px !important;
+    /* Kart İçindeki İnteraktif HTML Kontrolleri */
+    .card-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 12px;
     }
-    .stButton > button {
-        width: 100% !important;
-        background-color: #1a1d2e !important;
-        border: 1px solid #2d314e !important;
-        border-radius: 8px !important;
-        height: 42px !important;
+    
+    .html-dropdown {
+        flex: 1;
+        background: #1a1d2e;
+        color: #f3f4f6;
+        border: 1px solid #2d314e;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 13px;
+        outline: none;
+        cursor: pointer;
+        height: 38px;
     }
-    .stButton > button:hover {
-        border-color: #ef4444 !important;
-        color: #ef4444 !important;
-        background-color: rgba(239, 68, 68, 0.05) !important;
+    
+    .html-delete-button {
+        background: #1a1d2e;
+        color: #ef4444;
+        border: 1px solid #2d314e;
+        border-radius: 8px;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .html-delete-button:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# Oturum yönetimi hafıza kontrolü
-if "yonetici" not in st.session_state:
-    st.session_state.yonetici = GorevYoneticisi()
-
-gorev_yoneticisi = st.session_state.yonetici
-
-# --- ÜST SPRINT ANALİTİĞİ ---
+# --- ÜST PANEL ANALİTİKLERİ ---
 toplam_gorev = len(gorev_yoneticisi.gorevler)
 tamamlanan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Tamamlandı"])
 yapilan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Yapılıyor"])
@@ -113,11 +150,11 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Hizalama ve çakışma sorunları giderilmiş kararlı sürüm.</p>
+        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Tüm kontrol bileşenlerinin tek bir kart yapısında mühürlendiği kusursuz arayüz.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Üst Bilgiler
+# Üst Metrikler
 m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#9ca3af; font-size:12px; margin-bottom:4px;'>Sprint İlerleme Durumu: {int(ilerleme_orani*100)}%</p>", unsafe_allow_html=True)
@@ -131,7 +168,7 @@ with m4:
 
 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
 
-# --- SIDEBAR (KONTROL MERKEZİ) ---
+# --- PANEL KONTROL MERKEZİ (SIDEBAR) ---
 st.sidebar.markdown("<h3 style='color: #fff; font-weight: 700; margin-bottom:20px;'>Kontrol Merkezi</h3>", unsafe_allow_html=True)
 arama_sorgusu = st.sidebar.text_input("Görevlerde ara...", value="", placeholder="Kelime yazın...").strip().lower()
 filtre_zorluk = st.sidebar.multiselect("Önceliğe Göre Filtrele", ["Kolay", "Orta", "Zor"], default=["Kolay", "Orta", "Zor"])
@@ -151,7 +188,7 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
-# --- FİLTRELEME ÇALIŞTIRMA ---
+# --- FİLTRELEME İŞLEMLERİ ---
 gorev_yoneticisi.gorevleri_sirala()
 gosterilecek_gorevler = []
 for g in gorev_yoneticisi.gorevler:
@@ -191,38 +228,34 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # 1. KISIM: Kartın Üst Metin Bilgileri
+            # Seçim kutusu (Dropdown) opsiyon listesini hazırlama
+            tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
+            options_html = f'<option value="{g.durum}" selected disabled>{g.durum}</option>'
+            for d in tüm_durumlar:
+                if d != g.durum:
+                    options_html += f'<option value="{d}">{d}</option>'
+
+            # 🔥 HER ŞEYİ İÇİNE ALAN, ASLA BÖLÜNMEYEN TEK PARÇA KART HTML'İ
+            # (En alttaki unsafe_allow_html=True parametresi sayesinde kod olarak basılmak yerine tam render edilir)
             st.markdown(f"""
-                <div class="task-card-top">
+                <div class="premium-task-card">
                     <div class="indicator-{g.zorluk}"></div>
+                    
                     <div class="task-title">
                         {g.ad}
                         <span class="badge badge-{g.zorluk}">{g.zorluk}</span>
                     </div>
+                    
                     <div class="task-time">
                         <span>📅 {g.son_tarih}</span>
                         <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#9ca3af'}">{kalan_metin}</span>
                     </div>
+                    
+                    <div class="card-controls">
+                        <select class="html-dropdown" onchange="window.location.href='?action=move&id={g.id}&target=' + this.value">
+                            {options_html}
+                        </select>
+                        <a class="html-delete-button" href="?action=delete&id={g.id}" title="Görevi Sil">🗑️</a>
+                    </div>
                 </div>
             """, unsafe_allow_html=True)
-            
-            # 2. KISIM: Kartın Buton Alanı (Görsel olarak üst tarafa yapışık, tek parça kart)
-            st.markdown('<div class="task-card-bottom">', unsafe_allow_html=True)
-            
-            # Kaymayı engellemek için st.columns yerine tek satırda çalışan esnek bir form veya alan mimarisi
-            tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-            tüm_durumlar.remove(g.durum)
-            
-            yeni_durum = st.selectbox(
-                "Değiştir", [g.durum] + tüm_durumlar, key=f"mv_{g.id}", label_visibility="collapsed"
-            )
-            if yeni_durum != g.durum:
-                g.durum = yeni_durum
-                gorev_yoneticisi.gorevleri_kaydet()
-                st.rerun()
-                
-            if st.button("🗑️ Görevi Sil", key=f"rm_{g.id}"):
-                gorev_yoneticisi.gorev_sil(g.id)
-                st.rerun()
-                
-            st.markdown('</div>', unsafe_allow_html=True)
