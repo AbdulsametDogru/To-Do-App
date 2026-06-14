@@ -5,22 +5,39 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- CSS: ANA SÜTUNLAR VE KART BİLEŞENLERİ ---
+# --- CSS: ARKA PLAN VE KANBAN MİMARİSİ ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
-    .main { background: #090a0f; }
     
-    /* 3 Ana Kanban Sütunu */
+    /* 🌌 PREMIUM DEEP SPACE ARKA PLAN efekti */
+    .stApp {
+        background: radial-gradient(circle at 50% 0%, #1a1c29 0%, #0d0e15 70%, #07070a 100%) !important;
+        background-attachment: fixed !important;
+    }
+    
+    /* Arka plana şık bir doku/gren katmak isteyenler için hafif bir parıltı desteği */
+    .stApp::before {
+        content: "";
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0.02;
+        pointer-events: none;
+        z-index: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+    
+    /* 3 Ana Kanban Sütunu - Arka plan değişimine uyumlu olarak buzlu cam (backdrop) güçlendirildi */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        background: rgba(255, 255, 255, 0.02) !important;
-        backdrop-filter: blur(10px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 16px !important;
-        padding: 20px !important;
-        min-height: 70vh !important;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+        background: rgba(13, 15, 24, 0.4) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.04) !important;
+        border-radius: 20px !important;
+        padding: 22px !important;
+        min-height: 72vh !important;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
     }
     
     /* Sütun Başlıkları */
@@ -38,13 +55,14 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Container (Kart) Çerçevesi */
+    /* Container (Kart) Çerçevesi - Arka planda sırıtmaması için koyulaştırıldı */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #131520 !important;
-        border: 1px solid #1f2235 !important;
+        background: rgba(22, 25, 41, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
         border-radius: 14px !important;
-        margin-bottom: 12px !important;
+        margin-bottom: 14px !important;
         padding: 0px !important;
+        backdrop-filter: blur(5px) !important;
     }
     
     .task-card-content {
@@ -78,8 +96,8 @@ st.markdown("""
     
     /* Form Elemanları ve Buton Özelleştirmeleri */
     .stSelectbox div[data-baseweb="select"] {
-        background-color: #1a1d2e !important;
-        border: 1px solid #2d314e !important;
+        background-color: #121422 !important;
+        border: 1px solid #232742 !important;
         border-radius: 8px !important;
     }
     
@@ -87,8 +105,8 @@ st.markdown("""
     .stButton > button {
         width: 100% !important;
         border-radius: 8px !important;
-        background-color: #1a1d2e !important;
-        border: 1px solid #2d314e !important;
+        background-color: #121422 !important;
+        border: 1px solid #232742 !important;
         color: #f3f4f6 !important;
         transition: all 0.2s !important;
     }
@@ -106,6 +124,12 @@ st.markdown("""
         color: #ef4444 !important;
         background-color: rgba(239, 68, 68, 0.05) !important;
     }
+    
+    /* Kenar Çubuğu (Sidebar) Arka Plan Uyumu */
+    [data-testid="stSidebar"] {
+        background-color: #0b0c12 !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -115,7 +139,7 @@ if "yonetici" not in st.session_state:
 
 gorev_yoneticisi = st.session_state.yonetici
 
-# --- 🎯 GÖREV DÜZENLEME MODALI (DIALOG MERKEZİ) ---
+# --- GÖREV DÜZENLEME MODALI ---
 @st.dialog("📝 Görevi Düzenle")
 def gorev_duzenle_penceresi(gorev):
     st.markdown(f"**{gorev.ad}** görevine ait güncel bilgileri giriniz:")
@@ -124,7 +148,6 @@ def gorev_duzenle_penceresi(gorev):
     yeni_durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"], index=["Yapılacak", "Yapılıyor", "Tamamlandı"].index(gorev.durum))
     yeni_zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(gorev.zorluk))
     
-    # Mevcut tarihi datetime nesnesine çevirip date_input'a paslama
     mevcut_tarih = datetime.datetime.strptime(gorev.son_tarih, "%d/%m/%Y").date()
     yeni_son_tarih = st.date_input("Son Tarih", value=mevcut_tarih)
     
@@ -149,11 +172,10 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Kalem butonu ve akıllı düzenleme modülü entegre edilmiş kararlı sürüm.</p>
+        <p style='color: #525876; margin: 0; font-size: 13px;'>Derinlik hissi veren gradyan arka plan entegrasyonu tamamlandı.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Üst Metrik Çubukları
 m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#9ca3af; font-size:12px; margin-bottom:4px;'>Sprint İlerleme Durumu: {int(ilerleme_orani*100)}%</p>", unsafe_allow_html=True)
@@ -163,11 +185,12 @@ with m2:
 with m3:
     st.metric("Yapılıyor", yapilan_gorev)
 with m4:
+    st.metric("Tamamlandı", ... = tamamlanan_gorev) # Atama düzeltmesi güvenlik amaçlı direkt aktarılıyor
     st.metric("Tamamlandı", tamamlanan_gorev)
 
 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
 
-# --- PANEL KONTROL MERKEZİ (SIDEBAR) ---
+# --- SIDEBAR (KONTROL MERKEZİ) ---
 st.sidebar.markdown("<h3 style='color: #fff; font-weight: 700; margin-bottom:20px;'>Kontrol Merkezi</h3>", unsafe_allow_html=True)
 
 with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
@@ -216,10 +239,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # RESMİ BORDER KAPSAYICISI (Kart yapısı)
             with st.container(border=True):
-                
-                # Kart Üst Metin Alanı
                 st.markdown(f"""
                     <div class="task-card-content">
                         <div class="task-title-area">
@@ -233,8 +253,6 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     </div>
                 """, unsafe_allow_html=True)
                 
-                # Kart Altı Eylem Alanı: Düzenle ve Sil Butonları Yan Yana
-                # st.columns alanını çok dar tutup kartın dibine mühürledik.
                 b1, b2 = st.columns([1, 1])
                 with b1:
                     if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
