@@ -6,17 +6,29 @@ st.set_page_config(page_title="Sprint Board Pro", layout="wide", page_icon="⚡"
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap');
 *, *::before, *::after { font-family: 'Plus Jakarta Sans', sans-serif !important; box-sizing: border-box; }
 
-/* Arka plan renkleri ve parlamaları biraz daha açık hale getirildi */
+/* Arka plan biraz daha yumuşatıldı ve aydınlatıldı */
 .stApp {
     background:
-        radial-gradient(ellipse at 0% 0%, rgba(155,109,255,0.45) 0%, transparent 60%),
-        radial-gradient(ellipse at 100% 0%, rgba(96,165,250,0.40) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 100%, rgba(244,114,182,0.35) 0%, transparent 60%),
-        linear-gradient(135deg, #181439 0%, #231854 40%, #13243a 100%) !important;
+        radial-gradient(ellipse at 0% 0%, rgba(155,109,255,0.40) 0%, transparent 60%),
+        radial-gradient(ellipse at 100% 0%, rgba(96,165,250,0.35) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(244,114,182,0.30) 0%, transparent 60%),
+        linear-gradient(135deg, #1c183d 0%, #251b5a 40%, #162942 100%) !important;
     background-attachment: fixed !important;
+}
+
+/* --- STREAMLIT METRIC RENK DÜZELTMELERİ (Okunabilirlik için KRİTİK) --- */
+[data-testid="stMetricLabel"] {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+[data-testid="stMetricValue"] {
+    color: #ffffff !important;
+    font-size: 28px !important;
+    font-weight: 700 !important;
 }
 
 [data-testid="stSidebar"] {
@@ -33,14 +45,17 @@ st.markdown("""
     border: none !important; box-shadow: 0 0 20px rgba(139,92,246,0.45) !important;
 }
 
-/* Sütunlar ve Mobil Duyarlılık */
+/* Sütunlar ve Mobil için Flex düzeni */
+[data-testid="stHorizontalBlock"] {
+    gap: 16px !important;
+}
 [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-    background: rgba(22,15,54,0.65) !important;
-    backdrop-filter: blur(24px) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(255,255,255,0.12) !important;
-    border-radius: 22px !important; padding: 20px 16px !important;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4) !important;
-    margin-bottom: 16px; /* Mobilde alt alta gelince boşluk kalması için */
+    border-radius: 18px !important; padding: 16px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    margin-bottom: 12px !important;
 }
 
 [data-testid="stVerticalBlockBorderWrapper"],
@@ -51,91 +66,78 @@ st.markdown("""
 
 .col-header {
     font-size: 13px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1.8px; padding: 14px 16px; border-radius: 11px;
-    margin-bottom: 18px; color: #fff;
+    letter-spacing: 1.5px; padding: 12px 14px; border-radius: 10px;
+    margin-bottom: 14px; color: #fff;
     display: flex; align-items: center; justify-content: space-between;
 }
-.col-badge { background:rgba(255,255,255,0.25); padding:2px 10px; border-radius:18px; font-size:12px; font-weight:700; }
+.col-badge { background:rgba(255,255,255,0.25); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:700; }
 
-/* KART - Okunabilirlik ve Mobil Uyum Artırıldı */
+/* KART DÜZENLEME (Mobilde taşmayı önler) */
 .task-card {
-    border-radius: 14px; padding: 18px; margin-bottom: 0px;
+    border-radius: 14px; padding: 14px; margin-bottom: 0px;
     border: 1px solid transparent; cursor: pointer;
-    transition: transform 0.15s ease, filter 0.15s ease;
+    transition: transform 0.15s ease;
     user-select: none;
 }
-.task-card:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-/* Renkler kontrast için bir tık canlandırıldı */
-.task-card.Zor   { background:linear-gradient(135deg,#991b1b,#580a0a); border-color:rgba(239,68,68,0.55); }
-.task-card.Orta  { background:linear-gradient(135deg,#92400e,#541c07); border-color:rgba(245,158,11,0.55); }
-.task-card.Kolay { background:linear-gradient(135deg,#065f46,#022c22); border-color:rgba(16,185,129,0.50); }
+.task-card.Zor   { background:linear-gradient(135deg, #881337, #4c0519); border-color:rgba(244,63,94,0.4); }
+.task-card.Orta  { background:linear-gradient(135deg, #78350f, #451a03); border-color:rgba(245,158,11,0.4); }
+.task-card.Kolay { background:linear-gradient(135deg, #064e3b, #022c22); border-color:rgba(16,185,129,0.4); }
 
-.task-card.acik.Zor   { border-color:rgba(239,68,68,0.95)!important; border-radius:14px 14px 0 0!important; }
-.task-card.acik.Orta  { border-color:rgba(245,158,11,0.95)!important; border-radius:14px 14px 0 0!important; }
-.task-card.acik.Kolay { border-color:rgba(16,185,129,0.95)!important; border-radius:14px 14px 0 0!important; }
+.task-card.acik.Zor   { border-color:rgba(244,63,94,0.8)!important; border-radius:14px 14px 0 0!important; }
+.task-card.acik.Orta  { border-color:rgba(245,158,11,0.8)!important; border-radius:14px 14px 0 0!important; }
+.task-card.acik.Kolay { border-color:rgba(16,185,129,0.8)!important; border-radius:14px 14px 0 0!important; }
 
-/* Başlık mobilde taşmasın diye wrap eklendi */
-.task-title { color:#fff; font-size:16px; font-weight:700; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap: wrap; }
-.task-title span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:normal; word-break:break-word; flex:1; min-width:120px; }
-.badge { background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25); color:#fff; padding:4px 10px; border-radius:8px; font-size:11px; font-weight:700; text-transform:uppercase; flex-shrink:0; }
-.task-meta { color:rgba(255,255,255,0.8); font-size:13px; display:flex; justify-content:space-between; flex-wrap: wrap; gap: 4px; }
-.overdue { color:#fee2e2!important; background: rgba(220,38,38,0.4); padding: 1px 6px; border-radius: 4px; font-weight:700; }
+/* Başlık ve Meta alanları mobilde esnek ve alt alta gelebilir yapıldı */
+.task-title { color:#fff; font-size:15px; font-weight:700; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.task-title span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+.badge { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:3px 8px; border-radius:6px; font-size:10px; font-weight:700; text-transform:uppercase; flex-shrink:0; }
 
-/* TOGGLE BUTON - Mobilde dokunmayı kolaylaştırmak için büyütüldü */
+.task-meta { color:rgba(255,255,255,0.75); font-size:12px; display:flex; justify-content:space-between; align-items: center; gap: 4px; }
+.overdue { color:#fee2e2!important; background: rgba(220,38,38,0.5); padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:11px; }
+
+/* TOGGLE & ACTION MENU */
 .toggle-btn .stButton > button, .toggle-btn-acik .stButton > button {
     all: unset !important;
     display: block !important;
     width: 100% !important;
-    height: 36px !important; /* Dokunma alanı genişletildi */
+    height: 34px !important;
     cursor: pointer !important;
-    background: rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.05) !important;
     text-align: center !important;
-    font-size: 14px !important; /* İkonlar büyütüldü */
+    font-size: 13px !important;
     color: rgba(255,255,255,0.4) !important;
-    letter-spacing: 2px !important;
-    transition: background 0.12s, color 0.12s !important;
-    line-height: 36px !important;
+    line-height: 34px !important;
     box-sizing: border-box !important;
 }
-.toggle-btn .stButton > button {
-    border-radius: 0 0 14px 14px !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    border-top: none !important;
-    margin-bottom: 14px !important;
-}
-.toggle-btn-acik .stButton > button {
-    border-radius: 0 !important;
-    border-left: 1px solid rgba(255,255,255,0.1) !important;
-    border-right: 1px solid rgba(255,255,255,0.1) !important;
-    border-top: none !important;
-    border-bottom: none !important;
-    background: rgba(255,255,255,0.08) !important;
-    margin-bottom: 0 !important;
-}
-.toggle-btn .stButton > button:hover, .toggle-btn-acik .stButton > button:hover { background: rgba(255,255,255,0.12) !important; color: #fff !important; }
+.toggle-btn .stButton > button { border-radius: 0 0 14px 14px !important; border: 1px solid rgba(255,255,255,0.08) !important; border-top: none !important; margin-bottom: 12px !important; }
+.toggle-btn-acik .stButton > button { border-radius: 0 !important; border-left: 1px solid rgba(255,255,255,0.08) !important; border-right: 1px solid rgba(255,255,255,0.08) !important; border-top: none !important; border-bottom: none !important; background: rgba(255,255,255,0.08) !important; margin-bottom: 0 !important; }
 
-/* AÇILIR MENÜ - Dokunma alanları ve okunabilirlik artırıldı */
-.action-menu { border-radius:0 0 14px 14px; border:1px solid transparent; border-top:none; overflow:hidden; margin-bottom:14px; }
-.action-menu.Zor   { background:rgba(75,10,10,0.95);  border-color:rgba(239,68,68,0.95); }
-.action-menu.Orta  { background:rgba(69,26,7,0.95); border-color:rgba(245,158,11,0.95); }
-.action-menu.Kolay { background:rgba(4,47,31,0.95); border-color:rgba(16,185,129,0.95); }
+.action-menu { border-radius:0 0 14px 14px; border:1px solid transparent; border-top:none; overflow:hidden; margin-bottom:12px; }
+.action-menu.Zor   { background:rgba(76,5,25,0.95);  border-color:rgba(244,63,94,0.8); }
+.action-menu.Orta  { background:rgba(69,26,7,0.95); border-color:rgba(245,158,11,0.8); }
+.action-menu.Kolay { background:rgba(2,44,34,0.95); border-color:rgba(16,185,129,0.8); }
 .action-menu .stButton > button {
     all: unset !important;
     display:flex!important; align-items:center!important; gap:12px!important;
-    width:100%!important; padding:15px 20px!important; /* Parmak dostu genişlik */
-    color:rgba(255,255,255,0.9)!important; font-size:15px!important;
+    width:100%!important; padding:12px 16px!important;
+    color:rgba(255,255,255,0.9)!important; font-size:14px!important;
     font-weight:600!important; cursor:pointer!important;
-    border-bottom:1px solid rgba(255,255,255,0.1)!important;
-    transition:background 0.12s ease!important; box-sizing:border-box!important;
+    border-bottom:1px solid rgba(255,255,255,0.08)!important;
+    box-sizing:border-box!important;
 }
-.action-menu .stButton > button:hover { background:rgba(255,255,255,0.12)!important; color:#fff!important; }
-.action-menu .stButton:last-child > button { border-bottom:none!important; }
 
-/* Modal */
-div[role="dialog"] { background:linear-gradient(135deg,#241754,#120b2b)!important; border:1px solid rgba(139,92,246,0.45)!important; border-radius:18px!important; }
-div[role="dialog"] h1, div[role="dialog"] p { color:#fff!important; }
-div[role="dialog"] .stButton button { background:linear-gradient(90deg,#8b5cf6,#a855f7)!important; border:none!important; color:#fff!important; border-radius:8px!important; padding:12px 20px!important; font-weight:600!important; width:100%!important; }
+/* Ekran küçükse (Mobil) Sütunları rahatlat ve metrikleri düzgün göster */
+@media (max-width: 768px) {
+    [data-testid="stHorizontalBlock"] {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .task-meta {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -174,14 +176,15 @@ yapilan    = len([x for x in yon.gorevler if x.durum == "Yapılıyor"])
 ilerleme   = (tamamlanan / toplam) if toplam > 0 else 0.0
 
 st.markdown("""
-<div style='margin-bottom:22px;'>
-  <h1 style='color:#fff;font-weight:800;font-size:28px;margin-bottom:4px;'>
+<div style='margin-bottom:20px;'>
+  <h1 style='color:#fff;font-weight:800;font-size:26px;margin-bottom:4px;'>
     Workspace / <span style='color:#c084fc;'>Sprint Board Pro</span>
   </h1>
-  <p style='color:#94a3b8;margin:0;font-size:14px;'>Görevleri takip et, öncelikleri yönet.</p>
+  <p style='color:#94a3b8;margin:0;font-size:13px;'>Görevleri takip et, öncelikleri yönet.</p>
 </div>
 """, unsafe_allow_html=True)
 
+# Üst metrik alanları
 m1, m2, m3, m4 = st.columns([2.5, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#cbd5e1;font-size:13px;margin-bottom:5px;font-weight:600;'>Sprint İlerleme: {int(ilerleme*100)}%</p>", unsafe_allow_html=True)
@@ -189,7 +192,7 @@ with m1:
 with m2: st.metric("Toplam", toplam)
 with m3: st.metric("Aktif",  yapilan)
 with m4: st.metric("Biten",  tamamlanan)
-st.markdown("<div style='margin-bottom:28px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='margin-bottom:20px;'></div>", unsafe_allow_html=True)
 
 st.sidebar.markdown("<h2 style='color:#fff;font-weight:800;font-size:20px;'>Kontrol Merkezi</h2>", unsafe_allow_html=True)
 with st.sidebar.form("gorev_ekle", clear_on_submit=True):
@@ -243,7 +246,7 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
             </div>
             """, unsafe_allow_html=True)
 
-            # Kartın hemen altında görünmez ince şerit buton (tek tıklama noktası)
+            # İnce şerit buton
             toggle_cls = "toggle-btn-acik" if acik else "toggle-btn"
             st.markdown(f"<div class='{toggle_cls}'>", unsafe_allow_html=True)
             if st.button("• • •" if not acik else "▲", key=f"toggle_{g.id}"):
