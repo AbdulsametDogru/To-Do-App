@@ -2,19 +2,17 @@ import streamlit as st
 from Backend import GorevYoneticisi
 import datetime
 
-# Sayfa genişliği, başlık ve tema sabitleme
+# Sayfa yapılandırması
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- ULTRA PREMIUM CSS (YERLEŞİK SÜTUNLARI ÖZELLEŞTİRME) ---
+# --- KUSURSUZ KANBAN CSS TASARIMI (KAYMA RİSKİ SIFIR) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* Streamlit'in kendi oluşturduğu sütun alanlarını (st.columns) yakalıyoruz.
-       Böylece HTML açıp kapatma hatası (div kayması) tamamen engelleniyor.
-    */
+    /* Streamlit'in 3 ana kolonunu stabil gri panolara dönüştürüyoruz */
     [data-testid="stHorizontalBlock"] > div {
         background: rgba(255, 255, 255, 0.02) !important;
         backdrop-filter: blur(10px) !important;
@@ -40,53 +38,50 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Premium Kart Tasarımları */
+    /* Tek Parça Görev Kartı Tasarımı */
     .task-card {
         background: #131520;
         border: 1px solid #1f2235;
         border-radius: 14px;
         padding: 18px;
-        margin-bottom: 12px;
+        margin-bottom: 16px;
         position: relative;
         overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    }
-    .task-card:hover {
-        border-color: #3b82f6;
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
     
-    /* Sol Renk İndikatörleri */
+    /* Sol Öncelik Çizgileri */
     .indicator-Zor { background: #ef4444; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     .indicator-Orta { background: #f59e0b; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     .indicator-Kolay { background: #10b981; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
     
     .task-title { color: #f3f4f6; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
     
-    /* Rozet Tasarımları */
+    /* Öncelik Rozetleri */
     .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 6px; }
     .badge-Zor { background: rgba(239, 68, 68, 0.12); color: #f87171; }
     .badge-Orta { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
     .badge-Kolay { background: rgba(16, 185, 129, 0.12); color: #34d399; }
     
-    .task-time { color: #9ca3af; font-size: 12px; margin-top: 14px; display: flex; justify-content: space-between; }
+    .task-time { color: #9ca3af; font-size: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; }
     
-    /* Seçim Kutusu ve Buton Özelleştirmeleri */
+    /* Kart İçi Düzenli Buton ve Selectbox Alanları */
     .stSelectbox div[data-baseweb="select"] {
-        background-color: #131520 !important;
-        border: 1px solid #1f2235 !important;
+        background-color: #1a1d2e !important;
+        border: 1px solid #2d314e !important;
         border-radius: 8px !important;
     }
-    .stButton>button {
+    .stButton > button {
         width: 100% !important;
-        background-color: #131520 !important;
-        border: 1px solid #1f2235 !important;
+        background-color: #1a1d2e !important;
+        border: 1px solid #2d314e !important;
         border-radius: 8px !important;
+        height: 38px !important;
     }
-    .stButton>button:hover {
+    .stButton > button:hover {
         border-color: #ef4444 !important;
         color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -97,21 +92,20 @@ if "yonetici" not in st.session_state:
 
 gorev_yoneticisi = st.session_state.yonetici
 
-# --- ÜST SPRINT ANALİTİĞİ ---
+# --- ÜST PANEL ANALİTİKLERİ ---
 toplam_gorev = len(gorev_yoneticisi.gorevler)
 tamamlanan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Tamamlandı"])
 yapilan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Yapılıyor"])
-
 ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Gerçek zamanlı analitik panel entegrasyonlu kurumsal iş akış mimarisi.</p>
+        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Her görevin tek bir kart içinde toplandığı optimize edilmiş arayüz.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Üst Bilgi Kutuları
+# Üst Analitik Çubukları
 m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#9ca3af; font-size:12px; margin-bottom:4px;'>Sprint İlerleme Durumu: {int(ilerleme_orani*100)}%</p>", unsafe_allow_html=True)
@@ -172,7 +166,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
     sayac = len(sutun_gorevleri)
     
     with st_sutun:
-        # Sütun Başlığı (Artık doğrudan sütunun en üst elemanı)
+        # Sütun Başlığı
         st.markdown(f"""
             <div class="column-header" style="background: {renk};">
                 <span>{baslik}</span>
@@ -180,7 +174,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             </div>
         """, unsafe_allow_html=True)
         
-        # Görev Kartları (Doğrudan sütun bileşeninin içine ekleniyor)
+        # Her bir görev için TEK BİR KART alanı inşa ediyoruz
         for g in sutun_gorevleri:
             kalan_gun = g.kalan_gun_hesapla()
             
@@ -191,7 +185,8 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # HTML Kart Gövdesi
+            # --- TEK KART BAŞLANGICI ---
+            # Kartın üst kısmındaki metinleri ve bilgileri tek parça HTML ile basıyoruz
             st.markdown(f"""
                 <div class="task-card">
                     <div class="indicator-{g.zorluk}"></div>
@@ -206,8 +201,8 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                 </div>
             """, unsafe_allow_html=True)
             
-            # Kart Altı İşlevsel Butonlar
-            c1, c2 = st.columns([5, 1])
+            # Kartın altındaki butonları Streamlit kolonlarıyla kartın hemen altına bağlıyoruz
+            c1, c2 = st.columns([4, 1])
             with c1:
                 tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
                 tüm_durumlar.remove(g.durum)
@@ -223,4 +218,5 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     gorev_yoneticisi.gorev_sil(g.id)
                     st.rerun()
             
-            st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
+            # İki kart arasına net bir mesafe çizgisi koyarak kartların iç içe girmesini önlüyoruz
+            st.markdown("<hr style='border: 0; height: 1px; background: rgba(255,255,255,0.05); margin: 10px 0 20px 0;'>", unsafe_allow_html=True)
