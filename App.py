@@ -5,7 +5,7 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- CSS: SADECE ANA PANO SÜTUNLARINI VE ÖZEL METİNLERİ HEDEF ALAN TASARIM ---
+# --- CSS: SADECE ANA PANO SÜTUNLARINI VÖ ÖZEL METİNLERİ HEDEF ALAN TASARIM ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
@@ -112,7 +112,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Bileşenlerin container yapısıyla mühürlendiği kaymasız sürüm.</p>
+        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Bileşenlerin container yapısıyla mühürlendiği sade ve kararlı sürüm.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -132,10 +132,6 @@ st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
 
 # --- PANEL KONTROL MERKEZİ (SIDEBAR) ---
 st.sidebar.markdown("<h3 style='color: #fff; font-weight: 700; margin-bottom:20px;'>Kontrol Merkezi</h3>", unsafe_allow_html=True)
-arama_sorgusu = st.sidebar.text_input("Görevlerde ara...", value="", placeholder="Kelime yazın...").strip().lower()
-filtre_zorluk = st.sidebar.multiselect("Önceliğe Göre Filtrele", ["Kolay", "Orta", "Zor"], default=["Kolay", "Orta", "Zor"])
-
-st.sidebar.markdown("<hr style='border-color: #1f2235; margin:20px 0;'>", unsafe_allow_html=True)
 
 with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
     ad = st.text_input("Görev Adı")
@@ -150,12 +146,8 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
-# --- FİLTRELEME ÇALIŞTIRMA ---
+# Görevleri akıllı sıralamaya tabi tutuyoruz
 gorev_yoneticisi.gorevleri_sirala()
-gosterilecek_gorevler = []
-for g in gorev_yoneticisi.gorevler:
-    if (arama_sorgusu in g.ad.lower()) and (g.zorluk in filtre_turbu if 'filtre_zorluk' in locals() else filtre_zorluk):
-        gosterilecek_gorevler.append(g)
 
 # --- SÜTUNLARIN OLUŞTURULMASI ---
 sutun1, sutun2, sutun3 = st.columns(3)
@@ -167,7 +159,8 @@ sutun_ayarlari = {
 }
 
 for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
-    sutun_gorevleri = [x for x in gosterilecek_gorevler if x.durum == anahtar]
+    # Doğrudan yöneticideki tüm görevleri filtrelemeden çekiyoruz
+    sutun_gorevleri = [x for x in gorev_yoneticisi.gorevler if x.durum == anahtar]
     sayac = len(sutun_gorevleri)
     
     with st_sutun:
@@ -188,7 +181,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # 🎯 RESMİ BORDER KAPSAYICISI (Tüm bileşenleri tek kartta kilitler)
+            # RESMİ BORDER KAPSAYICISI (Elemanları tek kartta kilitler)
             with st.container(border=True):
                 
                 # Kart Üst Metin Alanı (HTML)
@@ -205,8 +198,8 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     </div>
                 """, unsafe_allow_html=True)
                 
-                # Kart Altı Kontrol Alanı (Güvenli Yerel Elemanlar - İçeride sarmalanmıştır, kayamaz)
-                padding_cols = st.columns([1])[0] # Hizalamayı korumak için izole alan
+                # Kart Altı Kontrol Alanı (Güvenli Yerel Elemanlar)
+                padding_cols = st.columns([1])[0]
                 with padding_cols:
                     tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
                     tüm_durumlar.remove(g.durum)
