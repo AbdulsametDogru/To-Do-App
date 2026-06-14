@@ -18,7 +18,6 @@ st.markdown("""
         linear-gradient(135deg, #0f0c29 0%, #1a1040 40%, #0d1b2a 100%) !important;
     background-attachment: fixed !important;
 }
-
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #130d35 0%, #0a0718 100%) !important;
     border-right: 1px solid rgba(139,92,246,0.25) !important;
@@ -26,134 +25,102 @@ st.markdown("""
 [data-testid="stSidebar"] .stForm {
     background: rgba(139,92,246,0.06) !important;
     border: 1px solid rgba(139,92,246,0.15) !important;
-    border-radius: 14px !important;
-    padding: 18px !important;
+    border-radius: 14px !important; padding: 18px !important;
 }
 [data-testid="stSidebar"] button[kind="primaryFormSubmit"] {
     background: linear-gradient(90deg,#7c3aed,#a855f7) !important;
-    border: none !important;
-    box-shadow: 0 0 20px rgba(139,92,246,0.45) !important;
+    border: none !important; box-shadow: 0 0 20px rgba(139,92,246,0.45) !important;
 }
-
 [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
     background: rgba(15,10,40,0.55) !important;
     backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
     border: 1px solid rgba(255,255,255,0.07) !important;
-    border-radius: 22px !important;
-    padding: 22px 18px !important;
+    border-radius: 22px !important; padding: 22px 18px !important;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
 }
-
 [data-testid="stVerticalBlockBorderWrapper"],
 [data-testid="element-container"],
 [data-testid="stVerticalBlock"] {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background: transparent !important; border: none !important; box-shadow: none !important;
 }
-
 .col-header {
     font-size: 12px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.8px; padding: 12px 16px; border-radius: 11px;
     margin-bottom: 18px; color: #fff;
     display: flex; align-items: center; justify-content: space-between;
 }
-.col-badge { background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 18px; font-size: 11px; }
+.col-badge { background:rgba(255,255,255,0.2); padding:2px 10px; border-radius:18px; font-size:11px; }
 
-/* ====== KART BUTONU — tüm kart tıklanabilir ====== */
-.stButton > button {
+/* KART */
+.task-card {
+    border-radius: 14px; padding: 16px; margin-bottom: 10px;
+    border: 1px solid transparent; cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+    user-select: none;
+}
+.task-card:hover { transform: translateY(-2px); filter: brightness(1.1); }
+.task-card.Zor   { background:linear-gradient(135deg,#7f1d1d,#450a0a); border-color:rgba(239,68,68,0.45); box-shadow:0 8px 25px rgba(239,68,68,0.2); }
+.task-card.Orta  { background:linear-gradient(135deg,#78350f,#431407); border-color:rgba(245,158,11,0.45); box-shadow:0 8px 25px rgba(245,158,11,0.15); }
+.task-card.Kolay { background:linear-gradient(135deg,#064e3b,#022c22); border-color:rgba(16,185,129,0.40); box-shadow:0 8px 25px rgba(16,185,129,0.15); }
+.task-card.acik.Zor   { border-color:rgba(239,68,68,0.9)!important; box-shadow:0 0 22px rgba(239,68,68,0.4)!important; border-radius:14px 14px 0 0!important; margin-bottom:0!important; }
+.task-card.acik.Orta  { border-color:rgba(245,158,11,0.9)!important; box-shadow:0 0 22px rgba(245,158,11,0.35)!important; border-radius:14px 14px 0 0!important; margin-bottom:0!important; }
+.task-card.acik.Kolay { border-color:rgba(16,185,129,0.9)!important; box-shadow:0 0 22px rgba(16,185,129,0.35)!important; border-radius:14px 14px 0 0!important; margin-bottom:0!important; }
+
+.task-title { color:#fff; font-size:15px; font-weight:700; margin-bottom:10px; display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+.task-title span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
+.badge { background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.2); color:#fff; padding:3px 9px; border-radius:7px; font-size:10px; font-weight:700; text-transform:uppercase; flex-shrink:0; }
+.task-meta { color:rgba(255,255,255,0.72); font-size:12px; display:flex; justify-content:space-between; }
+.overdue { color:#fca5a5!important; font-weight:700; }
+.tap-hint { color:rgba(255,255,255,0.22); font-size:10px; text-align:right; margin-top:10px; }
+
+/* AÇILIR MENÜ */
+.action-menu { border-radius:0 0 14px 14px; border:1px solid transparent; border-top:none; overflow:hidden; margin-bottom:10px; }
+.action-menu.Zor   { background:rgba(60,5,5,0.88);  border-color:rgba(239,68,68,0.9); }
+.action-menu.Orta  { background:rgba(55,18,3,0.88); border-color:rgba(245,158,11,0.9); }
+.action-menu.Kolay { background:rgba(2,28,20,0.88); border-color:rgba(16,185,129,0.9); }
+.action-menu .stButton > button {
+    all: unset !important;
+    display:flex!important; align-items:center!important; gap:12px!important;
+    width:100%!important; padding:13px 18px!important;
+    color:rgba(255,255,255,0.85)!important; font-size:14px!important;
+    font-weight:500!important; cursor:pointer!important;
+    border-bottom:1px solid rgba(255,255,255,0.07)!important;
+    transition:background 0.12s ease!important; box-sizing:border-box!important;
+}
+.action-menu .stButton > button:hover { background:rgba(255,255,255,0.09)!important; color:#fff!important; }
+.action-menu .stButton:last-child > button { border-bottom:none!important; }
+
+/* Toggle buton — ince şerit, karta yapışık */
+.toggle-btn .stButton > button {
     all: unset !important;
     display: block !important;
     width: 100% !important;
+    height: 28px !important;
     cursor: pointer !important;
+    border-radius: 0 0 14px 14px !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    border-top: none !important;
+    background: rgba(255,255,255,0.03) !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    color: rgba(255,255,255,0.2) !important;
+    letter-spacing: 2px !important;
+    transition: background 0.12s !important;
+    margin-bottom: 10px !important;
+    line-height: 28px !important;
 }
-
-/* Kart sarmalayıcı */
-.task-card {
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 10px;
-    border: 1px solid transparent;
-    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
-    width: 100%;
-}
-.task-card:hover { transform: translateY(-2px); filter: brightness(1.1); }
-.task-card.Zor   { background: linear-gradient(135deg,#7f1d1d,#450a0a); border-color: rgba(239,68,68,0.45); box-shadow: 0 8px 25px rgba(239,68,68,0.2); }
-.task-card.Orta  { background: linear-gradient(135deg,#78350f,#431407); border-color: rgba(245,158,11,0.45); box-shadow: 0 8px 25px rgba(245,158,11,0.15); }
-.task-card.Kolay { background: linear-gradient(135deg,#064e3b,#022c22); border-color: rgba(16,185,129,0.40); box-shadow: 0 8px 25px rgba(16,185,129,0.15); }
-
-.task-card.acik.Zor   { border-color: rgba(239,68,68,0.9) !important; box-shadow: 0 0 22px rgba(239,68,68,0.4) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
-.task-card.acik.Orta  { border-color: rgba(245,158,11,0.9) !important; box-shadow: 0 0 22px rgba(245,158,11,0.35) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
-.task-card.acik.Kolay { border-color: rgba(16,185,129,0.9) !important; box-shadow: 0 0 22px rgba(16,185,129,0.35) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
-
-.task-title {
-    color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px;
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
-}
-.task-title span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
-.badge {
-    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2);
-    color: #fff; padding: 3px 9px; border-radius: 7px;
-    font-size: 10px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;
-}
-.task-meta { color: rgba(255,255,255,0.72); font-size: 12px; display: flex; justify-content: space-between; }
-.overdue { color: #fca5a5 !important; font-weight: 700; }
-.tap-hint { color: rgba(255,255,255,0.25); font-size: 10px; text-align: right; margin-top: 10px; }
-
-/* ====== MODERN LİSTE MENÜ ====== */
-.action-menu {
-    border-radius: 0 0 14px 14px;
-    border: 1px solid transparent;
-    border-top: none;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-.action-menu.Zor   { background: rgba(60,5,5,0.85);  border-color: rgba(239,68,68,0.9); }
-.action-menu.Orta  { background: rgba(55,18,3,0.85); border-color: rgba(245,158,11,0.9); }
-.action-menu.Kolay { background: rgba(2,28,20,0.85); border-color: rgba(16,185,129,0.9); }
-
-/* Menü içindeki her item — stButton override */
-.action-menu .stButton > button {
-    all: unset !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    width: 100% !important;
-    padding: 13px 18px !important;
-    color: rgba(255,255,255,0.85) !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
-    transition: background 0.12s ease !important;
-    box-sizing: border-box !important;
-}
-.action-menu .stButton > button:hover {
-    background: rgba(255,255,255,0.08) !important;
-    color: #fff !important;
-}
-.action-menu .stButton:last-child > button {
-    border-bottom: none !important;
+.toggle-btn .stButton > button:hover { background: rgba(255,255,255,0.07) !important; color: rgba(255,255,255,0.4) !important; }
+/* Açıkken toggle rengi */
+.toggle-btn-acik .stButton > button {
+    border-radius: 0 !important;
+    background: rgba(255,255,255,0.04) !important;
+    margin-bottom: 0 !important;
 }
 
 /* Modal */
-div[role="dialog"] {
-    background: linear-gradient(135deg,#1a1040,#0d0720) !important;
-    border: 1px solid rgba(139,92,246,0.35) !important;
-    border-radius: 18px !important;
-}
-div[role="dialog"] h1, div[role="dialog"] p { color: #fff !important; }
-div[role="dialog"] .stButton button {
-    background: linear-gradient(90deg,#7c3aed,#a855f7) !important;
-    box-shadow: 0 0 16px rgba(139,92,246,0.35) !important;
-    border: none !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 10px 20px !important;
-    font-weight: 600 !important;
-    width: 100% !important;
-}
+div[role="dialog"] { background:linear-gradient(135deg,#1a1040,#0d0720)!important; border:1px solid rgba(139,92,246,0.35)!important; border-radius:18px!important; }
+div[role="dialog"] h1, div[role="dialog"] p { color:#fff!important; }
+div[role="dialog"] .stButton button { background:linear-gradient(90deg,#7c3aed,#a855f7)!important; box-shadow:0 0 16px rgba(139,92,246,0.35)!important; border:none!important; color:#fff!important; border-radius:8px!important; padding:10px 20px!important; font-weight:600!important; width:100%!important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -207,7 +174,6 @@ with m1:
 with m2: st.metric("Toplam", toplam)
 with m3: st.metric("Aktif",  yapilan)
 with m4: st.metric("Biten",  tamamlanan)
-
 st.markdown("<div style='margin-bottom:28px;'></div>", unsafe_allow_html=True)
 
 st.sidebar.markdown("<h2 style='color:#fff;font-weight:800;font-size:20px;'>Kontrol Merkezi</h2>", unsafe_allow_html=True)
@@ -247,10 +213,9 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
 
             acik     = (st.session_state.acik_kart == g.id)
             acik_cls = "acik" if acik else ""
-            hint     = "▲ kapat" if acik else "tıkla →"
 
-            # Kart tamamen st.button — HTML label içinde
-            kart_html = f"""
+            # Kart HTML
+            st.markdown(f"""
             <div class='task-card {g.zorluk} {acik_cls}'>
               <div class='task-title'>
                 <span>{g.ad}</span>
@@ -260,23 +225,24 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
                 <span>📅 {g.son_tarih}</span>
                 <span class='{k_cls}'>{k_metin}</span>
               </div>
-              <div class='tap-hint'>{hint}</div>
             </div>
-            """
-            if st.button(kart_html, key=f"kart_{g.id}", unsafe_allow_html=True):
+            """, unsafe_allow_html=True)
+
+            # Kartın hemen altında görünmez ince şerit buton (tek tıklama noktası)
+            toggle_cls = "toggle-btn-acik" if acik else "toggle-btn"
+            st.markdown(f"<div class='{toggle_cls}'>", unsafe_allow_html=True)
+            if st.button("• • •" if not acik else "▲", key=f"toggle_{g.id}"):
                 st.session_state.acik_kart = None if acik else g.id
                 st.rerun()
+            st.markdown("</div>", unsafe_allow_html=True)
 
-            # Açılır liste menü
+            # Açılır menü
             if acik:
                 st.markdown(f"<div class='action-menu {g.zorluk}'>", unsafe_allow_html=True)
-
                 if st.button("✏️   Düzenle", key=f"edit_{g.id}"):
                     gorev_duzenle(g)
-
                 if st.button("🗑️   Sil", key=f"rm_{g.id}"):
                     yon.gorev_sil(g.id)
                     st.session_state.acik_kart = None
                     st.rerun()
-
                 st.markdown("</div>", unsafe_allow_html=True)
