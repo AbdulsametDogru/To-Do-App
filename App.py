@@ -2,278 +2,297 @@ import streamlit as st
 from Backend import GorevYoneticisi
 import datetime
 
-# Sayfa genişliği, başlık ve tema sabitleme
-st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
+st.set_page_config(page_title="Sprint Board Pro", layout="wide", page_icon="⚡")
 
-# --- 🔥 MUTLAK POZİSYON SABİTLEMELİ AKILLI CSS MİMARİSİ ---
 st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
-    * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
-    
-    /* 🌌 ANA ARKA PLAN */
-    .stApp {
-        background: 
-            radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.1) 0%, transparent 40%),
-            radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-            radial-gradient(circle at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
-            linear-gradient(135deg, #090a10 0%, #121420 50%, #050508 100%) !important;
-        background-attachment: fixed !important;
-    }
-    
-    /* 📱 KANBAN SÜTUNLARI */
-    [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        background: rgba(6, 8, 14, 0.6) !important;
-        backdrop-filter: blur(25px) !important;
-        -webkit-backdrop-filter: blur(25px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 24px !important;
-        padding: 24px !important;
-        margin-bottom: 20px !important;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7) !important;
-    }
-    
-    .column-header {
-        font-size: 14px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        padding: 14px 18px;
-        border-radius: 12px;
-        margin-bottom: 22px;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    
-    /* 🎨 RENKLİ KONTROL MERKEZİ (SIDEBAR) */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0d111d 0%, #06070a 100%) !important;
-        border-right: 1px solid rgba(59, 130, 246, 0.2) !important;
-        box-shadow: 5px 0 30px rgba(0,0,0,0.5) !important;
-    }
-    [data-testid="stSidebar"] .stForm {
-        background: rgba(255, 255, 255, 0.02) !important;
-        border: 1px solid rgba(255, 255, 255, 0.05) !important;
-        border-radius: 15px !important;
-        padding: 20px !important;
-    }
-    [data-testid="stSidebar"] button[kind="primaryFormSubmit"] {
-        background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%) !important;
-        border: none !important;
-        box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
-    }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    /* Streamlit Gereksiz Boşluk ve Çerçeve Temizliği */
-    [data-testid="stVerticalBlockBorderWrapper"], 
-    div[data-testid="element-container"] .stElementContainer,
-    div[data-testid="stVerticalBlock"] {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
+*, *::before, *::after {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    box-sizing: border-box;
+}
 
-    /* 🎯 GEOMETRİK OLARAK SABİTLENMİŞ ANA KART YAPISI */
-    .custom-task-card-wrapper {
-        position: relative !important; /* İçindeki her şeyi buna göre hizalayacağız */
-        margin-bottom: 16px !important;
-    }
+/* Ana arka plan */
+.stApp {
+    background:
+        radial-gradient(ellipse at 15% 10%, rgba(239,68,68,0.09) 0%, transparent 45%),
+        radial-gradient(ellipse at 85% 15%, rgba(59,130,246,0.11) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 85%, rgba(16,185,129,0.07) 0%, transparent 50%),
+        linear-gradient(150deg, #07080f 0%, #10121e 55%, #040508 100%) !important;
+    background-attachment: fixed !important;
+}
 
-    .custom-task-card {
-        border-radius: 16px !important;
-        padding: 20px 20px 70px 20px !important; /* Butonlara alt tarafta güvenli bölge */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid transparent;
-    }
-    .card-glow-Zor { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
-    .card-glow-Orta { background: linear-gradient(135deg, #7c2d12 0%, #431407 100%) !important; border-color: rgba(245, 158, 11, 0.4) !important; }
-    .card-glow-Kolay { background: linear-gradient(135deg, #064e3b 0%, #022c22 100%) !important; border-color: rgba(16, 185, 129, 0.35) !important; }
-    
-    .task-title-area {
-        color: #ffffff !important;
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-    
-    .task-title-text {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    
-    .task-time-area {
-        color: rgba(255, 255, 255, 0.85) !important;
-        font-size: 13px;
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-    
-    .badge-white {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #ffffff !important;
-        padding: 4px 10px !important;
-        border-radius: 8px !important;
-        font-size: 11px !important;
-        font-weight: 700 !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        text-transform: uppercase !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* 🛠️ KAYMAYI ENGELLEYEN ABSOLUTE BUTON KİLİTLEME SİSTEMİ */
-    /* Butonları içeren alt Streamlit satırını yakalayıp kartın alt zeminine çiviliyoruz */
-    .custom-task-card-wrapper div[data-testid="stHorizontalBlock"] {
-        position: absolute !important;
-        bottom: 15px !important; /* Kartın altından tam 15px yukarıda sabit dur */
-        left: 20px !important;
-        right: 20px !important;
-        width: calc(100% - 40px) !important;
-        z-index: 5 !important;
-    }
-    
-    .stButton > button {
-        width: 100% !important;
-        border-radius: 8px !important;
-        background-color: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        color: #ffffff !important;
-        font-weight: 600;
-        padding: 5px 0px !important;
-    }
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0c1020 0%, #060709 100%) !important;
+    border-right: 1px solid rgba(59,130,246,0.18) !important;
+}
+[data-testid="stSidebar"] .stForm {
+    background: rgba(255,255,255,0.02) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    border-radius: 14px !important;
+    padding: 18px !important;
+}
+[data-testid="stSidebar"] button[kind="primaryFormSubmit"] {
+    background: linear-gradient(90deg,#1d4ed8,#3b82f6) !important;
+    border: none !important;
+    box-shadow: 0 0 18px rgba(59,130,246,0.35) !important;
+}
 
-    /* 📱 MOBİL UYUMLULUK AYARI */
-    @media (max-width: 768px) {
-        /* Mobilde butonlar alt alta binerse kart otomatik aşağı doğru esnesin diye padding artırıldı */
-        .custom-task-card {
-            padding-bottom: 105px !important;
-        }
-    }
+/* Kanban sütunlar */
+[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+    background: rgba(5,7,12,0.65) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255,255,255,0.05) !important;
+    border-radius: 22px !important;
+    padding: 22px 18px !important;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.6) !important;
+}
 
-    /* 🎨 RENKLİ GÜNCELLEME MODALI */
-    div[role="dialog"] {
-        background: linear-gradient(135deg, #131722 0%, #090a0f 100%) !important;
-        border: 1px solid rgba(59, 130, 246, 0.3) !important;
-        border-radius: 20px !important;
-    }
-    div[role="dialog"] h1, div[role="dialog"] p { color: #fff !important; }
-    div[role="dialog"] .stButton button {
-        background: linear-gradient(90deg, #059669 0%, #10b981 100%) !important;
-        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3) !important;
-        border: none !important;
-    }
-    </style>
+/* Genel arka plan temizliği */
+[data-testid="stVerticalBlockBorderWrapper"],
+[data-testid="element-container"],
+[data-testid="stVerticalBlock"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Kolon başlığı */
+.col-header {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    padding: 12px 16px;
+    border-radius: 11px;
+    margin-bottom: 20px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.col-badge {
+    background: rgba(255,255,255,0.18);
+    padding: 2px 9px;
+    border-radius: 18px;
+    font-size: 11px;
+}
+
+/* Görev kartı — sade, pozisyon hack'i yok */
+.task-card {
+    border-radius: 15px;
+    padding: 18px;
+    margin-bottom: 4px;          /* butonlarla minimal boşluk */
+    border: 1px solid transparent;
+}
+.task-card.Zor  { background: linear-gradient(135deg,#7f1d1d,#3f0707); border-color: rgba(239,68,68,0.38); }
+.task-card.Orta { background: linear-gradient(135deg,#7c2d12,#3b0f04); border-color: rgba(245,158,11,0.38); }
+.task-card.Kolay{ background: linear-gradient(135deg,#064e3b,#01201a); border-color: rgba(16,185,129,0.33); }
+
+.task-title {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+.task-title span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+.badge {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.task-meta {
+    color: rgba(255,255,255,0.78);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+}
+.overdue { color: #ff8585; font-weight: 700; }
+
+/* Kart altı butonlar */
+.stButton > button {
+    width: 100% !important;
+    border-radius: 8px !important;
+    background: rgba(0,0,0,0.35) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    padding: 5px 4px !important;
+    transition: background 0.15s ease !important;
+}
+.stButton > button:hover {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.22) !important;
+}
+
+/* Düzenleme modali */
+div[role="dialog"] {
+    background: linear-gradient(135deg,#131722,#090a0f) !important;
+    border: 1px solid rgba(59,130,246,0.28) !important;
+    border-radius: 18px !important;
+}
+div[role="dialog"] h1, div[role="dialog"] p { color: #fff !important; }
+div[role="dialog"] .stButton button {
+    background: linear-gradient(90deg,#059669,#10b981) !important;
+    box-shadow: 0 0 14px rgba(16,185,129,0.28) !important;
+    border: none !important;
+}
+
+/* Buton satırının üstünde gereksiz boşluk engeli */
+div[data-testid="stHorizontalBlock"] {
+    margin-top: 0 !important;
+    gap: 8px !important;
+}
+</style>
 """, unsafe_allow_html=True)
 
-# Oturum yönetimi hafıza kontrolü
+# --- Oturum başlat ---
 if "yonetici" not in st.session_state:
     st.session_state.yonetici = GorevYoneticisi()
 
-gorev_yoneticisi = st.session_state.yonetici
+yon = st.session_state.yonetici
 
-# --- 📝 GÖREV DÜZENLEME MODALI ---
+
+# --- Düzenleme modali ---
 @st.dialog("📝 Görevi Güncelle")
-def gorev_duzenle_penceresi(gorev):
-    st.markdown(f"**{gorev.ad}** görevi için yeni teknik parametreleri belirleyin:")
-    yeni_ad = st.text_input("Görevin Yeni Adı", value=gorev.ad)
-    yeni_durum = st.selectbox("Aşama Değiştir", ["Yapılacak", "Yapılıyor", "Tamamlandı"], index=["Yapılacak", "Yapılıyor", "Tamamlandı"].index(gorev.durum))
-    yeni_zorluk = st.selectbox("Öncelik Seviyesi", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(gorev.zorluk))
-    
-    mevcut_tarih = datetime.datetime.strptime(gorev.son_tarih, "%d/%m/%Y").date()
-    yeni_son_tarih = st.date_input("Deadline", value=mevcut_tarih)
-    
+def gorev_duzenle(gorev):
+    st.markdown(f"**{gorev.ad}** görevini güncelle:")
+    yeni_ad      = st.text_input("Görev Adı", value=gorev.ad)
+    yeni_durum   = st.selectbox("Aşama", ["Yapılacak","Yapılıyor","Tamamlandı"],
+                                index=["Yapılacak","Yapılıyor","Tamamlandı"].index(gorev.durum))
+    yeni_zorluk  = st.selectbox("Öncelik", ["Kolay","Orta","Zor"],
+                                index=["Kolay","Orta","Zor"].index(gorev.zorluk))
+    mevcut       = datetime.datetime.strptime(gorev.son_tarih, "%d/%m/%Y").date()
+    yeni_tarih   = st.date_input("Deadline", value=mevcut)
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("💾 Parametreleri Uygula", type="primary"):
+    if st.button("💾 Kaydet", type="primary"):
         if yeni_ad.strip():
-            gorev.ad = yeni_ad
-            gorev.durum = yeni_durum
-            gorev.zorluk = yeni_zorluk
-            gorev.son_tarih = yeni_son_tarih.strftime("%d/%m/%Y")
-            gorev_yoneticisi.gorevleri_kaydet()
+            gorev.ad       = yeni_ad
+            gorev.durum    = yeni_durum
+            gorev.zorluk   = yeni_zorluk
+            gorev.son_tarih = yeni_tarih.strftime("%d/%m/%Y")
+            yon.gorevleri_kaydet()
             st.rerun()
 
-# --- 📊 ÜST ANALİTİK PANEL ---
-toplam = len(gorev_yoneticisi.gorevler)
-tamamlanan = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Tamamlandı"])
-yapilan = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Yapılıyor"])
-ilerleme = (tamamlanan / toplam) if toplam > 0 else 0.0
+
+# --- Üst metrik şeridi ---
+toplam     = len(yon.gorevler)
+tamamlanan = len([x for x in yon.gorevler if x.durum == "Tamamlandı"])
+yapilan    = len([x for x in yon.gorevler if x.durum == "Yapılıyor"])
+ilerleme   = (tamamlanan / toplam) if toplam > 0 else 0.0
 
 st.markdown("""
-    <div style='margin-bottom: 25px;'>
-        <h1 style='color: #fff; font-weight: 800; font-size: 28px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #64748b; margin: 0; font-size: 13px;'>Mobil cihazlar ve PC için mutlak konumlandırmalı stabil kart yapısı.</p>
-    </div>
+<div style='margin-bottom:22px;'>
+  <h1 style='color:#fff;font-weight:800;font-size:26px;margin-bottom:4px;'>
+    Workspace / <span style='color:#3b82f6;'>Sprint Board Pro</span>
+  </h1>
+  <p style='color:#475569;margin:0;font-size:13px;'>Görevleri takip et, öncelikleri yönet.</p>
+</div>
 """, unsafe_allow_html=True)
 
-m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
+m1, m2, m3, m4 = st.columns([2.5, 1, 1, 1])
 with m1:
-    st.markdown(f"<p style='color:#94a3b8; font-size:12px; margin-bottom:6px;'>Sprint İlerleme: {int(ilerleme*100)}%</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#94a3b8;font-size:12px;margin-bottom:5px;'>Sprint İlerleme: {int(ilerleme*100)}%</p>",
+                unsafe_allow_html=True)
     st.progress(ilerleme)
-with m2: st.metric("Toplam", toplam)
-with m3: st.metric("Aktif", yapilan)
-with m4: st.metric("Biten", tamamlanan)
+with m2: st.metric("Toplam",  toplam)
+with m3: st.metric("Aktif",   yapilan)
+with m4: st.metric("Biten",   tamamlanan)
 
-st.markdown("<div style='margin-bottom: 30px;'></div>", unsafe_allow_html=True)
+st.markdown("<div style='margin-bottom:28px;'></div>", unsafe_allow_html=True)
 
-# --- ⚙️ KONTROL MERKEZİ (SIDEBAR) ---
-st.sidebar.markdown("<h2 style='color: #fff; font-weight: 800; font-size: 22px;'>Kontrol Merkezi</h2>", unsafe_allow_html=True)
-with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
-    st.markdown("<p style='color: #3b82f6; font-weight: 600;'>Yeni Görev Ekle</p>", unsafe_allow_html=True)
-    ad = st.text_input("Görev Tanımı")
-    durum = st.selectbox("Başlangıç Aşaması", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
-    zorluk = st.selectbox("Öncelik Derecesi", ["Kolay", "Orta", "Zor"])
-    son_tarih = st.date_input("Deadline", min_value=datetime.date.today())
-    if st.form_submit_button(label="🚀 GÖREVİ SİSTEME İŞLE"):
+
+# --- Sidebar: görev ekle ---
+st.sidebar.markdown("<h2 style='color:#fff;font-weight:800;font-size:20px;'>Kontrol Merkezi</h2>",
+                    unsafe_allow_html=True)
+with st.sidebar.form("gorev_ekle", clear_on_submit=True):
+    st.markdown("<p style='color:#3b82f6;font-weight:600;margin-bottom:4px;'>Yeni Görev Ekle</p>",
+                unsafe_allow_html=True)
+    ad       = st.text_input("Görev Tanımı")
+    durum    = st.selectbox("Başlangıç Aşaması", ["Yapılacak","Yapılıyor","Tamamlandı"])
+    zorluk   = st.selectbox("Öncelik", ["Kolay","Orta","Zor"])
+    son_tar  = st.date_input("Deadline", min_value=datetime.date.today())
+    if st.form_submit_button("🚀 Görevi Ekle"):
         if ad.strip():
-            gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih.strftime("%d/%m/%Y"))
+            yon.gorev_ekle(ad, durum, zorluk, son_tar.strftime("%d/%m/%Y"))
             st.rerun()
 
-gorev_yoneticisi.gorevleri_sirala()
+yon.gorevleri_sirala()
 
-# --- 🚀 KANBAN SÜRECİ ---
+
+# --- Kanban tahtası ---
 s1, s2, s3 = st.columns(3)
-ayarlar = {
-    "Yapılacak": (s1, "Yapılacaklar", "linear-gradient(90deg, #1e40af 0%, #1d4ed8 100%)"),
-    "Yapılıyor": (s2, "Yapılıyor Olanlar", "linear-gradient(90deg, #9a3412 0%, #c2410c 100%)"),
-    "Tamamlandı": (s3, "Tamamlananlar", "linear-gradient(90deg, #065f46 0%, #047857 100%)")
+kolonlar = {
+    "Yapılacak":  (s1, "Yapılacaklar",    "linear-gradient(90deg,#1e3a8a,#1d4ed8)"),
+    "Yapılıyor":  (s2, "Yapılıyor",       "linear-gradient(90deg,#9a3412,#c2410c)"),
+    "Tamamlandı": (s3, "Tamamlandı",      "linear-gradient(90deg,#065f46,#047857)"),
 }
 
-for anahtar, (st_sutun, baslik, renk) in ayarlar.items():
-    filtre_gorevler = [x for x in gorev_yoneticisi.gorevler if x.durum == anahtar]
-    with st_sutun:
-        st.markdown(f"<div class='column-header' style='background: {renk};'><span>{baslik}</span><span style='background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 20px; font-size: 11px;'>{len(filtre_gorevler)}</span></div>", unsafe_allow_html=True)
-        
-        for g in filtre_gorevler:
-            k_gun = g.kalan_gun_hesapla()
-            # 🛠️ DÜZELTME: "gün kaldı" ifadesi tam metin haline getirildi
-            k_metin = f"Gecikti ({abs(k_gun)}g)" if k_gun < 0 else ("Son Gün" if k_gun == 0 else f"{k_gun} gün kaldı")
-            
-            # Kart yapısını sarmalayıcı bir ana div (.custom-task-card-wrapper) içine alıyoruz
+for anahtar, (kolon, baslik, renk) in kolonlar.items():
+    filtre = [x for x in yon.gorevler if x.durum == anahtar]
+    with kolon:
+        # Kolon başlığı
+        st.markdown(f"""
+        <div class='col-header' style='background:{renk};'>
+          <span>{baslik}</span>
+          <span class='col-badge'>{len(filtre)}</span>
+        </div>
+        """, unsafe_allow_html=True)
+
+        for g in filtre:
+            k = g.kalan_gun_hesapla()
+            if k < 0:
+                k_metin = f"Gecikti ({abs(k)}g)"
+                renk_cls = "overdue"
+            elif k == 0:
+                k_metin = "Son Gün"
+                renk_cls = "overdue"
+            else:
+                k_metin = f"{k} gün kaldı"
+                renk_cls = ""
+
+            # Kart HTML — sade, absolute yok
             st.markdown(f"""
-                <div class="custom-task-card-wrapper">
-                    <div class="custom-task-card card-glow-{g.zorluk}">
-                        <div class="task-title-area">
-                            <span class="task-title-text">{g.ad}</span>
-                            <span class="badge-white">{g.zorluk}</span>
-                        </div>
-                        <div class="task-time-area">
-                            <span>📅 {g.son_tarih}</span>
-                            <span style="font-weight:700; color:{'#ff8585' if k_gun<=0 else '#ffffff'}">{k_metin}</span>
-                        </div>
-                    </div>
-                </div>
+            <div class='task-card {g.zorluk}'>
+              <div class='task-title'>
+                <span>{g.ad}</span>
+                <span class='badge'>{g.zorluk}</span>
+              </div>
+              <div class='task-meta'>
+                <span>📅 {g.son_tarih}</span>
+                <span class='{renk_cls}'>{k_metin}</span>
+              </div>
+            </div>
             """, unsafe_allow_html=True)
-            
-            # Butonlar bu üstteki wrapper elemanının tam tabanına kilitlenecek
-            b1, b2 = st.columns([1, 1])
+
+            # Butonlar kartın hemen altında, normal akışta
+            b1, b2 = st.columns(2)
             with b1:
-                if st.button("✏️ Düzenle", key=f"edit_{g.id}"): gorev_duzenle_penceresi(g)
+                if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
+                    gorev_duzenle(g)
             with b2:
-                if st.button("🗑️ Sil", key=f"rm_{g.id}"): gorev_yoneticisi.gorev_sil(g.id); st.rerun()
+                if st.button("🗑️ Sil", key=f"rm_{g.id}"):
+                    yon.gorev_sil(g.id)
+                    st.rerun()
+
+            # Kartlar arası görsel ayraç
+            st.markdown("<div style='height:10px;'></div>", unsafe_allow_html=True)
