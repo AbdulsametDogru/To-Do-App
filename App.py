@@ -2,41 +2,47 @@ import streamlit as st
 from Backend import GorevYoneticisi
 import datetime
 
-# Sayfa genişliği ve başlık ayarları
+# Sayfa genişliği, başlık ve tema sabitleme
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- CSS: RENKLİ KARTLAR VE KANBAN MİMARİSİ ---
+# --- ULTRA PREMIUM CAFCAFLI CSS (RENKLİ KARTLAR VE HIGH-TECH ARKA PLAN) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     
-    /* 🌌 PREMIUM DEEP SPACE ARKA PLAN EFECTİ */
+    /* 🌌 HIGH-TECH ARKA PLAN EFECTİ */
     .stApp {
-        background: radial-gradient(circle at 50% 0%, #161824 0%, #0b0c11 70%, #050507 100%) !important;
+        background: 
+            radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+            radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 50% 50%, #0d0e15 0%, #050507 100%) !important;
         background-attachment: fixed !important;
     }
     
+    /* Arka plana şık bir gren/noise ve ışıltı katmak */
     .stApp::before {
         content: "";
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        opacity: 0.015;
+        opacity: 0.02;
         pointer-events: none;
         z-index: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        background-image: 
+            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
+            radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
     }
     
-    /* 3 Ana Kanban Sütunu */
+    /* 3 Ana Kanban Sütunu - Buzlu cam etkisi (Glassmorphism) */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-        background: rgba(10, 11, 18, 0.4) !important;
+        background: rgba(13, 15, 24, 0.4) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.04) !important;
         border-radius: 20px !important;
         padding: 22px !important;
         min-height: 72vh !important;
-        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6) !important;
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5) !important;
     }
     
     /* Sütun Başlıkları */
@@ -54,45 +60,47 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* 🎨 DİNAMİK VE GÖRÜNÜR KART ARKA PLANLARI (CSS Ezme Uygulandı) */
+    /* 🎨 TAMAMEN RENKLENDİRİLMİŞ KART Container Algoritması */
+    /* Streamlit Container'larını zorluk sınıflarına göre boyuyoruz. 
+       `border=True` kullanmayı bıraktığımız için artık bu CSS sınıfları kartın ana gövdesini oluşturacak. */
     
-    /* 🔴 ZOR GÖREVLER: Belirgin Koyu Kırmızı */
-    div.card-Zor div[data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, #1c1316 100%) !important;
-        border: 1px solid rgba(239, 68, 68, 0.4) !important;
-        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.1) !important;
-    }
-    
-    /* 🟡 ORTA GÖREVLER: Belirgin Kehribar/Kahve */
-    div.card-Orta div[data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, #1a1612 100%) !important;
-        border: 1px solid rgba(245, 158, 11, 0.35) !important;
-        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08) !important;
-    }
-    
-    /* 🟢 KOLAY GÖREVLER: Belirgin Koyu Yeşil */
-    div.card-Kolay div[data-testid="stVerticalBlockBorderWrapper"] {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, #111614 100%) !important;
-        border: 1px solid rgba(16, 185, 129, 0.3) !important;
-        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.06) !important;
-    }
-    
-    /* Ortak Kart Ayarları */
-    [data-testid="stVerticalBlockBorderWrapper"] {
+    /* 🔴 ZOR GÖREVLER: Belirgin Koyu Kırmızı ve Kor Işıltı */
+    .card-Zor {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(28, 19, 22, 0.95) 100%) !important;
+        border: 1px solid rgba(239, 68, 68, 0.35) !important;
         border-radius: 14px !important;
         margin-bottom: 14px !important;
-        padding: 0px !important;
-        transition: transform 0.2s ease, border-color 0.2s ease !important;
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.08) !important;
+        transition: transform 0.2s, border-color 0.2s !important;
     }
-    [data-testid="stVerticalBlockBorderWrapper"]:hover {
-        transform: translateY(-3px) !important;
+    
+    /* 🟡 ORTA GÖREVLER: Belirgin Kehribar/Turuncu */
+    .card-Orta {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(26, 22, 18, 0.95) 100%) !important;
+        border: 1px solid rgba(245, 158, 11, 0.3) !important;
+        border-radius: 14px !important;
+        margin-bottom: 14px !important;
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.06) !important;
+        transition: transform 0.2s, border-color 0.2s !important;
     }
-    div.card-Zor div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(239, 68, 68, 0.8) !important; }
-    div.card-Orta div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(245, 158, 11, 0.7) !important; }
-    div.card-Kolay div[data-testid="stVerticalBlockBorderWrapper"]:hover { border-color: rgba(16, 185, 129, 0.6) !important; }
+    
+    /* 🟢 KOLAY GÖREVLER: Belirgin Koyu Zümrüt Yeşili */
+    .card-Kolay {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(17, 22, 20, 0.95) 100%) !important;
+        border: 1px solid rgba(16, 185, 129, 0.25) !important;
+        border-radius: 14px !important;
+        margin-bottom: 14px !important;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05) !important;
+        transition: transform 0.2s, border-color 0.2s !important;
+    }
+    
+    /* Kartların Hover Durumları (Işıltı güçlendirilmiş) */
+    .card-Zor:hover { border-color: rgba(239, 68, 68, 0.7) !important; transform: translateY(-2px); }
+    .card-Orta:hover { border-color: rgba(245, 158, 11, 0.6) !important; transform: translateY(-2px); }
+    .card-Kolay:hover { border-color: rgba(16, 185, 129, 0.5) !important; transform: translateY(-2px); }
 
     .task-card-content {
-        padding: 15px 15px 4px 15px;
+        padding: 18px 18px 8px 18px;
     }
     
     .task-title-area {
@@ -119,37 +127,41 @@ st.markdown("""
         margin-bottom: 12px;
     }
     
-    /* Kart İçi Buton Entegrasyon Tasarımları */
-    .stButton > button {
-        width: 100% !important;
-        border-radius: 8px !important;
-        background-color: rgba(0, 0, 0, 0.2) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-        color: #e5e7eb !important;
-        transition: all 0.2s !important;
-    }
-    
-    /* Butonların Hover Durumları */
-    div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
-        border-color: #3b82f6 !important;
-        color: #3b82f6 !important;
-        background-color: rgba(59, 130, 246, 0.15) !important;
-    }
-    div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
-        border-color: #ef4444 !important;
-        color: #ef4444 !important;
-        background-color: rgba(239, 68, 68, 0.15) !important;
-    }
-    
-    /* Kenar Çubuğu Form Elemanları */
+    /* Form Elemanları ve Buton Özelleştirmeleri (Sidebar ve Dialog) */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #121422 !important;
         border: 1px solid #232742 !important;
         border-radius: 8px !important;
     }
+    
+    /* Butonların Genel Tasarımı */
+    .stButton > button {
+        width: 100% !important;
+        border-radius: 8px !important;
+        background-color: #121422 !important;
+        border: 1px solid #232742 !important;
+        color: #f3f4f6 !important;
+        transition: all 0.2s !important;
+    }
+    
+    /* Düzenle Butonu Hover */
+    div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
+        border-color: #3b82f6 !important;
+        color: #3b82f6 !important;
+        background-color: rgba(59, 130, 246, 0.05) !important;
+    }
+    
+    /* Sil Butonu Hover */
+    div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
+        border-color: #ef4444 !important;
+        color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+    
+    /* Kenar Çubuğu (Sidebar) Cafcaflı Arka Plan Uyumu */
     [data-testid="stSidebar"] {
-        background-color: #090a0e !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.02) !important;
+        background-color: #0b0c12 !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -193,7 +205,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #525876; margin: 0; font-size: 13px;'>Zorluk seviyelerine ait belirgin renkli kart arka planları aktifleştirildi.</p>
+        <p style='color: #525876; margin: 0; font-size: 13px;'>Cafcaflı High-Tech arka plan ve zorluk rengine mühürlenmiş kart sürümü.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -227,7 +239,7 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
-# Sıralama mekanizması
+# Görevleri akıllı sıralamaya tabi tutuyoruz
 gorev_yoneticisi.gorevleri_sirala()
 
 # --- SÜTUNLARIN OLUŞTURULMASI ---
@@ -261,25 +273,29 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # Dinamik sınıf enjeksiyonu
+            # 🔥 ÇÖZÜM: RESMİ CONTAINER'I KALDIRDIK. KENDİ HTML KARTIMIZI OLUŞTURUYORUZ.
+            # Böylece `unsafe_allow_html=True` parametresi sayesinde kartın arka planı tam istediğin renk olur.
+            # (Kartın başına dinamik CSS sınıfını basıyoruz: class="card-{g.zorluk}")
             st.markdown(f'<div class="card-{g.zorluk}">', unsafe_allow_html=True)
             
-            with st.container(border=True):
-                # Kart İçeriği
-                st.markdown(f"""
-                    <div class="task-card-content">
-                        <div class="task-title-area">
-                            <span>{g.ad}</span>
-                            <span class="badge badge-{g.zorluk}">{g.zorluk}</span>
-                        </div>
-                        <div class="task-time-area">
-                            <span>📅 {g.son_tarih}</span>
-                            <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#a3a9b6'}">{kalan_metin}</span>
-                        </div>
+            # Kartın Üst Metin Alanı (HTML)
+            st.markdown(f"""
+                <div class="task-card-content">
+                    <div class="task-title-area">
+                        <span>{g.ad}</span>
+                        <span class="badge badge-{g.zorluk}">{g.zorluk}</span>
                     </div>
-                """, unsafe_allow_html=True)
-                
-                # Eylemler
+                    <div class="task-time-area">
+                        <span>📅 {g.son_tarih}</span>
+                        <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#e5e7eb'}">{kalan_metin}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # Kart Altı Kontrol Alanı (Güvenli Yerel Elemanlar)
+            # Kartın altındaki butonları kartın içine hapsetmek için st.container'ı sarmalıyoruz
+            # AMA border parametresi kullanmıyoruz, böylece arka plan HTML'imize uyum sağlıyor.
+            with st.container():
                 b1, b2 = st.columns([1, 1])
                 with b1:
                     if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
@@ -289,4 +305,5 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                         gorev_yoneticisi.gorev_sil(g.id)
                         st.rerun()
             
+            # Dinamik etiketi kapatıyoruz
             st.markdown('</div>', unsafe_allow_html=True)
