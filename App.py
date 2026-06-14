@@ -11,13 +11,13 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     
-    /* 🌌 PREMIUM DEEP SPACE ARKA PLAN efekti */
+    /* 🌌 PREMIUM DEEP SPACE ARKA PLAN EFECTİ */
     .stApp {
         background: radial-gradient(circle at 50% 0%, #1a1c29 0%, #0d0e15 70%, #07070a 100%) !important;
         background-attachment: fixed !important;
     }
     
-    /* Arka plana şık bir doku/gren katmak isteyenler için hafif bir parıltı desteği */
+    /* Arka plana şık bir doku/gren katmak için hafif bir parıltı */
     .stApp::before {
         content: "";
         position: fixed;
@@ -28,7 +28,7 @@ st.markdown("""
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
     
-    /* 3 Ana Kanban Sütunu - Arka plan değişimine uyumlu olarak buzlu cam (backdrop) güçlendirildi */
+    /* 3 Ana Kanban Sütunu - Buzlu cam etkisi (Glassmorphism) */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         background: rgba(13, 15, 24, 0.4) !important;
         backdrop-filter: blur(20px) !important;
@@ -55,7 +55,7 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Container (Kart) Çerçevesi - Arka planda sırıtmaması için koyulaştırıldı */
+    /* Container (Kart) Çerçevesi */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background: rgba(22, 25, 41, 0.7) !important;
         border: 1px solid rgba(255, 255, 255, 0.05) !important;
@@ -139,7 +139,7 @@ if "yonetici" not in st.session_state:
 
 gorev_yoneticisi = st.session_state.yonetici
 
-# --- GÖREV DÜZENLEME MODALI ---
+# --- 🎯 GÖREV DÜZENLEME MODALI (DIALOG) ---
 @st.dialog("📝 Görevi Düzenle")
 def gorev_duzenle_penceresi(gorev):
     st.markdown(f"**{gorev.ad}** görevine ait güncel bilgileri giriniz:")
@@ -172,10 +172,11 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #525876; margin: 0; font-size: 13px;'>Derinlik hissi veren gradyan arka plan entegrasyonu tamamlandı.</p>
+        <p style='color: #525876; margin: 0; font-size: 13px;'>Derinlik hissi veren gradyan arka plan ve düzenleme modülü entegreli kararlı sürüm.</p>
     </div>
 """, unsafe_allow_html=True)
 
+# Üst Metrik Çubukları
 m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#9ca3af; font-size:12px; margin-bottom:4px;'>Sprint İlerleme Durumu: {int(ilerleme_orani*100)}%</p>", unsafe_allow_html=True)
@@ -185,12 +186,11 @@ with m2:
 with m3:
     st.metric("Yapılıyor", yapilan_gorev)
 with m4:
-    st.metric("Tamamlandı", ... = tamamlanan_gorev) # Atama düzeltmesi güvenlik amaçlı direkt aktarılıyor
     st.metric("Tamamlandı", tamamlanan_gorev)
 
 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
 
-# --- SIDEBAR (KONTROL MERKEZİ) ---
+# --- PANEL KONTROL MERKEZİ (SIDEBAR) ---
 st.sidebar.markdown("<h3 style='color: #fff; font-weight: 700; margin-bottom:20px;'>Kontrol Merkezi</h3>", unsafe_allow_html=True)
 
 with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
@@ -206,6 +206,7 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
+# Görevleri akıllı sıralamaya tabi tutuyoruz
 gorev_yoneticisi.gorevleri_sirala()
 
 # --- SÜTUNLARIN OLUŞTURULMASI ---
@@ -239,7 +240,10 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
+            # RESMİ BORDER KAPSAYICISI (Elemanları tek kartta kilitler)
             with st.container(border=True):
+                
+                # Kart Üst Metin Alanı (HTML)
                 st.markdown(f"""
                     <div class="task-card-content">
                         <div class="task-title-area">
@@ -253,6 +257,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     </div>
                 """, unsafe_allow_html=True)
                 
+                # Kart Altı Kontrol Alanı (Düzenle ve Sil Yan Yana)
                 b1, b2 = st.columns([1, 1])
                 with b1:
                     if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
