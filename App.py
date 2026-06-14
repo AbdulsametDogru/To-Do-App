@@ -2,18 +2,19 @@ import streamlit as st
 from Backend import GorevYoneticisi
 import datetime
 
-# Sayfa yapılandırması
+# Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- TASARIMI MÜHÜRLEYEN VE TAŞMALARI ENGELLEYEN CSS ---
+# --- CSS: SADECE ANA SÜTUNLARI VE KARTLARI HEDEF ALAN GÜVENLİ TASARIM ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* 3 Ana Sütun Panosu */
-    [data-testid="stHorizontalBlock"] > div {
+    /* Yalnızca en üst seviyedeki 3 ana Kanban panosunu gri kutu yapıyoruz.
+       İçerideki alt sütunların tetiklenmesini engellemek için sadece ilk seviyeyi (> div) hedefledik. */
+    [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         background: rgba(255, 255, 255, 0.02) !important;
         backdrop-filter: blur(10px) !important;
         border: 1px solid rgba(255, 255, 255, 0.05) !important;
@@ -38,27 +39,29 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Saf Metin Kartı Yapısı (Butonlar Hariç Üst Kısım) */
+    /* Tek Parça Görev Kartı (Üst Kısım) */
     .task-card-top {
-        background: #131520;
-        border: 1px solid #1f2235;
-        border-top-left-radius: 14px;
-        border-top-right-radius: 14px;
-        padding: 18px 18px 5px 18px;
+        background: #131520 !important;
+        border-top: 1px solid #1f2235 !important;
+        border-left: 1px solid #1f2235 !important;
+        border-right: 1px solid #1f2235 !important;
+        border-top-left-radius: 14px !important;
+        border-top-right-radius: 14px !important;
+        padding: 18px 18px 8px 18px !important;
         position: relative;
         overflow: hidden;
     }
     
-    /* Butonları Sarmalayan ve Kartın İçinde Tutan Alt Kutu */
+    /* Tek Parça Görev Kartı (Butonların Durduğu Alt Kısım) */
     .task-card-bottom {
-        background: #131520;
-        border-left: 1px solid #1f2235;
-        border-right: 1px solid #1f2235;
-        border-bottom: 1px solid #1f2235;
-        border-bottom-left-radius: 14px;
-        border-bottom-right-radius: 14px;
-        padding: 0px 18px 15px 18px;
-        margin-bottom: 20px;
+        background: #131520 !important;
+        border-bottom: 1px solid #1f2235 !important;
+        border-left: 1px solid #1f2235 !important;
+        border-right: 1px solid #1f2235 !important;
+        border-bottom-left-radius: 14px !important;
+        border-bottom-right-radius: 14px !important;
+        padding: 0px 18px 18px 18px !important;
+        margin-bottom: 20px !important;
     }
     
     .indicator-Zor { background: #ef4444; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
@@ -72,9 +75,9 @@ st.markdown("""
     .badge-Orta { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
     .badge-Kolay { background: rgba(16, 185, 129, 0.12); color: #34d399; }
     
-    .task-time { color: #9ca3af; font-size: 12px; display: flex; justify-content: space-between; }
+    .task-time { color: #9ca3af; font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 5px; }
     
-    /* Streamlit Yerel Elemanlarını Kart İçine Sabitleme */
+    /* Kart İçindeki Streamlit Bileşenlerinin Tasarımı */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #1a1d2e !important;
         border: 1px solid #2d314e !important;
@@ -95,13 +98,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Oturum yönetimi
+# Oturum yönetimi hafıza kontrolü
 if "yonetici" not in st.session_state:
     st.session_state.yonetici = GorevYoneticisi()
 
 gorev_yoneticisi = st.session_state.yonetici
 
-# --- ÜST PANEL ANALİTİKLERİ ---
+# --- ÜST SPRINT ANALİTİĞİ ---
 toplam_gorev = len(gorev_yoneticisi.gorevler)
 tamamlanan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Tamamlandı"])
 yapilan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Yapılıyor"])
@@ -110,11 +113,11 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Streamlit elementleri ile tam uyumlu, kaymasız kart mimarisi.</p>
+        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Hizalama ve çakışma sorunları giderilmiş kararlı sürüm.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Üst Analitik Çubukları
+# Üst Bilgiler
 m1, m2, m3, m4 = st.columns([2, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#9ca3af; font-size:12px; margin-bottom:4px;'>Sprint İlerleme Durumu: {int(ilerleme_orani*100)}%</p>", unsafe_allow_html=True)
@@ -128,7 +131,7 @@ with m4:
 
 st.markdown("<div style='margin-bottom: 25px;'></div>", unsafe_allow_html=True)
 
-# --- PANEL KONTROL MERKEZİ (SIDEBAR) ---
+# --- SIDEBAR (KONTROL MERKEZİ) ---
 st.sidebar.markdown("<h3 style='color: #fff; font-weight: 700; margin-bottom:20px;'>Kontrol Merkezi</h3>", unsafe_allow_html=True)
 arama_sorgusu = st.sidebar.text_input("Görevlerde ara...", value="", placeholder="Kelime yazın...").strip().lower()
 filtre_zorluk = st.sidebar.multiselect("Önceliğe Göre Filtrele", ["Kolay", "Orta", "Zor"], default=["Kolay", "Orta", "Zor"])
@@ -148,15 +151,14 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
-# --- FİLTRELEME VE AKILLI SIRALAMA ---
+# --- FİLTRELEME ÇALIŞTIRMA ---
 gorev_yoneticisi.gorevleri_sirala()
 gosterilecek_gorevler = []
-
 for g in gorev_yoneticisi.gorevler:
     if (arama_sorgusu in g.ad.lower()) and (g.zorluk in filtre_zorluk):
         gosterilecek_gorevler.append(g)
 
-# --- SÜTUNLARIN OLUŞTURULMASI ---
+# --- KANBAN SÜTUNLARINI OLUŞTURMA ---
 sutun1, sutun2, sutun3 = st.columns(3)
 
 sutun_ayarlari = {
@@ -170,6 +172,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
     sayac = len(sutun_gorevleri)
     
     with st_sutun:
+        # Sütun Başlığı
         st.markdown(f"""
             <div class="column-header" style="background: {renk};">
                 <span>{baslik}</span>
@@ -177,6 +180,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             </div>
         """, unsafe_allow_html=True)
         
+        # Görev Kartları Döngüsü
         for g in sutun_gorevleri:
             kalan_gun = g.kalan_gun_hesapla()
             
@@ -187,41 +191,38 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # --- TEK PARÇA KONTROL KAPSAYICISI (CONTAINER) ---
-            # Her görevi izole bir kutuya alıyoruz ki altındaki butonlar başka yere kaymasın
-            with st.container():
-                # 1. Aşama: Kartın Üst Bilgileri (HTML)
-                st.markdown(f"""
-                    <div class="task-card-top">
-                        <div class="indicator-{g.zorluk}"></div>
-                        <div class="task-title">
-                            {g.ad}
-                            <span class="badge badge-{g.zorluk}">{g.zorluk}</span>
-                        </div>
-                        <div class="task-time">
-                            <span>📅 {g.son_tarih}</span>
-                            <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#9ca3af'}">{kalan_metin}</span>
-                        </div>
+            # 1. KISIM: Kartın Üst Metin Bilgileri
+            st.markdown(f"""
+                <div class="task-card-top">
+                    <div class="indicator-{g.zorluk}"></div>
+                    <div class="task-title">
+                        {g.ad}
+                        <span class="badge badge-{g.zorluk}">{g.zorluk}</span>
                     </div>
-                """, unsafe_allow_html=True)
+                    <div class="task-time">
+                        <span>📅 {g.son_tarih}</span>
+                        <span style="font-weight:600; color:{'#f87171' if kalan_gun<=0 else '#9ca3af'}">{kalan_metin}</span>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+            
+            # 2. KISIM: Kartın Buton Alanı (Görsel olarak üst tarafa yapışık, tek parça kart)
+            st.markdown('<div class="task-card-bottom">', unsafe_allow_html=True)
+            
+            # Kaymayı engellemek için st.columns yerine tek satırda çalışan esnek bir form veya alan mimarisi
+            tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
+            tüm_durumlar.remove(g.durum)
+            
+            yeni_durum = st.selectbox(
+                "Değiştir", [g.durum] + tüm_durumlar, key=f"mv_{g.id}", label_visibility="collapsed"
+            )
+            if yeni_durum != g.durum:
+                g.durum = yeni_durum
+                gorev_yoneticisi.gorevleri_kaydet()
+                st.rerun()
                 
-                # 2. Aşama: Kartın Alt Bölümü (CSS ile üst karta yapışık ve butonları sarmalıyor)
-                st.markdown('<div class="task-card-bottom">', unsafe_allow_html=True)
+            if st.button("🗑️ Görevi Sil", key=f"rm_{g.id}"):
+                gorev_yoneticisi.gorev_sil(g.id)
+                st.rerun()
                 
-                c1, c2 = st.columns([4, 1])
-                with c1:
-                    tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-                    tüm_durumlar.remove(g.durum)
-                    yeni_durum = st.selectbox(
-                        "Değiştir", [g.durum] + tüm_durumlar, key=f"mv_{g.id}", label_visibility="collapsed"
-                    )
-                    if yeni_durum != g.durum:
-                        g.durum = yeni_durum
-                        gorev_yoneticisi.gorevleri_kaydet()
-                        st.rerun()
-                with c2:
-                    if st.button("🗑️", key=f"rm_{g.id}"):
-                        gorev_yoneticisi.gorev_sil(g.id)
-                        st.rerun()
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown('</div>', unsafe_allow_html=True)
