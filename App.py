@@ -61,26 +61,31 @@ st.markdown("""
 }
 .col-badge { background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 18px; font-size: 11px; }
 
-/* KART */
+/* ====== KART BUTONU — tüm kart tıklanabilir ====== */
+.stButton > button {
+    all: unset !important;
+    display: block !important;
+    width: 100% !important;
+    cursor: pointer !important;
+}
+
+/* Kart sarmalayıcı */
 .task-card {
     border-radius: 14px;
     padding: 16px;
     margin-bottom: 10px;
     border: 1px solid transparent;
-    cursor: pointer;
-    transition: transform 0.15s ease, filter 0.15s ease;
-    user-select: none;
-    position: relative;
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
 }
 .task-card:hover { transform: translateY(-2px); filter: brightness(1.1); }
 .task-card.Zor   { background: linear-gradient(135deg,#7f1d1d,#450a0a); border-color: rgba(239,68,68,0.45); box-shadow: 0 8px 25px rgba(239,68,68,0.2); }
 .task-card.Orta  { background: linear-gradient(135deg,#78350f,#431407); border-color: rgba(245,158,11,0.45); box-shadow: 0 8px 25px rgba(245,158,11,0.15); }
 .task-card.Kolay { background: linear-gradient(135deg,#064e3b,#022c22); border-color: rgba(16,185,129,0.40); box-shadow: 0 8px 25px rgba(16,185,129,0.15); }
 
-/* Açık kart — parlak kenar */
-.task-card.acik.Zor   { border-color: rgba(239,68,68,0.85) !important; box-shadow: 0 0 20px rgba(239,68,68,0.35) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
-.task-card.acik.Orta  { border-color: rgba(245,158,11,0.85) !important; box-shadow: 0 0 20px rgba(245,158,11,0.30) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
-.task-card.acik.Kolay { border-color: rgba(16,185,129,0.85) !important; box-shadow: 0 0 20px rgba(16,185,129,0.30) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
+.task-card.acik.Zor   { border-color: rgba(239,68,68,0.9) !important; box-shadow: 0 0 22px rgba(239,68,68,0.4) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
+.task-card.acik.Orta  { border-color: rgba(245,158,11,0.9) !important; box-shadow: 0 0 22px rgba(245,158,11,0.35) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
+.task-card.acik.Kolay { border-color: rgba(16,185,129,0.9) !important; box-shadow: 0 0 22px rgba(16,185,129,0.35) !important; border-radius: 14px 14px 0 0 !important; margin-bottom: 0 !important; }
 
 .task-title {
     color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px;
@@ -94,51 +99,42 @@ st.markdown("""
 }
 .task-meta { color: rgba(255,255,255,0.72); font-size: 12px; display: flex; justify-content: space-between; }
 .overdue { color: #fca5a5 !important; font-weight: 700; }
-.tap-hint { color: rgba(255,255,255,0.22); font-size: 10px; text-align: right; margin-top: 10px; letter-spacing: 0.4px; }
+.tap-hint { color: rgba(255,255,255,0.25); font-size: 10px; text-align: right; margin-top: 10px; }
 
-/* AÇILIR EYLEM PANELİ */
-.action-panel {
+/* ====== MODERN LİSTE MENÜ ====== */
+.action-menu {
     border-radius: 0 0 14px 14px;
     border: 1px solid transparent;
     border-top: none;
     overflow: hidden;
     margin-bottom: 10px;
 }
-.action-panel.Zor   { background: rgba(80,10,10,0.75);  border-color: rgba(239,68,68,0.85); }
-.action-panel.Orta  { background: rgba(70,25,5,0.75);   border-color: rgba(245,158,11,0.85); }
-.action-panel.Kolay { background: rgba(3,35,25,0.75);   border-color: rgba(16,185,129,0.85); }
+.action-menu.Zor   { background: rgba(60,5,5,0.85);  border-color: rgba(239,68,68,0.9); }
+.action-menu.Orta  { background: rgba(55,18,3,0.85); border-color: rgba(245,158,11,0.9); }
+.action-menu.Kolay { background: rgba(2,28,20,0.85); border-color: rgba(16,185,129,0.9); }
 
-.action-panel .stButton > button {
+/* Menü içindeki her item — stButton override */
+.action-menu .stButton > button {
+    all: unset !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
     width: 100% !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    border-top: 1px solid rgba(255,255,255,0.07) !important;
+    padding: 13px 18px !important;
     color: rgba(255,255,255,0.85) !important;
-    font-weight: 600 !important;
-    font-size: 13px !important;
-    padding: 12px 16px !important;
-    text-align: left !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
     transition: background 0.12s ease !important;
-    display: block !important;
+    box-sizing: border-box !important;
 }
-.action-panel .stButton > button:hover {
-    background: rgba(255,255,255,0.09) !important;
+.action-menu .stButton > button:hover {
+    background: rgba(255,255,255,0.08) !important;
     color: #fff !important;
 }
-
-/* Kart tıklama butonu — görünmez overlay */
-.card-click-btn .stButton > button {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    opacity: 0 !important;
-    cursor: pointer !important;
-    border: none !important;
-    background: transparent !important;
-    border-radius: 14px !important;
-    z-index: 10 !important;
+.action-menu .stButton:last-child > button {
+    border-bottom: none !important;
 }
 
 /* Modal */
@@ -152,6 +148,11 @@ div[role="dialog"] .stButton button {
     background: linear-gradient(90deg,#7c3aed,#a855f7) !important;
     box-shadow: 0 0 16px rgba(139,92,246,0.35) !important;
     border: none !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    width: 100% !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -185,7 +186,6 @@ def gorev_duzenle(gorev):
             st.rerun()
 
 
-# Metrikler
 toplam     = len(yon.gorevler)
 tamamlanan = len([x for x in yon.gorevler if x.durum == "Tamamlandı"])
 yapilan    = len([x for x in yon.gorevler if x.durum == "Yapılıyor"])
@@ -204,13 +204,12 @@ m1, m2, m3, m4 = st.columns([2.5, 1, 1, 1])
 with m1:
     st.markdown(f"<p style='color:#94a3b8;font-size:12px;margin-bottom:5px;'>Sprint İlerleme: {int(ilerleme*100)}%</p>", unsafe_allow_html=True)
     st.progress(ilerleme)
-with m2: st.metric("Toplam",  toplam)
-with m3: st.metric("Aktif",   yapilan)
-with m4: st.metric("Biten",   tamamlanan)
+with m2: st.metric("Toplam", toplam)
+with m3: st.metric("Aktif",  yapilan)
+with m4: st.metric("Biten",  tamamlanan)
 
 st.markdown("<div style='margin-bottom:28px;'></div>", unsafe_allow_html=True)
 
-# Sidebar
 st.sidebar.markdown("<h2 style='color:#fff;font-weight:800;font-size:20px;'>Kontrol Merkezi</h2>", unsafe_allow_html=True)
 with st.sidebar.form("gorev_ekle", clear_on_submit=True):
     st.markdown("<p style='color:#a855f7;font-weight:600;margin-bottom:4px;'>Yeni Görev Ekle</p>", unsafe_allow_html=True)
@@ -225,7 +224,6 @@ with st.sidebar.form("gorev_ekle", clear_on_submit=True):
 
 yon.gorevleri_sirala()
 
-# Kanban
 s1, s2, s3 = st.columns(3)
 kolonlar = {
     "Yapılacak":  (s1, "Yapılacaklar", "linear-gradient(90deg,#4c1d95,#6d28d9)"),
@@ -243,15 +241,16 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
 
         for g in filtre:
             k = g.kalan_gun_hesapla()
-            if k < 0:   k_metin, k_cls = f"Gecikti ({abs(k)}g)", "overdue"
+            if k < 0:    k_metin, k_cls = f"Gecikti ({abs(k)}g)", "overdue"
             elif k == 0: k_metin, k_cls = "Son Gün", "overdue"
             else:         k_metin, k_cls = f"{k} gün kaldı", ""
 
-            acik = (st.session_state.acik_kart == g.id)
+            acik     = (st.session_state.acik_kart == g.id)
             acik_cls = "acik" if acik else ""
+            hint     = "▲ kapat" if acik else "tıkla →"
 
-            # Kart HTML
-            st.markdown(f"""
+            # Kart tamamen st.button — HTML label içinde
+            kart_html = f"""
             <div class='task-card {g.zorluk} {acik_cls}'>
               <div class='task-title'>
                 <span>{g.ad}</span>
@@ -261,25 +260,23 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
                 <span>📅 {g.son_tarih}</span>
                 <span class='{k_cls}'>{k_metin}</span>
               </div>
-              {"<div class='tap-hint'>▲ kapat</div>" if acik else "<div class='tap-hint'>tıkla →</div>"}
+              <div class='tap-hint'>{hint}</div>
             </div>
-            """, unsafe_allow_html=True)
-
-            # Görünmez tıklama butonu — kart HTML'inin hemen ardından gelir,
-            # CSS ile absolute overlay yaparak kartın üstünü kaplar
-            st.markdown("<div class='card-click-btn' style='position:relative;height:0;overflow:visible;'>", unsafe_allow_html=True)
-            if st.button(" ", key=f"toggle_{g.id}"):
+            """
+            if st.button(kart_html, key=f"kart_{g.id}", unsafe_allow_html=True):
                 st.session_state.acik_kart = None if acik else g.id
                 st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
 
-            # Açılır eylem paneli
+            # Açılır liste menü
             if acik:
-                st.markdown(f"<div class='action-panel {g.zorluk}'>", unsafe_allow_html=True)
-                if st.button("✏️  Düzenle", key=f"edit_{g.id}"):
+                st.markdown(f"<div class='action-menu {g.zorluk}'>", unsafe_allow_html=True)
+
+                if st.button("✏️   Düzenle", key=f"edit_{g.id}"):
                     gorev_duzenle(g)
-                if st.button("🗑️  Sil", key=f"rm_{g.id}"):
+
+                if st.button("🗑️   Sil", key=f"rm_{g.id}"):
                     yon.gorev_sil(g.id)
                     st.session_state.acik_kart = None
                     st.rerun()
+
                 st.markdown("</div>", unsafe_allow_html=True)
