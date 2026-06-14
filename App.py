@@ -5,14 +5,14 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- CSS: SADECE ANA PANO SÜTUNLARINI VÖ ÖZEL METİNLERİ HEDEF ALAN TASARIM ---
+# --- CSS: ANA SÜTUNLAR VE KART BİLEŞENLERİ ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* Yalnızca en dıştaki 3 ana Kanban sütununu gri kutu yapıyoruz */
+    /* 3 Ana Kanban Sütunu */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         background: rgba(255, 255, 255, 0.02) !important;
         backdrop-filter: blur(10px) !important;
@@ -38,7 +38,7 @@ st.markdown("""
         justify-content: space-between;
     }
     
-    /* Container (Kart) Çerçeve Özelleştirmesi */
+    /* Container (Kart) Çerçevesi */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background: #131520 !important;
         border: 1px solid #1f2235 !important;
@@ -47,7 +47,6 @@ st.markdown("""
         padding: 0px !important;
     }
     
-    /* Kart İçeriği Esneklik Ayarları */
     .task-card-content {
         padding: 14px 14px 4px 14px;
         position: relative;
@@ -77,21 +76,34 @@ st.markdown("""
         margin-bottom: 12px;
     }
     
-    /* Streamlit Bileşenlerini Kart Yapısına Sabitleme */
+    /* Form Elemanları ve Buton Özelleştirmeleri */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #1a1d2e !important;
         border: 1px solid #2d314e !important;
         border-radius: 8px !important;
     }
+    
+    /* Butonların Genel Tasarımı */
     .stButton > button {
         width: 100% !important;
+        border-radius: 8px !important;
         background-color: #1a1d2e !important;
         border: 1px solid #2d314e !important;
-        border-radius: 8px !important;
-        color: #ef4444 !important;
+        color: #f3f4f6 !important;
+        transition: all 0.2s !important;
     }
-    .stButton > button:hover {
+    
+    /* Düzenle Butonu Hover */
+    div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
+        border-color: #3b82f6 !important;
+        color: #3b82f6 !important;
+        background-color: rgba(59, 130, 246, 0.05) !important;
+    }
+    
+    /* Sil Butonu Hover */
+    div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
         border-color: #ef4444 !important;
+        color: #ef4444 !important;
         background-color: rgba(239, 68, 68, 0.05) !important;
     }
     </style>
@@ -103,6 +115,31 @@ if "yonetici" not in st.session_state:
 
 gorev_yoneticisi = st.session_state.yonetici
 
+# --- 🎯 GÖREV DÜZENLEME MODALI (DIALOG MERKEZİ) ---
+@st.dialog("📝 Görevi Düzenle")
+def gorev_duzenle_penceresi(gorev):
+    st.markdown(f"**{gorev.ad}** görevine ait güncel bilgileri giriniz:")
+    
+    yeni_ad = st.text_input("Görev Adı", value=gorev.ad)
+    yeni_durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"], index=["Yapılacak", "Yapılıyor", "Tamamlandı"].index(gorev.durum))
+    yeni_zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(gorev.zorluk))
+    
+    # Mevcut tarihi datetime nesnesine çevirip date_input'a paslama
+    mevcut_tarih = datetime.datetime.strptime(gorev.son_tarih, "%d/%m/%Y").date()
+    yeni_son_tarih = st.date_input("Son Tarih", value=mevcut_tarih)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    if st.button("💾 Değişiklikleri Kaydet", type="primary"):
+        if yeni_ad.strip():
+            gorev.ad = yeni_ad
+            gorev.durum = yeni_durum
+            gorev.zorluk = yeni_zorluk
+            gorev.son_tarih = yeni_son_tarih.strftime("%d/%m/%Y")
+            
+            gorev_yoneticisi.gorevleri_kaydet()
+            st.rerun()
+
 # --- ÜST PANEL ANALİTİKLERİ ---
 toplam_gorev = len(gorev_yoneticisi.gorevler)
 tamamlanan_gorev = len([x for x in gorev_yoneticisi.gorevler if x.durum == "Tamamlandı"])
@@ -112,7 +149,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 20px;'>
         <h1 style='color: #fff; font-weight: 700; font-size: 26px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Bileşenlerin container yapısıyla mühürlendiği sade ve kararlı sürüm.</p>
+        <p style='color: #4b5563; margin: 0; font-size: 13px;'>Kalem butonu ve akıllı düzenleme modülü entegre edilmiş kararlı sürüm.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -146,7 +183,6 @@ with st.sidebar.form("gorev_ekle_formu", clear_on_submit=True):
             gorev_yoneticisi.gorev_ekle(ad, durum, zorluk, son_tarih_str)
             st.rerun()
 
-# Görevleri akıllı sıralamaya tabi tutuyoruz
 gorev_yoneticisi.gorevleri_sirala()
 
 # --- SÜTUNLARIN OLUŞTURULMASI ---
@@ -159,7 +195,6 @@ sutun_ayarlari = {
 }
 
 for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
-    # Doğrudan yöneticideki tüm görevleri filtrelemeden çekiyoruz
     sutun_gorevleri = [x for x in gorev_yoneticisi.gorevler if x.durum == anahtar]
     sayac = len(sutun_gorevleri)
     
@@ -181,10 +216,10 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # RESMİ BORDER KAPSAYICISI (Elemanları tek kartta kilitler)
+            # RESMİ BORDER KAPSAYICISI (Kart yapısı)
             with st.container(border=True):
                 
-                # Kart Üst Metin Alanı (HTML)
+                # Kart Üst Metin Alanı
                 st.markdown(f"""
                     <div class="task-card-content">
                         <div class="task-title-area">
@@ -198,20 +233,13 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     </div>
                 """, unsafe_allow_html=True)
                 
-                # Kart Altı Kontrol Alanı (Güvenli Yerel Elemanlar)
-                padding_cols = st.columns([1])[0]
-                with padding_cols:
-                    tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-                    tüm_durumlar.remove(g.durum)
-                    
-                    yeni_durum = st.selectbox(
-                        "Durum Değiştir", [g.durum] + tüm_durumlar, key=f"mv_{g.id}", label_visibility="collapsed"
-                    )
-                    if yeni_durum != g.durum:
-                        g.durum = yeni_durum
-                        gorev_yoneticisi.gorevleri_kaydet()
-                        st.rerun()
-                        
-                    if st.button("🗑️ Görevi Sil", key=f"rm_{g.id}"):
+                # Kart Altı Eylem Alanı: Düzenle ve Sil Butonları Yan Yana
+                # st.columns alanını çok dar tutup kartın dibine mühürledik.
+                b1, b2 = st.columns([1, 1])
+                with b1:
+                    if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
+                        gorev_duzenle_penceresi(g)
+                with b2:
+                    if st.button("🗑️ Sil", key=f"rm_{g.id}"):
                         gorev_yoneticisi.gorev_sil(g.id)
                         st.rerun()
