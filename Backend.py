@@ -78,3 +78,32 @@ class GorevYoneticisi:
         """Belirtilen ID'ye sahip görevi siler"""
         self.gorevler = [gorev for gorev in self.gorevler if gorev.id != gorev_id]
         self.gorevleri_kaydet()
+
+    def gorev_guncelle(self, gorev_id, ad=None, durum=None, zorluk=None, son_tarih=None):
+        """Belirtilen ID'ye sahip görevi günceller"""
+        for gorev in self.gorevler:
+            if gorev.id == gorev_id:
+                if ad is not None:
+                    gorev.ad = ad
+                if durum is not None:
+                    gorev.durum = durum
+                if zorluk is not None:
+                    gorev.zorluk = zorluk
+                if son_tarih is not None:
+                    gorev.son_tarih = son_tarih
+                self.gorevleri_kaydet()
+                return gorev
+        return None
+    
+    def gorevleri_sirala(self, kriter="ad"):
+        """Görevleri belirtilen kritere göre sıralar"""
+        if kriter == "ad":
+            return sorted(self.gorevler, key=lambda x: x.ad)
+        elif kriter == "durum":
+            return sorted(self.gorevler, key=lambda x: x.durum)
+        elif kriter == "son_tarih":
+            return sorted(self.gorevler, key=lambda x: datetime.datetime.strptime(x.son_tarih, "%d/%m/%Y"))
+        elif kriter == "zorluk":
+            return sorted(self.gorevler, key=lambda x: x.zorluk)
+        else:
+            return self.gorevler
