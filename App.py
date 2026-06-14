@@ -5,23 +5,24 @@ import datetime
 # Sayfa genişliği, başlık ve tema sabitleme
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- ULTRA PREMIUM CSS (GLASSMORPHISM & INTERACTIVE UI) ---
+# --- ULTRA PREMIUM CSS (YERLEŞİK SÜTUNLARI ÖZELLEŞTİRME) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* Kanban Sütun Yapısı (Kartları Kapsayan Dış Kutu) */
-    .kanban-column {
-        background: rgba(255, 255, 255, 0.02);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 16px;
-        padding: 20px;
-        min-height: 65vh;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        margin-bottom: 20px;
+    /* Streamlit'in kendi oluşturduğu sütun alanlarını (st.columns) yakalıyoruz.
+       Böylece HTML açıp kapatma hatası (div kayması) tamamen engelleniyor.
+    */
+    [data-testid="stHorizontalBlock"] > div {
+        background: rgba(255, 255, 255, 0.02) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.05) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+        min-height: 70vh !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
     }
     
     /* Sütun Başlıkları */
@@ -171,7 +172,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
     sayac = len(sutun_gorevleri)
     
     with st_sutun:
-        # Sütun Başlığı
+        # Sütun Başlığı (Artık doğrudan sütunun en üst elemanı)
         st.markdown(f"""
             <div class="column-header" style="background: {renk};">
                 <span>{baslik}</span>
@@ -179,10 +180,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             </div>
         """, unsafe_allow_html=True)
         
-        # Kapsayıcı Sütun Kutusunu Başlatıyoruz
-        st.markdown('<div class="kanban-column">', unsafe_allow_html=True)
-        
-        # Görev Kartlarını Kapsayıcının İçine Basıyoruz
+        # Görev Kartları (Doğrudan sütun bileşeninin içine ekleniyor)
         for g in sutun_gorevleri:
             kalan_gun = g.kalan_gun_hesapla()
             
@@ -193,7 +191,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # HTML Kart Gövdesi (Sütun Kutusunun İçinde Kalacak Şekilde)
+            # HTML Kart Gövdesi
             st.markdown(f"""
                 <div class="task-card">
                     <div class="indicator-{g.zorluk}"></div>
@@ -208,7 +206,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                 </div>
             """, unsafe_allow_html=True)
             
-            # Kart Altı Butonlar (Yine Sütun İçinde Hizalı)
+            # Kart Altı İşlevsel Butonlar
             c1, c2 = st.columns([5, 1])
             with c1:
                 tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
@@ -226,6 +224,3 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     st.rerun()
             
             st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
-            
-        # Kapsayıcı Sütun Kutusunu Kapatıyoruz (Kartlar bittikten sonra kapandığı için kartlar üstte kalıyor)
-        st.markdown('</div>', unsafe_allow_html=True)
