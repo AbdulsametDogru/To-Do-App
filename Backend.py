@@ -10,17 +10,16 @@ class Gorev:
         self.ad = ad
         self.durum = durum
         self.zorluk = zorluk
-        self.son_tarih = son_tarih #GG/AA/YYYY formatında
+        self.son_tarih = son_tarih  # GG/AA/YYYY formatında
 
-    def kalan_gun(self):
-        """Görevin kalan gün sayısını hesaplar"""
+    def kalan_gun_hesapla(self):
+        """Görevin kalan gün sayısını tam sayı olarak hesaplar"""
         try:
-            son_tarih_dt = datetime.datetime.strptime(self.son_tarih, "%d/%m/%Y")
-            bugun = datetime.datetime.now()
-            kalan = (son_tarih_dt - bugun).days
-            return kalan
+            son_tarih_dt = datetime.datetime.strptime(self.son_tarih, "%d/%m/%Y").date()
+            bugun = datetime.date.today()
+            return (son_tarih_dt - bugun).days
         except ValueError:
-            return "Geçersiz tarih formatı. GG/AA/YYYY formatında olmalıdır."
+            return 0
         
     def to_dict(self):
         """Görevi sözlük formatına çevirir"""
@@ -31,6 +30,7 @@ class Gorev:
             "zorluk": self.zorluk,
             "son_tarih": self.son_tarih
         }
+
     @classmethod
     def from_dict(cls, data):
         """Sözlükten Görev nesnesi oluşturur"""
@@ -52,7 +52,7 @@ class GorevYoneticisi:
         """Görevleri JSON dosyasından yükler"""
         try:
             if os.path.exists(self.dosya_adi):
-                with open(self.dosya_adi, "r") as f:
+                with open(self.dosya_adi, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     return [Gorev.from_dict(gorev) for gorev in data]
         except Exception as e:
@@ -62,8 +62,8 @@ class GorevYoneticisi:
     def gorevleri_kaydet(self):
         """Görevleri JSON dosyasına kaydeder"""
         try:
-            with open(self.dosya_adi, "w") as f:
-                json.dump([gorev.to_dict() for gorev in self.gorevler], f, indent=4)
+            with open(self.dosya_adi, "w", encoding="utf-8") as f:
+                json.dump([gorev.to_dict() for gorev in self.gorevler], f, indent=4, ensure_ascii=False)
         except Exception as e:
             print(f"Hata oluştu: {e}")
 
@@ -79,31 +79,12 @@ class GorevYoneticisi:
         self.gorevler = [gorev for gorev in self.gorevler if gorev.id != gorev_id]
         self.gorevleri_kaydet()
 
-    def gorev_guncelle(self, gorev_id, ad=None, durum=None, zorluk=None, son_tarih=None):
-        """Belirtilen ID'ye sahip görevi günceller"""
-        for gorev in self.gorevler:
-            if gorev.id == gorev_id:
-                if ad is not None:
-                    gorev.ad = ad
-                if durum is not None:
-                    gorev.durum = durum
-                if zorluk is not None:
-                    gorev.zorluk = zorluk
-                if son_tarih is not None:
-                    gorev.son_tarih = son_tarih
-                self.gorevleri_kaydet()
-                return gorev
-        return None
-    
-    def gorevleri_sirala(self, kriter="ad"):
-        """Görevleri belirtilen kritere göre sıralar"""
-        if kriter == "ad":
-            return sorted(self.gorevler, key=lambda x: x.ad)
-        elif kriter == "durum":
-            return sorted(self.gorevler, key=lambda x: x.durum)
-        elif kriter == "son_tarih":
-            return sorted(self.gorevler, key=lambda x: datetime.datetime.strptime(x.son_tarih, "%d/%m/%Y"))
-        elif kriter == "zorluk":
-            return sorted(self.gorevler, key=lambda x: x.zorluk)
-        else:
-            return self.gorevler
+    def gorevleri_sirala(self):
+        """Görevleri önce yakın tarihe, tarihler eşitse zorluk derecesine göre akıllı sıralar"""
+        zorluk_map = {"Zor": 3, "Orta": 2, "Kolay": 1}
+        self.gorevler.sort(
+            key=lambda x: (
+                datetime.datetime.strptime(x.son_tarih, "%d/%m/%Y"),
+                -zorluk_map.get(x.zorluk, 0)
+            )
+        )
