@@ -6,7 +6,7 @@ import datetime
 class Gorev:
     """Gorev sınıfı görevlerin özelliklerini tanımlar"""
     def __init__(self, ad, durum, zorluk, son_tarih, id=None):
-        self.id = str(uuid.uuid4())
+        self.id = id if id is not None else str(uuid.uuid4())
         self.ad = ad
         self.durum = durum
         self.zorluk = zorluk
@@ -50,10 +50,13 @@ class GorevYoneticisi:
 
     def gorevleri_yukle(self):
         """Görevleri JSON dosyasından yükler"""
-        if os.path.exists(self.dosya_adi):
-            with open(self.dosya_adi, "r") as f:
-                data = json.load(f)
-                return [Gorev.from_dict(gorev) for gorev in data]
+        try:
+            if os.path.exists(self.dosya_adi):
+                with open(self.dosya_adi, "r") as f:
+                    data = json.load(f)
+                    return [Gorev.from_dict(gorev) for gorev in data]
+        except Exception as e:
+            print(f"Hata oluştu: {e}")
         return []
 
     def gorevleri_kaydet(self):
@@ -63,3 +66,15 @@ class GorevYoneticisi:
                 json.dump([gorev.to_dict() for gorev in self.gorevler], f, indent=4)
         except Exception as e:
             print(f"Hata oluştu: {e}")
+
+    def gorev_ekle(self, ad, durum, zorluk, son_tarih):
+        """Yeni bir görev ekler"""
+        yeni_gorev = Gorev(ad, durum, zorluk, son_tarih)
+        self.gorevler.append(yeni_gorev)
+        self.gorevleri_kaydet()
+        return yeni_gorev
+    
+    def gorev_sil(self, gorev_id):
+        """Belirtilen ID'ye sahip görevi siler"""
+        self.gorevler = [gorev for gorev in self.gorevler if gorev.id != gorev_id]
+        self.gorevleri_kaydet()
