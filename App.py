@@ -12,7 +12,7 @@ st.markdown("""
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     .main { background: #090a0f; }
     
-    /* Kanban Sütun Yapısı */
+    /* Kanban Sütun Yapısı (Kartları Kapsayan Dış Kutu) */
     .kanban-column {
         background: rgba(255, 255, 255, 0.02);
         backdrop-filter: blur(10px);
@@ -21,6 +21,7 @@ st.markdown("""
         padding: 20px;
         min-height: 65vh;
         box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        margin-bottom: 20px;
     }
     
     /* Sütun Başlıkları */
@@ -70,7 +71,7 @@ st.markdown("""
     
     .task-time { color: #9ca3af; font-size: 12px; margin-top: 14px; display: flex; justify-content: space-between; }
     
-    /* Streamlit Seçim Kutusu ve Buton Özelleştirmeleri */
+    /* Seçim Kutusu ve Buton Özelleştirmeleri */
     .stSelectbox div[data-baseweb="select"] {
         background-color: #131520 !important;
         border: 1px solid #1f2235 !important;
@@ -170,6 +171,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
     sayac = len(sutun_gorevleri)
     
     with st_sutun:
+        # Sütun Başlığı
         st.markdown(f"""
             <div class="column-header" style="background: {renk};">
                 <span>{baslik}</span>
@@ -177,8 +179,10 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             </div>
         """, unsafe_allow_html=True)
         
+        # Kapsayıcı Sütun Kutusunu Başlatıyoruz
         st.markdown('<div class="kanban-column">', unsafe_allow_html=True)
         
+        # Görev Kartlarını Kapsayıcının İçine Basıyoruz
         for g in sutun_gorevleri:
             kalan_gun = g.kalan_gun_hesapla()
             
@@ -189,7 +193,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # HTML Kart Yapısı
+            # HTML Kart Gövdesi (Sütun Kutusunun İçinde Kalacak Şekilde)
             st.markdown(f"""
                 <div class="task-card">
                     <div class="indicator-{g.zorluk}"></div>
@@ -204,7 +208,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                 </div>
             """, unsafe_allow_html=True)
             
-            # Kart Altı İşlevsel Buton Alanı
+            # Kart Altı Butonlar (Yine Sütun İçinde Hizalı)
             c1, c2 = st.columns([5, 1])
             with c1:
                 tüm_durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
@@ -221,6 +225,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     gorev_yoneticisi.gorev_sil(g.id)
                     st.rerun()
             
-            st.markdown("<div style='margin-bottom: 4px;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
             
+        # Kapsayıcı Sütun Kutusunu Kapatıyoruz (Kartlar bittikten sonra kapandığı için kartlar üstte kalıyor)
         st.markdown('</div>', unsafe_allow_html=True)
