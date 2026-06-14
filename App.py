@@ -8,19 +8,68 @@ st.title("Görev Yönetimi")
 # Kanban tarzında 3 sütunlu CSS stillerini ekle
 st.markdown("""
     <style>
-        .kanban-column {
-            display: inline-block;
-            vertical-align: top;
-            width: 30%;
-            margin-right: 1%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .kanban-column h2 {
-            text-align: center;
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+    .main { background: #090a0f; }
+    
+    /* Kanban Sütun Yapısı */
+    .kanban-column {
+        background: rgba(255, 255, 255, 0.02);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        padding: 20px;
+        min-height: 65vh;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Sütun Başlıkları */
+    .column-header {
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    /* Premium Kart Tasarımları */
+    .task-card {
+        background: #131520;
+        border: 1px solid #1f2235;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 15px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .task-card:hover {
+        border-color: #3b82f6;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Sol Renk İndikatörleri */
+    .indicator-Zor { background: #ef4444; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
+    .indicator-Orta { background: #f59e0b; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
+    .indicator-Kolay { background: #10b981; width: 4px; position: absolute; left: 0; top: 0; bottom: 0; }
+    
+    .task-title { color: #f3f4f6; font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+    
+    /* Rozet Tasarımları */
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; margin-left: 6px; }
+    .badge-Zor { background: rgba(239, 68, 68, 0.12); color: #f87171; }
+    .badge-Orta { background: rgba(245, 158, 11, 0.12); color: #fbbf24; }
+    .badge-Kolay { background: rgba(16, 185, 129, 0.12); color: #34d399; }
+    
+    .task-time { color: #9ca3af; font-size: 12px; margin-top: 14px; display: flex; justify-content: space-between; }
+    hr { border: 0; height: 1px; background: #1f2235; margin: 15px 0 5px 0; }
     </style>
 """, unsafe_allow_html=True)
 
