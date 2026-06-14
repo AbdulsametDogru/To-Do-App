@@ -5,13 +5,13 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- 🔥 ULTRA CAFCAFLI HIGH-TECH CSS & KARTA GÖMÜLÜ BUTONLAR MİMARİSİ ---
+# --- 🔥 GÖMÜLÜ BUTONLAR VE CAFCAFLI TASARIM İÇİN KESİN ÇÖZÜM CSS ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
     * { font-family: 'Plus Jakarta Sans', sans-serif !important; }
     
-    /* 🌌 OYUNCU/HIGH-TECH TARZI CAFCAFLI ARKA PLAN */
+    /* 🌌 CAFCAFLI HIGH-TECH ARKA PLAN */
     .stApp {
         background: 
             radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.1) 0%, transparent 40%),
@@ -58,63 +58,60 @@ st.markdown("""
         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
     
-    /* 🎨 STREAMLIT İÇ BİLEŞEN SIFIRLAMA */
+    /* 🎨 STREAMLIT'İN GİZLİ GRİ ÇERÇEVELERİNİ SIFIRLAMA */
+    /* Resimdeki butonların altına açılan o koyu renkli kutuları kökten yok ediyoruz */
     [data-testid="stVerticalBlockBorderWrapper"], 
     div[data-testid="element-container"] .stElementContainer,
-    div[data-testid="stVerticalBlock"] {
+    div[data-testid="stVerticalBlock"],
+    .stDeployButton {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
-    /* 🎯 TEK PARÇA, GÖMÜLÜ KART YAPISI (Butonları da içeriyor) */
+    /* 🎯 TAMAMEN BOYALI, BUTONLARI İÇİNE ALAN YENİ KART YAPISI */
     .custom-task-card {
         border-radius: 16px !important;
-        padding: 18px 18px 14px 18px !important;
-        margin-bottom: 18px !important;
+        padding: 20px 20px 16px 20px !important;
+        margin-bottom: 20px !important;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
         transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         border: 1px solid transparent;
+        display: flex;
+        flex-direction: column;
     }
     
-    /* 🔴 ZOR: Kıpkırmızı Gradyan */
+    /* 🔴 ZOR: Kıpkırmızı */
     .card-glow-Zor {
         background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%) !important;
         border-color: rgba(239, 68, 68, 0.4) !important;
         box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
-    /* 🟡 ORTA: Canlı Turuncu Gradyan */
+    /* 🟡 ORTA: Canlı Turuncu */
     .card-glow-Orta {
         background: linear-gradient(135deg, #7c2d12 0%, #431407 100%) !important;
-        border-color: rgba(245, 158, 11, 0.35) !important;
-        box-shadow: 0 0 15px rgba(245, 158, 11, 0.12), 0 10px 25px rgba(0,0,0,0.5) !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.15), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
-    /* 🟢 KOLAY: Yemyeşil Zümrüt Gradyan */
+    /* 🟢 KOLAY: Yemyeşil */
     .card-glow-Kolay {
         background: linear-gradient(135deg, #064e3b 0%, #022c22 100%) !important;
-        border-color: rgba(16, 185, 129, 0.3) !important;
-        box-shadow: 0 0 15px rgba(16, 185, 129, 0.1), 0 10px 25px rgba(0,0,0,0.5) !important;
+        border-color: rgba(16, 185, 129, 0.35) !important;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.12), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
-    .custom-task-card:hover {
-        transform: translateY(-4px) !important;
-    }
-    .card-glow-Zor:hover { box-shadow: 0 0 22px rgba(239, 68, 68, 0.35), 0 15px 30px rgba(0,0,0,0.6) !important; }
-    .card-glow-Orta:hover { box-shadow: 0 0 22px rgba(245, 158, 11, 0.3), 0 15px 30px rgba(0,0,0,0.6) !important; }
-    .card-glow-Kolay:hover { box-shadow: 0 0 22px rgba(16, 185, 129, 0.25), 0 15px 30px rgba(0,0,0,0.6) !important; }
+    .custom-task-card:hover { transform: translateY(-4px) !important; }
     
-    /* Kart İçi Başlık ve Zaman Alanı */
     .task-title-area {
         color: #ffffff !important;
-        font-size: 17px;
+        font-size: 18px;
         font-weight: 700;
         margin-bottom: 8px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
     
     .task-time-area {
@@ -122,7 +119,7 @@ st.markdown("""
         font-size: 13px;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 16px; /* Butonlarla aradaki boşluk */
+        margin-bottom: 18px;
         font-weight: 500;
     }
     
@@ -137,46 +134,46 @@ st.markdown("""
         text-transform: uppercase;
     }
     
-    /* 🛠️ GÖMÜLÜ STREAMLIT BUTON AYARLARI */
-    /* Kartın içine gömülen butonları şeffaf cam efektine geçiriyoruz */
+    /* 🎛️ BUTONLARI YAN YANA GETİREN ÖZEL YERLEŞİM TASARIMI */
+    /* Streamlit buton bileşenlerini kapsayan ana div yapısını flex yapıyoruz */
+    .button-group-container {
+        display: flex !important;
+        gap: 10px !important;
+        width: 100% !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    
+    .button-group-container > div {
+        flex: 1 !important;
+        background: transparent !important;
+    }
+    
+    /* Kart İçindeki Gömülü Butonların Şeffaf Cam Görünümü */
     .stButton > button {
         width: 100% !important;
         border-radius: 8px !important;
-        background-color: rgba(0, 0, 0, 0.25) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
         font-weight: 600 !important;
-        font-size: 12.5px !important;
+        font-size: 13px !important;
         padding: 6px 0px !important;
-        transition: all 0.2s !important;
+        transition: all 0.2s ease !important;
     }
     
-    /* Gömülü Düzenle Butonu Hover */
-    div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
+    /* Düzenle Butonu Hover */
+    .stButton > button[key^="edit_"]:hover {
         border-color: #3b82f6 !important;
-        color: #fff !important;
         background-color: #3b82f6 !important;
-        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
     }
     
-    /* Gömülü Sil Butonu Hover */
-    div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
+    /* Sil Butonu Hover */
+    .stButton > button[key^="rm_"]:hover {
         border-color: #ef4444 !important;
-        color: #fff !important;
         background-color: #ef4444 !important;
-        box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
-    }
-    
-    /* Kenar Çubuğu Giriş Alanları */
-    .stSelectbox div[data-baseweb="select"], .stTextInput input {
-        background-color: #0d0f1a !important;
-        border: 1px solid #1e2238 !important;
-        border-radius: 10px !important;
-        color: #fff !important;
-    }
-    [data-testid="stSidebar"] {
-        background-color: #06070a !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.03) !important;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -220,7 +217,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 25px;'>
         <h1 style='color: #fff; font-weight: 800; font-size: 28px; margin-bottom: 5px; letter-spacing: -0.5px;'>Workspace / <span style='color: #3b82f6; text-shadow: 0 0 15px rgba(59,130,246,0.4);'>Sprint Board Pro</span></h1>
-        <p style='color: #64748b; margin: 0; font-size: 13.5px; font-weight: 500;'>Butonları tamamen kartın içerisine gömülmüş tek parça premium tasarım.</p>
+        <p style='color: #64748b; margin: 0; font-size: 13.5px; font-weight: 500;'>Butonların tamamen renkli kart gövdesine gömüldüğü kusursuz siber sürüm.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -288,7 +285,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # 🔥 ADIM 1: HTML KART BAŞLANGICI VE METİN ALANI
+            # 🛠️ ÇÖZÜM: HTML Kartını açıyoruz ve butonların yer alacağı alanı da bu kapsama alıyoruz
             st.markdown(f"""
                 <div class="custom-task-card card-glow-{g.zorluk}">
                     <div class="task-title-area">
@@ -301,16 +298,24 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                     </div>
             """, unsafe_allow_html=True)
             
-            # 🎛️ ADIM 2: BUTONLAR DOĞRUDAN KARTIN HTML İÇERİĞİNİN İÇİNE ENJEKTE EDİLİYOR
-            # Streamlit buton sütunlarını açıyoruz fakat arka plan şeffaf olduğu için kartın üstüne tam oturuyor
-            b1, b2 = st.columns([1, 1])
-            with b1:
-                if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
-                    gorev_duzenle_penceresi(g)
-            with b2:
-                if st.button("🗑️ Sil", key=f"rm_{g.id}"):
-                    gorev_yoneticisi.gorev_sil(g.id)
-                    st.rerun()
+            # 🎛️ Özel Flex yapımız sayesinde butonları yan yana getiriyor ve arkadaki gri kutu hatasını tamamen siliyoruz
+            st.markdown('<div class="button-group-container">', unsafe_allow_html=True)
             
-            # 🔥 ADIM 3: HTML KART ETİKETİNİ KAPATIYORUZ
+            # Düzenle Butonu (Kendi küçük konteyneri içinde)
+            st.markdown('<div>', unsafe_allow_html=True)
+            if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
+                gorev_duzenle_penceresi(g)
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Sil Butonu (Kendi küçük konteyneri içinde)
+            st.markdown('<div>', unsafe_allow_html=True)
+            if st.button("🗑️ Sil", key=f"rm_{g.id}"):
+                gorev_yoneticisi.gorev_sil(g.id)
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Flex kapsayıcıyı kapatıyoruz
+            st.markdown('</div>', unsafe_allow_html=True)
+            
+            # Ana renkli HTML kartı kapatıyoruz
             st.markdown('</div>', unsafe_allow_html=True)
