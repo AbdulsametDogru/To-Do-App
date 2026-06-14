@@ -5,7 +5,7 @@ import datetime
 # Sayfa genişliği, başlık ve tema sabitleme
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- 🔥 ULTRA PREMIUM CAFCAFLI & METİN KAYMASI DÜZELTİLMİŞ CSS ---
+# --- 🔥 MUTLAK POZİSYON SABİTLEMELİ AKILLI CSS MİMARİSİ ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
@@ -65,7 +65,7 @@ st.markdown("""
         box-shadow: 0 0 15px rgba(59, 130, 246, 0.4) !important;
     }
 
-    /* Streamlit Alan Temizliği */
+    /* Streamlit Gereksiz Boşluk ve Çerçeve Temizliği */
     [data-testid="stVerticalBlockBorderWrapper"], 
     div[data-testid="element-container"] .stElementContainer,
     div[data-testid="stVerticalBlock"] {
@@ -74,23 +74,22 @@ st.markdown("""
         box-shadow: none !important;
     }
 
-    /* 🎯 YENİLENMİŞ KART VE METİN DÜZENİ */
+    /* 🎯 GEOMETRİK OLARAK SABİTLENMİŞ ANA KART YAPISI */
+    .custom-task-card-wrapper {
+        position: relative !important; /* İçindeki her şeyi buna göre hizalayacağız */
+        margin-bottom: 16px !important;
+    }
+
     .custom-task-card {
-        position: relative !important;
         border-radius: 16px !important;
-        padding: 20px 20px 75px 20px !important;
-        margin-bottom: -55px !important; 
+        padding: 20px 20px 70px 20px !important; /* Butonlara alt tarafta güvenli bölge */
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
-        transition: transform 0.2s ease !important;
         border: 1px solid transparent;
     }
     .card-glow-Zor { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%) !important; border-color: rgba(239, 68, 68, 0.4) !important; }
     .card-glow-Orta { background: linear-gradient(135deg, #7c2d12 0%, #431407 100%) !important; border-color: rgba(245, 158, 11, 0.4) !important; }
     .card-glow-Kolay { background: linear-gradient(135deg, #064e3b 0%, #022c22 100%) !important; border-color: rgba(16, 185, 129, 0.35) !important; }
     
-    .custom-task-card:hover { transform: translateY(-4px) !important; }
-    
-    /* Yapışmayı Engelleyen Flex Yapısı */
     .task-title-area {
         color: #ffffff !important;
         font-size: 17px;
@@ -106,7 +105,6 @@ st.markdown("""
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        padding-right: 8px;
     }
     
     .task-time-area {
@@ -116,10 +114,8 @@ st.markdown("""
         justify-content: space-between !important;
         align-items: center !important;
         width: 100% !important;
-        font-weight: 500;
     }
     
-    /* Ayırt Edici Belirgin Rozet Yapısı */
     .badge-white {
         background: rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
@@ -129,33 +125,36 @@ st.markdown("""
         font-weight: 700 !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         text-transform: uppercase !important;
-        letter-spacing: 0.5px;
-        display: inline-block !important;
         flex-shrink: 0 !important;
     }
     
-    /* Butonları Kart İçine Çekme (PC) */
-    div[data-testid="stHorizontalBlock"] div.element-container:has(button[key^="edit_"]),
-    div[data-testid="stHorizontalBlock"] div.element-container:has(button[key^="rm_"]) {
-        position: relative !important;
-        top: -60px !important; 
-        z-index: 10 !important;
+    /* 🛠️ KAYMAYI ENGELLEYEN ABSOLUTE BUTON KİLİTLEME SİSTEMİ */
+    /* Butonları içeren alt Streamlit satırını yakalayıp kartın alt zeminine çiviliyoruz */
+    .custom-task-card-wrapper div[data-testid="stHorizontalBlock"] {
+        position: absolute !important;
+        bottom: 15px !important; /* Kartın altından tam 15px yukarıda sabit dur */
+        left: 20px !important;
+        right: 20px !important;
+        width: calc(100% - 40px) !important;
+        z-index: 5 !important;
     }
     
     .stButton > button {
         width: 100% !important;
         border-radius: 8px !important;
-        background-color: rgba(0, 0, 0, 0.35) !important;
+        background-color: rgba(0, 0, 0, 0.4) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
         font-weight: 600;
+        padding: 5px 0px !important;
     }
 
-    /* 📱 MOBİL RE-ARRANGE */
+    /* 📱 MOBİL UYUMLULUK AYARI */
     @media (max-width: 768px) {
-        .custom-task-card { padding-bottom: 110px !important; margin-bottom: -95px !important; }
-        div[data-testid="stHorizontalBlock"] div.element-container:has(button[key^="edit_"]),
-        div[data-testid="stHorizontalBlock"] div.element-container:has(button[key^="rm_"]) { top: -100px !important; }
+        /* Mobilde butonlar alt alta binerse kart otomatik aşağı doğru esnesin diye padding artırıldı */
+        .custom-task-card {
+            padding-bottom: 105px !important;
+        }
     }
 
     /* 🎨 RENKLİ GÜNCELLEME MODALI */
@@ -209,7 +208,7 @@ ilerleme = (tamamlanan / toplam) if toplam > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 25px;'>
         <h1 style='color: #fff; font-weight: 800; font-size: 28px; margin-bottom: 5px;'>Workspace / <span style='color: #3b82f6;'>Sprint Board Pro</span></h1>
-        <p style='color: #64748b; margin: 0; font-size: 13px;'>Hizalama ve etiket yapışma sorunları giderilmiş kararlı arayüz.</p>
+        <p style='color: #64748b; margin: 0; font-size: 13px;'>Mobil cihazlar ve PC için mutlak konumlandırmalı stabil kart yapısı.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -253,22 +252,26 @@ for anahtar, (st_sutun, baslik, renk) in ayarlar.items():
         
         for g in filtre_gorevler:
             k_gun = g.kalan_gun_hesapla()
-            k_metin = f"Gecikti ({abs(k_gun)}g)" if k_gun < 0 else ("Son Gün" if k_gun == 0 else f"{k_gun} kaldı")
+            # 🛠️ DÜZELTME: "gün kaldı" ifadesi tam metin haline getirildi
+            k_metin = f"Gecikti ({abs(k_gun)}g)" if k_gun < 0 else ("Son Gün" if k_gun == 0 else f"{k_gun} gün kaldı")
             
-            # 🛠️ GÜNCELLEME: Elemanları .task-title-text ve .badge-white olarak ayırıp aralarını tam açtık
+            # Kart yapısını sarmalayıcı bir ana div (.custom-task-card-wrapper) içine alıyoruz
             st.markdown(f"""
-                <div class="custom-task-card card-glow-{g.zorluk}">
-                    <div class="task-title-area">
-                        <span class="task-title-text">{g.ad}</span>
-                        <span class="badge-white">{g.zorluk}</span>
-                    </div>
-                    <div class="task-time-area">
-                        <span>📅 {g.son_tarih}</span>
-                        <span style="font-weight:700; color:{'#ff8585' if k_gun<=0 else '#ffffff'}">{k_metin}</span>
+                <div class="custom-task-card-wrapper">
+                    <div class="custom-task-card card-glow-{g.zorluk}">
+                        <div class="task-title-area">
+                            <span class="task-title-text">{g.ad}</span>
+                            <span class="badge-white">{g.zorluk}</span>
+                        </div>
+                        <div class="task-time-area">
+                            <span>📅 {g.son_tarih}</span>
+                            <span style="font-weight:700; color:{'#ff8585' if k_gun<=0 else '#ffffff'}">{k_metin}</span>
+                        </div>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
             
+            # Butonlar bu üstteki wrapper elemanının tam tabanına kilitlenecek
             b1, b2 = st.columns([1, 1])
             with b1:
                 if st.button("✏️ Düzenle", key=f"edit_{g.id}"): gorev_duzenle_penceresi(g)
