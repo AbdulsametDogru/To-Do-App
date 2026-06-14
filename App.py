@@ -5,7 +5,7 @@ import datetime
 # Sayfa genişliği ve başlık ayarları
 st.set_page_config(page_title="Enterprise Task Board Pro", layout="wide", page_icon="⚡")
 
-# --- 🔥 ULTRA CAFCAFLI HIGH-TECH CSS & TAMAMEN RENKLİ KARTLAR MİMARİSİ ---
+# --- 🔥 ULTRA CAFCAFLI HIGH-TECH CSS & KARTA GÖMÜLÜ BUTONLAR MİMARİSİ ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap');
@@ -21,7 +21,6 @@ st.markdown("""
         background-attachment: fixed !important;
     }
     
-    /* Canlılık hissi için ince nokta deseni ve üst parıltı */
     .stApp::before {
         content: "";
         position: fixed;
@@ -32,7 +31,7 @@ st.markdown("""
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
     
-    /* 3 Ana Kanban Sütunu - Saydam Buzlu Cam Tasarımı */
+    /* 3 Ana Kanban Sütunu */
     [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
         background: rgba(6, 8, 14, 0.6) !important;
         backdrop-filter: blur(25px) !important;
@@ -44,7 +43,6 @@ st.markdown("""
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7) !important;
     }
     
-    /* Sütun Başlıkları */
     .column-header {
         font-size: 14px;
         font-weight: 700;
@@ -60,71 +58,74 @@ st.markdown("""
         box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
     
-    /* 🎨 STREAMLIT'İN İÇ KUTULARINI SIFIRLAMA (Ezme Operasyonu) */
-    /* Streamlit'in kendi gri kutu arka planlarını tamamen yok ediyoruz ki bizim renklerimiz parlasın */
-    [data-testid="stVerticalBlockBorderWrapper"], div[data-testid="element-container"] .stElementContainer {
+    /* 🎨 STREAMLIT İÇ BİLEŞEN SIFIRLAMA */
+    [data-testid="stVerticalBlockBorderWrapper"], 
+    div[data-testid="element-container"] .stElementContainer,
+    div[data-testid="stVerticalBlock"] {
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
-    /* 🎯 TAMAMEN BOYALI, PARLAK VE CAZİBELİ KARTLARIMIZ */
+    /* 🎯 TEK PARÇA, GÖMÜLÜ KART YAPISI (Butonları da içeriyor) */
     .custom-task-card {
         border-radius: 16px !important;
-        padding: 16px 18px !important;
-        margin-bottom: 0px !important; /* Altındaki buton sarmalayıcısı ile birleşecek */
+        padding: 18px 18px 14px 18px !important;
+        margin-bottom: 18px !important;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4) !important;
-        transition: transform 0.2s ease !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
         border: 1px solid transparent;
     }
     
-    /* 🔴 ZOR: Kıpkırmızı Gradyan ve Kor Neon Işıltı */
+    /* 🔴 ZOR: Kıpkırmızı Gradyan */
     .card-glow-Zor {
         background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%) !important;
-        border-color: rgba(239, 68, 68, 0.5) !important;
-        box-shadow: 0 0 15px rgba(239, 68, 68, 0.2), 0 10px 25px rgba(0,0,0,0.5) !important;
+        border-color: rgba(239, 68, 68, 0.4) !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.15), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
-    /* 🟡 ORTA: Canlı Turuncu/Kehribar Gradyan */
+    /* 🟡 ORTA: Canlı Turuncu Gradyan */
     .card-glow-Orta {
         background: linear-gradient(135deg, #7c2d12 0%, #431407 100%) !important;
-        border-color: rgba(245, 158, 11, 0.5) !important;
-        box-shadow: 0 0 15px rgba(245, 158, 11, 0.18), 0 10px 25px rgba(0,0,0,0.5) !important;
+        border-color: rgba(245, 158, 11, 0.35) !important;
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.12), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
     /* 🟢 KOLAY: Yemyeşil Zümrüt Gradyan */
     .card-glow-Kolay {
         background: linear-gradient(135deg, #064e3b 0%, #022c22 100%) !important;
-        border-color: rgba(16, 185, 129, 0.4) !important;
-        box-shadow: 0 0 15px rgba(16, 185, 129, 0.15), 0 10px 25px rgba(0,0,0,0.5) !important;
+        border-color: rgba(16, 185, 129, 0.3) !important;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.1), 0 10px 25px rgba(0,0,0,0.5) !important;
     }
     
-    /* Hover Efekti (Kartlar havaya kalksın) */
     .custom-task-card:hover {
         transform: translateY(-4px) !important;
     }
+    .card-glow-Zor:hover { box-shadow: 0 0 22px rgba(239, 68, 68, 0.35), 0 15px 30px rgba(0,0,0,0.6) !important; }
+    .card-glow-Orta:hover { box-shadow: 0 0 22px rgba(245, 158, 11, 0.3), 0 15px 30px rgba(0,0,0,0.6) !important; }
+    .card-glow-Kolay:hover { box-shadow: 0 0 22px rgba(16, 185, 129, 0.25), 0 15px 30px rgba(0,0,0,0.6) !important; }
     
-    /* Kart İçi Metin Mimarisi */
+    /* Kart İçi Başlık ve Zaman Alanı */
     .task-title-area {
         color: #ffffff !important;
-        font-size: 18px !important;
-        font-weight: 700 !important;
-        margin-bottom: 8px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         text-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
     
     .task-time-area {
-        color: rgba(255, 255, 255, 0.8) !important;
-        font-size: 13.5px !important;
-        display: flex !important;
-        justify-content: space-between !important;
-        font-weight: 500 !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px; /* Butonlarla aradaki boşluk */
+        font-weight: 500;
     }
     
-    /* Kart Rozetleri (Cam Görünümlü Beyaz) */
     .badge-white {
         background: rgba(255, 255, 255, 0.15) !important;
         color: #ffffff !important;
@@ -136,41 +137,34 @@ st.markdown("""
         text-transform: uppercase;
     }
     
-    /* 🎛️ BUTON ALANI SARMALAYICISI (Kartın altına tam mühürleme) */
-    .action-container-box {
-        background: rgba(0, 0, 0, 0.25) !important;
-        border-bottom-left-radius: 16px;
-        border-bottom-right-radius: 16px;
-        padding: 8px 12px;
-        margin-bottom: 18px;
-        border: 1px solid rgba(255, 255, 255, 0.03);
-        border-top: none;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    }
-    
-    /* Streamlit İç Buton Tasarımları */
+    /* 🛠️ GÖMÜLÜ STREAMLIT BUTON AYARLARI */
+    /* Kartın içine gömülen butonları şeffaf cam efektine geçiriyoruz */
     .stButton > button {
         width: 100% !important;
         border-radius: 8px !important;
-        background-color: rgba(255, 255, 255, 0.05) !important;
+        background-color: rgba(0, 0, 0, 0.25) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         color: #ffffff !important;
         font-weight: 600 !important;
-        font-size: 13px !important;
+        font-size: 12.5px !important;
+        padding: 6px 0px !important;
         transition: all 0.2s !important;
     }
     
+    /* Gömülü Düzenle Butonu Hover */
     div[data-testid="stHorizontalBlock"] button[key^="edit_"]:hover {
         border-color: #3b82f6 !important;
-        color: #3b82f6 !important;
-        background-color: rgba(59, 130, 246, 0.15) !important;
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+        color: #fff !important;
+        background-color: #3b82f6 !important;
+        box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
     }
+    
+    /* Gömülü Sil Butonu Hover */
     div[data-testid="stHorizontalBlock"] button[key^="rm_"]:hover {
         border-color: #ef4444 !important;
-        color: #ef4444 !important;
-        background-color: rgba(239, 68, 68, 0.15) !important;
-        box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        color: #fff !important;
+        background-color: #ef4444 !important;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
     }
     
     /* Kenar Çubuğu Giriş Alanları */
@@ -226,7 +220,7 @@ ilerleme_orani = (tamamlanan_gorev / toplam_gorev) if toplam_gorev > 0 else 0.0
 st.markdown("""
     <div style='margin-bottom: 25px;'>
         <h1 style='color: #fff; font-weight: 800; font-size: 28px; margin-bottom: 5px; letter-spacing: -0.5px;'>Workspace / <span style='color: #3b82f6; text-shadow: 0 0 15px rgba(59,130,246,0.4);'>Sprint Board Pro</span></h1>
-        <p style='color: #64748b; margin: 0; font-size: 13.5px; font-weight: 500;'>Tümüyle renklendirilmiş ultra parlak kartlar ve siber punk radyal arka plan aktif.</p>
+        <p style='color: #64748b; margin: 0; font-size: 13.5px; font-weight: 500;'>Butonları tamamen kartın içerisine gömülmüş tek parça premium tasarım.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -294,7 +288,7 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
             else:
                 kalan_metin = f"{kalan_gun} gün kaldı"
             
-            # 🔥 ADIM 1: KART GÖVDESİNİ SAF HTML VE RENKLİ GRADYANLARLA BASIYORUZ
+            # 🔥 ADIM 1: HTML KART BAŞLANGICI VE METİN ALANI
             st.markdown(f"""
                 <div class="custom-task-card card-glow-{g.zorluk}">
                     <div class="task-title-area">
@@ -305,11 +299,10 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                         <span>📅 {g.son_tarih}</span>
                         <span style="font-weight:700; color:{'#ff8585' if kalan_gun<=0 else '#ffffff'}">{kalan_metin}</span>
                     </div>
-                </div>
             """, unsafe_allow_html=True)
             
-            # 🎛️ ADIM 2: BUTONLARI KARTIN ALTINA YERLEŞTİRİP TEK BİR BLOK GİBİ SARMALIYORUZ
-            st.markdown('<div class="action-container-box">', unsafe_allow_html=True)
+            # 🎛️ ADIM 2: BUTONLAR DOĞRUDAN KARTIN HTML İÇERİĞİNİN İÇİNE ENJEKTE EDİLİYOR
+            # Streamlit buton sütunlarını açıyoruz fakat arka plan şeffaf olduğu için kartın üstüne tam oturuyor
             b1, b2 = st.columns([1, 1])
             with b1:
                 if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
@@ -318,4 +311,6 @@ for anahtar, (st_sutun, baslik, renk) in sutun_ayarlari.items():
                 if st.button("🗑️ Sil", key=f"rm_{g.id}"):
                     gorev_yoneticisi.gorev_sil(g.id)
                     st.rerun()
+            
+            # 🔥 ADIM 3: HTML KART ETİKETİNİ KAPATIYORUZ
             st.markdown('</div>', unsafe_allow_html=True)
