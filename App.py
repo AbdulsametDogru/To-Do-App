@@ -7,11 +7,7 @@ st.set_page_config(page_title="Sprint Board Pro", layout="wide", page_icon="⚡"
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
-*, *::before, *::after {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    box-sizing: border-box;
-}
+*, *::before, *::after { font-family: 'Plus Jakarta Sans', sans-serif !important; box-sizing: border-box; }
 
 .stApp {
     background:
@@ -41,7 +37,6 @@ st.markdown("""
 [data-testid="stHorizontalBlock"] > div[data-testid="column"] {
     background: rgba(5,7,12,0.65) !important;
     backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
     border: 1px solid rgba(255,255,255,0.05) !important;
     border-radius: 22px !important;
     padding: 22px 18px !important;
@@ -57,127 +52,84 @@ st.markdown("""
 }
 
 .col-header {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.6px;
-    padding: 12px 16px;
-    border-radius: 11px;
-    margin-bottom: 20px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.6px; padding: 12px 16px; border-radius: 11px;
+    margin-bottom: 20px; color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
 }
-.col-badge {
-    background: rgba(255,255,255,0.18);
-    padding: 2px 9px;
-    border-radius: 18px;
-    font-size: 11px;
-}
+.col-badge { background: rgba(255,255,255,0.18); padding: 2px 9px; border-radius: 18px; font-size: 11px; }
 
-/* === KART CONTAINER === */
-/* st.container(border=False) etrafındaki wrapper'ı yakalıyoruz */
-.task-container > div[data-testid="stVerticalBlockBorderWrapper"] > div > div[data-testid="stVerticalBlock"] {
-    border-radius: 15px !important;
-    padding: 0 !important;
-    margin-bottom: 12px !important;
-    overflow: hidden !important;
-}
-
-/* Kart üst kısım (HTML içerik) */
-.task-card-top {
-    border-radius: 15px 15px 0 0;
-    padding: 16px 16px 14px 16px;
+/* === KART === */
+.task-card {
+    border-radius: 15px;
+    padding: 16px;
+    margin-bottom: 3px;
     border: 1px solid transparent;
-    border-bottom: none;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+    user-select: none;
 }
-.task-card-top.Zor   { background: linear-gradient(135deg,#7f1d1d,#3f0707); border-color: rgba(239,68,68,0.38); }
-.task-card-top.Orta  { background: linear-gradient(135deg,#7c2d12,#3b0f04); border-color: rgba(245,158,11,0.38); }
-.task-card-top.Kolay { background: linear-gradient(135deg,#064e3b,#01201a); border-color: rgba(16,185,129,0.33); }
+.task-card:hover { filter: brightness(1.12); }
+.task-card.Zor   { background: linear-gradient(135deg,#7f1d1d,#3f0707); border-color: rgba(239,68,68,0.38); }
+.task-card.Orta  { background: linear-gradient(135deg,#7c2d12,#3b0f04); border-color: rgba(245,158,11,0.38); }
+.task-card.Kolay { background: linear-gradient(135deg,#064e3b,#01201a); border-color: rgba(16,185,129,0.33); }
 
 .task-title {
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
+    color: #fff; font-size: 15px; font-weight: 700; margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;
 }
-.task-title span:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex: 1;
-}
+.task-title span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
 .badge {
-    background: rgba(255,255,255,0.14);
-    border: 1px solid rgba(255,255,255,0.18);
-    color: #fff;
-    padding: 3px 9px;
-    border-radius: 7px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    flex-shrink: 0;
+    background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18);
+    color: #fff; padding: 3px 9px; border-radius: 7px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; flex-shrink: 0;
 }
-.task-meta {
-    color: rgba(255,255,255,0.78);
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-}
+.task-meta { color: rgba(255,255,255,0.78); font-size: 12px; display: flex; justify-content: space-between; }
 .overdue { color: #ff8585 !important; font-weight: 700; }
+.hint-text { color: rgba(255,255,255,0.3); font-size: 10px; text-align: right; margin-top: 8px; letter-spacing: 0.5px; }
 
-/* Kart alt kısım (buton şeridi) */
-.task-card-bottom {
-    display: flex;
-    gap: 0;
-    border-radius: 0 0 15px 15px;
-    overflow: hidden;
-    border: 1px solid transparent;
-    border-top: none;
-}
-.task-card-bottom.Zor   { background: rgba(127,29,29,0.55);  border-color: rgba(239,68,68,0.38); }
-.task-card-bottom.Orta  { background: rgba(124,45,18,0.55);  border-color: rgba(245,158,11,0.38); }
-.task-card-bottom.Kolay { background: rgba(6,78,59,0.55);    border-color: rgba(16,185,129,0.33); }
-
-/* Butonları kart alt şeridine gömüyoruz */
-.task-card-bottom .stButton { flex: 1; margin: 0 !important; }
-.task-card-bottom .stButton > button {
+/* === AÇILIR MENÜ BUTONLARI === */
+/* Kart tıklandığında altında çıkan eylem butonlarının wrapper'ı */
+.action-strip { margin-bottom: 14px; }
+.action-strip .stButton > button {
     width: 100% !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    border-top: 1px solid rgba(255,255,255,0.08) !important;
-    color: rgba(255,255,255,0.75) !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-    padding: 8px 4px !important;
-    transition: background 0.15s ease, color 0.15s ease !important;
-}
-.task-card-bottom .stButton > button:hover {
-    background: rgba(255,255,255,0.1) !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(255,255,255,0.10) !important;
     color: #fff !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    padding: 9px 8px !important;
+    margin-bottom: 6px !important;
+    transition: background 0.15s ease, transform 0.1s ease !important;
 }
-/* Düzenle/Sil ayraç çizgisi */
-.task-card-bottom > div:first-child .stButton > button {
-    border-right: 1px solid rgba(255,255,255,0.08) !important;
+.action-strip .stButton > button:hover { transform: translateY(-1px) !important; }
+
+/* Düzenle butonu */
+.action-strip > div:nth-child(1) .stButton > button {
+    background: rgba(59,130,246,0.18) !important;
+    border-color: rgba(59,130,246,0.35) !important;
+}
+.action-strip > div:nth-child(1) .stButton > button:hover {
+    background: rgba(59,130,246,0.32) !important;
 }
 
-/* Buton satırı içindeki padding/margin sıfırlama */
-.task-card-bottom > div[data-testid="column"] {
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+/* Sil butonu */
+.action-strip > div:nth-child(2) .stButton > button {
+    background: rgba(239,68,68,0.15) !important;
+    border-color: rgba(239,68,68,0.32) !important;
+    color: #fca5a5 !important;
 }
-.task-card-bottom [data-testid="stHorizontalBlock"] {
-    gap: 0 !important;
-    margin: 0 !important;
+.action-strip > div:nth-child(2) .stButton > button:hover {
+    background: rgba(239,68,68,0.28) !important;
+}
+
+/* Kapat butonu */
+.action-strip > div:nth-child(3) .stButton > button {
+    background: rgba(255,255,255,0.04) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+    color: rgba(255,255,255,0.4) !important;
+    font-size: 11px !important;
+    padding: 5px 8px !important;
 }
 
 /* Modal */
@@ -198,6 +150,8 @@ div[role="dialog"] .stButton button {
 # --- Oturum ---
 if "yonetici" not in st.session_state:
     st.session_state.yonetici = GorevYoneticisi()
+if "acik_kart" not in st.session_state:
+    st.session_state.acik_kart = None   # hangi kartın menüsü açık
 
 yon = st.session_state.yonetici
 
@@ -205,7 +159,6 @@ yon = st.session_state.yonetici
 # --- Düzenleme modali ---
 @st.dialog("📝 Görevi Güncelle")
 def gorev_duzenle(gorev):
-    st.markdown(f"**{gorev.ad}** görevini güncelle:")
     yeni_ad     = st.text_input("Görev Adı", value=gorev.ad)
     yeni_durum  = st.selectbox("Aşama", ["Yapılacak","Yapılıyor","Tamamlandı"],
                                index=["Yapılacak","Yapılıyor","Tamamlandı"].index(gorev.durum))
@@ -221,6 +174,7 @@ def gorev_duzenle(gorev):
             gorev.zorluk    = yeni_zorluk
             gorev.son_tarih = yeni_tarih.strftime("%d/%m/%Y")
             yon.gorevleri_kaydet()
+            st.session_state.acik_kart = None
             st.rerun()
 
 
@@ -290,18 +244,18 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
         for g in filtre:
             k = g.kalan_gun_hesapla()
             if k < 0:
-                k_metin  = f"Gecikti ({abs(k)}g)"
-                k_cls    = "overdue"
+                k_metin, k_cls = f"Gecikti ({abs(k)}g)", "overdue"
             elif k == 0:
-                k_metin  = "Son Gün"
-                k_cls    = "overdue"
+                k_metin, k_cls = "Son Gün", "overdue"
             else:
-                k_metin  = f"{k} gün kaldı"
-                k_cls    = ""
+                k_metin, k_cls = f"{k} gün kaldı", ""
 
-            # Kart üstü (HTML)
+            acik = (st.session_state.acik_kart == g.id)
+
+            # --- KART (tıklanabilir buton) ---
+            # Streamlit butonu tamamen kart HTML'i gibi görünecek şekilde stilleniyor
             st.markdown(f"""
-            <div class='task-card-top {g.zorluk}'>
+            <div class='task-card {g.zorluk}' style='margin-bottom:0; {"border-radius: 15px 15px 0 0 !important;" if acik else ""}'>
               <div class='task-title'>
                 <span>{g.ad}</span>
                 <span class='badge'>{g.zorluk}</span>
@@ -310,18 +264,68 @@ for anahtar, (kolon, baslik, renk) in kolonlar.items():
                 <span>📅 {g.son_tarih}</span>
                 <span class='{k_cls}'>{k_metin}</span>
               </div>
+              {"" if acik else "<div class='hint-text'>↕ işlemler için tıkla</div>"}
             </div>
-            <div class='task-card-bottom {g.zorluk}'>
             """, unsafe_allow_html=True)
 
-            # Butonlar — task-card-bottom div'inin CSS hedefi
-            b1, b2 = st.columns(2)
-            with b1:
-                if st.button("✏️ Düzenle", key=f"edit_{g.id}"):
-                    gorev_duzenle(g)
-            with b2:
-                if st.button("🗑️ Sil", key=f"rm_{g.id}"):
-                    yon.gorev_sil(g.id)
-                    st.rerun()
+            # Görünmez tıklama butonu — kart HTML'inin tam üstüne overlay gibi
+            # Bunun yerine kartın hemen altına küçük bir "aç/kapat" toggle butonu koyuyoruz
+            toggle_label = "▲ kapat" if acik else "▼ işlemler"
+            toggle_style = """
+            <style>
+            div[data-testid="stButton"]:has(button[data-card-toggle]) > button {
+                background: transparent !important;
+                border: none !important;
+                color: rgba(255,255,255,0.25) !important;
+                font-size: 10px !important;
+                padding: 2px 0 !important;
+                width: 100% !important;
+                border-radius: 0 !important;
+                cursor: pointer !important;
+            }
+            </style>
+            """
+
+            # Kart tıklama toggle — kart HTML'ine bağlı görünür küçük çizgi
+            if acik:
+                toggle_bg = "rgba(255,255,255,0.04)"
+            else:
+                toggle_bg = "transparent"
+
+            st.markdown(f"""
+            <div style='
+                background:{toggle_bg};
+                border: 1px solid rgba(255,255,255,0.07);
+                border-top: none;
+                border-radius: 0 0 {"0 0" if acik else "10px 10px"};
+                text-align:center;
+                margin-bottom: {"0" if acik else "12px"};
+            '>
+            """, unsafe_allow_html=True)
+
+            if st.button(
+                "▲ Kapat" if acik else "▼ Düzenle / Sil",
+                key=f"toggle_{g.id}",
+                help="Kart işlemleri"
+            ):
+                st.session_state.acik_kart = None if acik else g.id
+                st.rerun()
 
             st.markdown("</div>", unsafe_allow_html=True)
+
+            # --- AÇILIR MENÜ ---
+            if acik:
+                st.markdown("<div class='action-strip'>", unsafe_allow_html=True)
+
+                if st.button("✏️  Düzenle", key=f"edit_{g.id}"):
+                    gorev_duzenle(g)
+
+                if st.button("🗑️  Sil", key=f"rm_{g.id}"):
+                    yon.gorev_sil(g.id)
+                    st.session_state.acik_kart = None
+                    st.rerun()
+
+                st.markdown("</div>", unsafe_allow_html=True)
+                st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
+            else:
+                pass  # kapali kartlar arasi bosluk zaten toggle div'inden geliyor
