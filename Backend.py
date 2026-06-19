@@ -19,7 +19,7 @@ class Gorev:
         return {"id": self.id, "ad": self.ad, "durum": self.durum, "zorluk": self.zorluk, "son_tarih": self.son_tarih}
 
 class GorevYoneticisi:
-    def __init__(self, user_id="sabit_user"):
+    def __init__(self, user_id="f31faf1f-6445-49a9-a84a-888227f0597e"):
         self.user_id = user_id
         # Veritabanından çekip Gorev objelerine dönüştürüyoruz
         data = database.db_getir_gorevler(self.user_id)
