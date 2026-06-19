@@ -50,18 +50,40 @@ yon = st.session_state.yonetici
 with st.sidebar:
     st.title("⚡ Kontrol Merkezi")
     
-    # Formunu sidebar'ın içine alıyoruz
     with st.form("gorev_ekle_form", clear_on_submit=True):
         yeni_gorev = st.text_input("Görev Tanımı")
-        durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
+        durum = st.selectbox("Aşama", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
+        zorluk = st.selectbox("Öncelik", ["Kolay", "Orta", "Zor"]) # Eksik olan buydu
+        son_tar = st.date_input("Deadline") # Eksik olan buydu
         
-        if st.form_submit_button("Ekle"):
+        if st.form_submit_button("🚀 Görevi Ekle"):
             if yeni_gorev:
-                # Burada kendi gorev_ekle fonksiyonunu çağır
-                yon.gorev_ekle(yeni_gorev, durum, "Orta", "20/06/2026")
-                st.success("Görev eklendi!")
-                st.rerun()
+                # Backend fonksiyonuna tüm parametreleri gönder
+                yon.gorev_ekle(yeni_gorev, durum, zorluk, son_tar.strftime("%d/%m/%Y"))
+                st.success("Görev başarıyla eklendi!")
+                st.rerun() # Sayfayı yenile ki yeni görev hemen görünsün
+            else:
+                st.error("Görev adı boş olamaz!")
 # --- SIDEBAR BİTİŞİ ---
+
+# --- ANA EKRAN BOARD GÖRÜNÜMÜ ---
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("<div class='col-header'>Yapılacak</div>", unsafe_allow_html=True)
+    # Burada for döngüsü ile "Yapılacak" görevleri listele
+    for gorev in [g for g in yon.gorevler if g.durum == "Yapılacak"]:
+        st.write(f"**{gorev.ad}**")
+
+with col2:
+    st.markdown("<div class='col-header'>Yapılıyor</div>", unsafe_allow_html=True)
+    for gorev in [g for g in yon.gorevler if g.durum == "Yapılıyor"]:
+        st.write(f"**{gorev.ad}**")
+
+with col3:
+    st.markdown("<div class='col-header'>Tamamlandı</div>", unsafe_allow_html=True)
+    for gorev in [g for g in yon.gorevler if g.durum == "Tamamlandı"]:
+        st.write(f"**{gorev.ad}**")
 
 @st.dialog("📝 Görevi Güncelle")
 def gorev_duzenle(gorev):
