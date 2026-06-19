@@ -39,11 +39,29 @@ def render_css():
 
 render_css()
 
+
 # 4. Fonksiyonel Kod
 if "yonetici" not in st.session_state:
     st.session_state.yonetici = GorevYoneticisi()
 
 yon = st.session_state.yonetici
+
+# --- SIDEBAR BAŞLANGICI ---
+with st.sidebar:
+    st.title("⚡ Kontrol Merkezi")
+    
+    # Formunu sidebar'ın içine alıyoruz
+    with st.form("gorev_ekle_form", clear_on_submit=True):
+        yeni_gorev = st.text_input("Görev Tanımı")
+        durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
+        
+        if st.form_submit_button("Ekle"):
+            if yeni_gorev:
+                # Burada kendi gorev_ekle fonksiyonunu çağır
+                yon.gorev_ekle(yeni_gorev, durum, "Orta", "20/06/2026")
+                st.success("Görev eklendi!")
+                st.rerun()
+# --- SIDEBAR BİTİŞİ ---
 
 @st.dialog("📝 Görevi Güncelle")
 def gorev_duzenle(gorev):
