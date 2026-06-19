@@ -5,7 +5,7 @@ import datetime
 
 st.write("--- HATA AYIKLAMA PANELİ ---")
 try:
-    data = database.db_getir_gorevler("sabit_user")
+    data = database.db_getir_gorevler("f31faf1f-6445-49a9-a84a-888227f0597e")
     st.write(f"Veritabanından çekilen veri sayısı: {len(data)}")
     st.write(data)
 except Exception as e:
