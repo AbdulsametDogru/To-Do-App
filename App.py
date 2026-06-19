@@ -1,6 +1,15 @@
 import streamlit as st
 from Backend import GorevYoneticisi
+import database
 import datetime
+
+st.write("--- HATA AYIKLAMA PANELİ ---")
+try:
+    data = database.db_getir_gorevler("sabit_user")
+    st.write(f"Veritabanından çekilen veri sayısı: {len(data)}")
+    st.write(data)
+except Exception as e:
+    st.error(f"Veritabanı bağlantı hatası: {e}")
 
 # --- UI KISMI: repr() kullanımı ve f-string güvenliği ---
 # St.markdown içerisindeki metinleri daha güvenli hale getirdik.
