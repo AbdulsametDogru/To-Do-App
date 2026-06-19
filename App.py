@@ -70,20 +70,69 @@ with st.sidebar:
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    st.markdown("<div class='col-header'>Yapılacak</div>", unsafe_allow_html=True)
-    # Burada for döngüsü ile "Yapılacak" görevleri listele
-    for gorev in [g for g in yon.gorevler if g.durum == "Yapılacak"]:
-        st.write(f"**{gorev.ad}**")
+    # Sütunları döngüye sokarken hatayı engellemek için:
+    for col, durum in zip([col1, col2, col3], ["Yapılacak", "Yapılıyor", "Tamamlandı"]):
+        with col:
+            st.markdown(f"<div class='col-header'>{durum}</div>", unsafe_allow_html=True)
+        
+        # Filtrelenmiş listeyi al
+        gorevler_listesi = [g for g in yon.gorevler if g.durum == durum]
+        
+        # Eğer liste boşsa bir şey yapma, doluysa döngüye gir
+        if gorevler_listesi:
+            for gorev in gorevler_listesi:
+                # Burada 'gorev' artık tanımlıdır
+                st.markdown(f"""
+                    <div class='task-card'>
+                        <div class='task-title'><span>{gorev.ad}</span></div>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Görev yok")
 
 with col2:
     st.markdown("<div class='col-header'>Yapılıyor</div>", unsafe_allow_html=True)
-    for gorev in [g for g in yon.gorevler if g.durum == "Yapılıyor"]:
-        st.write(f"**{gorev.ad}**")
+    # Sütunları döngüye sokarken hatayı engellemek için:
+for col, durum in zip([col1, col2, col3], ["Yapılacak", "Yapılıyor", "Tamamlandı"]):
+    with col:
+        st.markdown(f"<div class='col-header'>{durum}</div>", unsafe_allow_html=True)
+        
+        # Filtrelenmiş listeyi al
+        gorevler_listesi = [g for g in yon.gorevler if g.durum == durum]
+        
+        # Eğer liste boşsa bir şey yapma, doluysa döngüye gir
+        if gorevler_listesi:
+            for gorev in gorevler_listesi:
+                # Burada 'gorev' artık tanımlıdır
+                st.markdown(f"""
+                    <div class='task-card'>
+                        <div class='task-title'><span>{gorev.ad}</span></div>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Görev yok")
 
 with col3:
     st.markdown("<div class='col-header'>Tamamlandı</div>", unsafe_allow_html=True)
-    for gorev in [g for g in yon.gorevler if g.durum == "Tamamlandı"]:
-        st.write(f"**{gorev.ad}**")
+    # Sütunları döngüye sokarken hatayı engellemek için:
+for col, durum in zip([col1, col2, col3], ["Yapılacak", "Yapılıyor", "Tamamlandı"]):
+    with col:
+        st.markdown(f"<div class='col-header'>{durum}</div>", unsafe_allow_html=True)
+        
+        # Filtrelenmiş listeyi al
+        gorevler_listesi = [g for g in yon.gorevler if g.durum == durum]
+        
+        # Eğer liste boşsa bir şey yapma, doluysa döngüye gir
+        if gorevler_listesi:
+            for gorev in gorevler_listesi:
+                # Burada 'gorev' artık tanımlıdır
+                st.markdown(f"""
+                    <div class='task-card'>
+                        <div class='task-title'><span>{gorev.ad}</span></div>
+                    </div>
+                """, unsafe_allow_html=True)
+        else:
+            st.info("Görev yok")
 
 @st.dialog("📝 Görevi Güncelle")
 def gorev_duzenle(gorev):
