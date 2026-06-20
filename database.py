@@ -1,37 +1,23 @@
-import streamlit as st
-from supabase import create_client
+import requests
 
-# Supabase bilgilerini kontrol et
-url = st.secrets["SUPABASE_URL"]
-key = st.secrets["SUPABASE_KEY"]
-supabase = create_client(url, key)
+# SheetDB'den aldığın o uzun "Endpoint URL" linkini buraya yapıştır
+API_URL = "https://sheetdb.io/api/v1/buraya_aldigin_linki_yaz"
 
 def db_getir_gorevler(user_id):
-
-    return supabase.table("tasks").select("*").eq("user_id", user_id).execute().data
-
+    # API'ye bağlanıp tüm verileri çekiyoruz
+    response = requests.get(API_URL)
+    if response.status_code == 200:
+        return response.json()
+    return []
 
 def db_ekle_gorev(data):
-    try:
-        response = supabase.table("tasks").insert(data).execute()
-        return response
-    except Exception as e:
-        # Hatanın detayını ekrana basıyoruz
-        st.error(f"DETAYLI HATA: {str(e)}") 
-        return None
+    # Yeni görevi Sheets'e gönderiyoruz
+    requests.post(API_URL, json={"data": [data]})
 
 def db_sil_gorev(task_id):
-    try:
-        response = supabase.table("tasks").delete().eq("id", task_id).execute()
-        return response
-    except Exception as e:
-        st.error(f"DETAYLI HATA: {str(e)}")
-        return None
+    # ID kullanarak ilgili satırı siliyoruz
+    requests.delete(f"{API_URL}/id/{task_id}")
 
 def db_guncelle_gorev(task_id, data):
-    try:
-        response = supabase.table("tasks").update(data).eq("id", task_id).execute()
-        return response
-    except Exception as e:
-        st.error(f"DETAYLI HATA: {str(e)}")
-        return None
+    # ID kullanarak ilgili satırı güncelliyoruz
+    requests.patch(f"{API_URL}/id/{task_id}", json={"data": [data]})
