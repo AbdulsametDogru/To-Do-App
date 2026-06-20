@@ -1,10 +1,24 @@
 import uuid
 import database
+from datetime import datetime
 
 class Gorev:
     def __init__(self, ad, durum, zorluk, son_tarih, user_id, id=None):
         self.id = id if id else str(uuid.uuid4())
-        self.ad, self.durum, self.zorluk, self.son_tarih, self.user_id = ad, durum, zorluk, son_tarih, user_id
+        self.ad = ad
+        self.durum = durum
+        self.zorluk = zorluk
+        self.son_tarih = son_tarih
+        self.user_id = user_id
+
+    def gun_kaldi(self):
+        try:
+            hedef = datetime.strptime(self.son_tarih, "%Y-%m-%d")
+            bugun = datetime.now()
+            fark = (hedef - bugun).days + 1
+            return fark
+        except:
+            return 0
 
 class GorevYoneticisi:
     def __init__(self, kullanici_adi):
@@ -14,9 +28,16 @@ class GorevYoneticisi:
 
     def gorev_ekle(self, ad, durum, zorluk, son_tarih):
         yeni_id = str(uuid.uuid4())
-        yeni_data = {"id": yeni_id, "ad": ad, "durum": durum, "zorluk": zorluk, "son_tarih": son_tarih, "user_id": self.kullanici}
+        yeni_data = {
+            "id": yeni_id, 
+            "ad": ad, 
+            "durum": durum, 
+            "zorluk": zorluk, 
+            "son_tarih": son_tarih, 
+            "user_id": self.kullanici
+        }
         database.db_ekle_gorev(yeni_data)
-        self.gorevler.append(Gorev(ad, durum, zorluk, son_tarih, self.kullanici, yeni_id))
+        self.gorevler.append(Gorev(**yeni_data))
 
     def gorev_sil(self, task_id):
         database.db_sil_gorev(task_id)
@@ -26,8 +47,5 @@ class GorevYoneticisi:
         database.db_guncelle_gorev(task_id, yeni_data)
         for g in self.gorevler:
             if g.id == task_id:
-                g.ad = yeni_data.get('ad', g.ad)
                 g.durum = yeni_data.get('durum', g.durum)
-                g.zorluk = yeni_data.get('zorluk', g.zorluk)
-                g.son_tarih = yeni_data.get('son_tarih', g.son_tarih)
                 break

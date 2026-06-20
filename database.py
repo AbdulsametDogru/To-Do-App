@@ -2,14 +2,14 @@ import requests
 import os
 import streamlit as st
 
-# Secrets veya .env dosyasından URL'i çeker
+# SheetDB Endpoint URL
 API_URL = st.secrets.get("SHEETDB_URL") or os.getenv("SHEETDB_URL")
 
 def db_getir_gorevler():
     try:
         response = requests.get(API_URL)
         return response.json() if response.status_code == 200 else []
-    except: 
+    except Exception as e:
         return []
 
 def db_ekle_gorev(data):
