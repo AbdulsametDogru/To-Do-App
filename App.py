@@ -3,12 +3,12 @@ from Backend import GorevYoneticisi
 from datetime import date
 
 # Sayfa Yapılandırması
-st.set_page_config(page_title="Neon Sprint Board", layout="wide")
+st.set_page_config(page_title="Neon Sprint Board Pro", layout="wide")
 
-# CSS - Cyber-Neon Tasarımı
+# CSS - Gelişmiş Neon Tasarımı
 st.markdown("""
 <style>
-    /* Arka Plan: Mor-Mavi-Kırmızı Derinlikli Gradient */
+    /* Arka Plan Gradient */
     .stApp { 
         background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
                     radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
@@ -18,98 +18,113 @@ st.markdown("""
     
     /* Yan Panel - Cam Efekti */
     [data-testid="stSidebar"] {
-        background: rgba(30, 30, 46, 0.4) !important;
+        background: rgba(15, 23, 42, 0.7) !important;
         backdrop-filter: blur(15px);
         border-right: 1px solid #8b5cf6;
     }
 
-    /* Görev Kartları - Neon Glow */
+    /* Genel Kart Yapısı */
     .task-card {
-        background: rgba(22, 27, 34, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
         padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+        border-radius: 15px;
+        margin-bottom: 5px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         transition: 0.3s;
     }
-    .task-card:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); border-color: #8b5cf6; }
+
+    /* Duruma Göre Renkli Neon Glow Efektleri */
+    .card-todo { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); border-left: 5px solid #3b82f6; }
+    .card-doing { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); border-left: 5px solid #ef4444; }
+    .card-done { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); border-left: 5px solid #10b981; }
     
-    /* Sütun Başlıkları */
+    /* Kart Başlıkları */
+    .task-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; color: #f8fafc; }
+    .task-info { font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
+
+    /* Kolon Başlıkları */
     .col-header {
         text-align: center; font-weight: 800; padding: 12px; border-radius: 10px;
-        margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1.5px;
+        margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;
         color: white; font-size: 1.1rem;
     }
-    .todo-header { background: linear-gradient(90deg, #1e40af, #3b82f6); }
-    .doing-header { background: linear-gradient(90deg, #991b1b, #ef4444); }
-    .done-header { background: linear-gradient(90deg, #065f46, #10b981); }
+    .todo-h { background: linear-gradient(90deg, #1e40af, #3b82f6); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+    .doing-h { background: linear-gradient(90deg, #991b1b, #ef4444); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+    .done-h { background: linear-gradient(90deg, #065f46, #10b981); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+
+    /* Buton Tasarımları */
+    .stButton>button { width: 100%; border-radius: 8px; height: 35px; font-size: 0.8rem; }
 </style>
 """, unsafe_allow_html=True)
 
-# 1. Giriş Kontrolü
+# Giriş Kontrolü
 if "kullanici_adi" not in st.session_state:
-    st.markdown("<h1 style='text-align:center; color:#8b5cf6;'>⚡ Cyber-Sprint Giriş</h1>", unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    col_a, col_b, col_c = st.columns([1, 2, 1])
+    st.markdown("<h1 style='text-align:center; color:#8b5cf6; margin-top:100px;'>⚡ Cyber-Sprint Login</h1>", unsafe_allow_html=True)
+    col_a, col_b, col_c = st.columns([1, 1.5, 1])
     with col_b:
-        isim = st.text_input("Kullanıcı Adı:")
-        if st.button("Sisteme Giriş Yap"):
+        isim = st.text_input("Kimliğinizi Girin:")
+        if st.button("Sisteme Eriş"):
             if isim:
                 st.session_state.kullanici_adi = isim
                 st.rerun()
     st.stop()
 
-# 2. Yöneticiyi Başlat
 yon = GorevYoneticisi(st.session_state.kullanici_adi)
 
-# 3. Sidebar
+# Sidebar
 with st.sidebar:
-    st.header("Kontrol Paneli")
-    st.write(f"Aktif Kullanıcı: **{st.session_state.kullanici_adi}**")
+    st.markdown(f"### 👤 {st.session_state.kullanici_adi}")
     st.divider()
-    
-    with st.expander("➕ Yeni Görev Ekle", expanded=True):
+    with st.expander("➕ Yeni Görev Tanımla", expanded=True):
         with st.form("yeni_form"):
-            ad = st.text_input("Görev Adı")
+            ad = st.text_input("Görev İsmi")
             durum = st.selectbox("Aşama", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
             zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
-            tarih = st.date_input("Son Gün", value=date.today())
-            if st.form_submit_button("Kaydet"):
+            tarih = st.date_input("Teslim Tarihi")
+            if st.form_submit_button("Veritabanına İşle"):
                 yon.gorev_ekle(ad, durum, zorluk, str(tarih))
                 st.rerun()
-    
-    if st.button("Çıkış Yap"):
+    if st.button("Güvenli Çıkış"):
         del st.session_state.kullanici_adi
         st.rerun()
 
-# 4. Ana Board
-st.markdown("<h1 style='text-align:center;'>Board Görünümü</h1>", unsafe_allow_html=True)
+# Ana Board
+st.markdown("<h1 style='text-align:center; letter-spacing:2px;'>SPRINT CONTROL CENTER</h1>", unsafe_allow_html=True)
 st.markdown("<br>", unsafe_allow_html=True)
 
 cols = st.columns(3)
 durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-st_styles = ["todo-header", "doing-header", "done-header"]
+css_headers = ["todo-h", "doing-h", "done-h"]
+card_colors = ["card-todo", "card-doing", "card-done"]
 
 for i, col in enumerate(cols):
     with col:
-        st.markdown(f"<div class='col-header {st_styles[i]}'>{durumlar[i]}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='col-header {css_headers[i]}'>{durumlar[i]}</div>", unsafe_allow_html=True)
         
-        for g in [g for g in yon.gorevler if g.durum == durumlar[i]]:
+        # Kullanıcının görevlerini filtrele
+        gorevler = [g for g in yon.gorevler if g.durum == durumlar[i]]
+        
+        for g in gorevler:
+            # Kart Görünümü (HTML)
             st.markdown(f"""
-            <div class='task-card'>
-                <h3 style='margin:0; font-size:1.2rem'>{g.ad}</h3>
-                <p style='color:#a1a1aa; margin:10px 0;'>📅 {g.son_tarih} | {g.zorluk}</p>
+            <div class='task-card {card_colors[i]}'>
+                <div class='task-title'>{g.ad}</div>
+                <div class='task-info'>📅 Son Gün: {g.son_tarih}</div>
+                <div class='task-info'>🔥 Zorluk: {g.zorluk}</div>
             </div>
             """, unsafe_allow_html=True)
             
-            c1, c2 = st.columns(2)
-            with c1:
-                if st.button("Sil", key=f"del_{g.id}"):
-                    yon.gorev_sil(g.id)
-                    st.rerun()
-            with c2:
-                yeni_dur = st.selectbox("Taşı", durumlar, index=durumlar.index(g.durum), key=f"move_{g.id}", label_visibility="collapsed")
+            # İşlem Butonları (Kartın hemen altında)
+            b_col1, b_col2 = st.columns(2)
+            with b_col1:
+                # Güncelleme/Taşıma Dropdown
+                yeni_dur = st.selectbox("Taşı", durumlar, index=durumlar.index(g.durum), key=f"m_{g.id}", label_visibility="collapsed")
                 if yeni_dur != g.durum:
                     yon.gorev_guncelle(g.id, {"durum": yeni_dur})
                     st.rerun()
+            with b_col2:
+                # Silme Butonu
+                if st.button("🗑️ Sil", key=f"d_{g.id}"):
+                    yon.gorev_sil(g.id)
+                    st.rerun()
+            st.markdown("<div style='margin-bottom:20px;'></div>", unsafe_allow_html=True)
