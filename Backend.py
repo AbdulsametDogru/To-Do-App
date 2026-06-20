@@ -22,10 +22,8 @@ class GorevYoneticisi:
         database.db_sil_gorev(task_id)
         self.gorevler = [g for g in self.gorevler if g.id != task_id]
 
-    # EKSİK OLAN METOD BURASI:
     def gorev_guncelle(self, task_id, yeni_data):
         database.db_guncelle_gorev(task_id, yeni_data)
-        # Yerel listeyi güncelle
         for g in self.gorevler:
             if g.id == task_id:
                 g.ad = yeni_data.get('ad', g.ad)

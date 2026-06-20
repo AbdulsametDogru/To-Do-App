@@ -1,15 +1,16 @@
 import requests
 import os
-from dotenv import load_dotenv
+import streamlit as st
 
-load_dotenv()
-API_URL = os.getenv("SHEETDB_URL") # .env dosyanı oluşturmayı unutma!
+# Secrets veya .env dosyasından URL'i çeker
+API_URL = st.secrets.get("SHEETDB_URL") or os.getenv("SHEETDB_URL")
 
 def db_getir_gorevler():
     try:
         response = requests.get(API_URL)
         return response.json() if response.status_code == 200 else []
-    except: return []
+    except: 
+        return []
 
 def db_ekle_gorev(data):
     requests.post(API_URL, json={"data": [data]})
