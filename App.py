@@ -2,88 +2,80 @@ import streamlit as st
 from Backend import GorevYoneticisi
 from datetime import date
 
+# Sayfa Yapılandırması
 st.set_page_config(page_title="Neon Sprint Board", layout="wide")
 
-# Şık Neon CSS Tasarımı
+# CSS - Cyber-Neon Tasarımı
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-    
-    .stApp { background-color: #0d1117; font-family: 'Inter', sans-serif; }
-    
-    /* Kolon Başlıkları */
-    .column-header {
-        padding: 12px;
-        border-radius: 8px;
-        color: white;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    /* Arka Plan: Mor-Mavi-Kırmızı Derinlikli Gradient */
+    .stApp { 
+        background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
+                    radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
+        background-attachment: fixed;
+        color: #ffffff;
     }
-    .header-todo { background: linear-gradient(90deg, #1e40af, #3b82f6); border-bottom: 3px solid #60a5fa; }
-    .header-doing { background: linear-gradient(90deg, #991b1b, #ef4444); border-bottom: 3px solid #f87171; }
-    .header-done { background: linear-gradient(90deg, #065f46, #10b981); border-bottom: 3px solid #34d399; }
+    
+    /* Yan Panel - Cam Efekti */
+    [data-testid="stSidebar"] {
+        background: rgba(30, 30, 46, 0.4) !important;
+        backdrop-filter: blur(15px);
+        border-right: 1px solid #8b5cf6;
+    }
 
-    /* Görev Kartları */
+    /* Görev Kartları - Neon Glow */
     .task-card {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 12px;
+        background: rgba(22, 27, 34, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
         padding: 20px;
-        margin-bottom: 15px;
-        transition: transform 0.2s;
-    }
-    .task-card:hover { transform: translateY(-3px); border-color: #8b5cf6; }
-    
-    .task-title { color: #f0f6fc; font-size: 1.1rem; font-weight: 600; margin-bottom: 8px; }
-    
-    /* Rozetler (Badges) */
-    .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: bold;
-        margin-right: 5px;
-    }
-    .badge-date { background: #238636; color: #ffffff; }
-    .badge-urgent { background: #da3633; color: #ffffff; }
-    .badge-info { background: #1f6feb; color: #ffffff; }
-
-    /* Butonlar */
-    div.stButton > button {
-        border-radius: 8px;
-        font-weight: 600;
+        margin-bottom: 20px;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
         transition: 0.3s;
     }
+    .task-card:hover { box-shadow: 0 0 25px rgba(139, 92, 246, 0.5); border-color: #8b5cf6; }
+    
+    /* Sütun Başlıkları */
+    .col-header {
+        text-align: center; font-weight: 800; padding: 12px; border-radius: 10px;
+        margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1.5px;
+        color: white; font-size: 1.1rem;
+    }
+    .todo-header { background: linear-gradient(90deg, #1e40af, #3b82f6); }
+    .doing-header { background: linear-gradient(90deg, #991b1b, #ef4444); }
+    .done-header { background: linear-gradient(90deg, #065f46, #10b981); }
 </style>
 """, unsafe_allow_html=True)
 
-# Giriş Kontrolü
+# 1. Giriş Kontrolü
 if "kullanici_adi" not in st.session_state:
-    st.title("⚡ Cyber-Sprint Giriş")
-    isim = st.text_input("Giriş yapın:")
-    if st.button("Başla"):
-        if isim:
-            st.session_state.kullanici_adi = isim
-            st.rerun()
+    st.markdown("<h1 style='text-align:center; color:#8b5cf6;'>⚡ Cyber-Sprint Giriş</h1>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    col_a, col_b, col_c = st.columns([1, 2, 1])
+    with col_b:
+        isim = st.text_input("Kullanıcı Adı:")
+        if st.button("Sisteme Giriş Yap"):
+            if isim:
+                st.session_state.kullanici_adi = isim
+                st.rerun()
     st.stop()
 
+# 2. Yöneticiyi Başlat
 yon = GorevYoneticisi(st.session_state.kullanici_adi)
 
-# Sidebar - Kontrol Paneli
+# 3. Sidebar
 with st.sidebar:
-    st.title("⚙️ Panel")
-    st.info(f"Hoş geldin: **{st.session_state.kullanici_adi}**")
+    st.header("Kontrol Paneli")
+    st.write(f"Aktif Kullanıcı: **{st.session_state.kullanici_adi}**")
+    st.divider()
     
-    with st.expander("➕ Yeni Görev", expanded=True):
-        with st.form("yeni_ekle"):
+    with st.expander("➕ Yeni Görev Ekle", expanded=True):
+        with st.form("yeni_form"):
             ad = st.text_input("Görev Adı")
             durum = st.selectbox("Aşama", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
             zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
-            tarih = st.date_input("Teslim", value=date.today())
-            if st.form_submit_button("Listeye Ekle"):
+            tarih = st.date_input("Son Gün", value=date.today())
+            if st.form_submit_button("Kaydet"):
                 yon.gorev_ekle(ad, durum, zorluk, str(tarih))
                 st.rerun()
     
@@ -91,42 +83,33 @@ with st.sidebar:
         del st.session_state.kullanici_adi
         st.rerun()
 
-# Ana Board
-st.title("🚀 Proje Takip Dashboard")
+# 4. Ana Board
+st.markdown("<h1 style='text-align:center;'>Board Görünümü</h1>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 cols = st.columns(3)
-durum_listesi = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-st_header_classes = ["header-todo", "header-doing", "header-done"]
+durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
+st_styles = ["todo-header", "doing-header", "done-header"]
 
 for i, col in enumerate(cols):
     with col:
-        st.markdown(f"<div class='column-header {st_header_classes[i]}'>{durum_listesi[i]}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='col-header {st_styles[i]}'>{durumlar[i]}</div>", unsafe_allow_html=True)
         
-        filtreli_gorevler = [g for g in yon.gorevler if g.durum == durum_listesi[i]]
-        
-        for g in filtreli_gorevler:
-            kalangun = g.gun_kaldi()
-            date_badge = "badge-urgent" if kalangun <= 2 else "badge-date"
+        for g in [g for g in yon.gorevler if g.durum == durumlar[i]]:
+            st.markdown(f"""
+            <div class='task-card'>
+                <h3 style='margin:0; font-size:1.2rem'>{g.ad}</h3>
+                <p style='color:#a1a1aa; margin:10px 0;'>📅 {g.son_tarih} | {g.zorluk}</p>
+            </div>
+            """, unsafe_allow_html=True)
             
-            with st.container():
-                st.markdown(f"""
-                <div class='task-card'>
-                    <div class='task-title'>{g.ad}</div>
-                    <div>
-                        <span class='badge {date_badge}'>📅 {g.son_tarih}</span>
-                        <span class='badge badge-info'>{kalangun} gün kaldı</span>
-                        <span class='badge' style='background:#30363d;'>{g.zorluk}</span>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                c1, c2 = st.columns([1, 1])
-                with c1:
-                    if st.button("🗑️ Sil", key=f"s_{g.id}"):
-                        yon.gorev_sil(g.id)
-                        st.rerun()
-                with c2:
-                    yeni_dur = st.selectbox("➡️", durum_listesi, index=dur_index if (dur_index := durum_listesi.index(g.durum)) else 0, key=f"d_{g.id}", label_visibility="collapsed")
-                    if yeni_dur != g.durum:
-                        yon.gorev_guncelle(g.id, {"durum": yeni_dur})
-                        st.rerun()
+            c1, c2 = st.columns(2)
+            with c1:
+                if st.button("Sil", key=f"del_{g.id}"):
+                    yon.gorev_sil(g.id)
+                    st.rerun()
+            with c2:
+                yeni_dur = st.selectbox("Taşı", durumlar, index=durumlar.index(g.durum), key=f"move_{g.id}", label_visibility="collapsed")
+                if yeni_dur != g.durum:
+                    yon.gorev_guncelle(g.id, {"durum": yeni_dur})
+                    st.rerun()
