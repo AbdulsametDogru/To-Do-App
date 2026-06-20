@@ -1,23 +1,21 @@
 import requests
+import os
+from dotenv import load_dotenv
 
-# SheetDB'den aldığın o uzun "Endpoint URL" linkini buraya yapıştır
-API_URL = "https://sheetdb.io/api/v1/buraya_aldigin_linki_yaz"
+load_dotenv()
+API_URL = os.getenv("SHEETDB_URL") # .env dosyanı oluşturmayı unutma!
 
-def db_getir_gorevler(user_id):
-    # API'ye bağlanıp tüm verileri çekiyoruz
-    response = requests.get(API_URL)
-    if response.status_code == 200:
-        return response.json()
-    return []
+def db_getir_gorevler():
+    try:
+        response = requests.get(API_URL)
+        return response.json() if response.status_code == 200 else []
+    except: return []
 
 def db_ekle_gorev(data):
-    # Yeni görevi Sheets'e gönderiyoruz
     requests.post(API_URL, json={"data": [data]})
 
 def db_sil_gorev(task_id):
-    # ID kullanarak ilgili satırı siliyoruz
     requests.delete(f"{API_URL}/id/{task_id}")
 
 def db_guncelle_gorev(task_id, data):
-    # ID kullanarak ilgili satırı güncelliyoruz
     requests.patch(f"{API_URL}/id/{task_id}", json={"data": [data]})
