@@ -8,39 +8,63 @@ st.set_page_config(page_title="Neon Sprint Board Pro", layout="wide")
 # ---------------- CSS ----------------
 st.markdown("""
 <style>
+/* Modern Font İçe Aktarımı */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
 .stApp {
     background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
                 radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
-    color: white;
+    color: #f8fafc;
+    font-family: 'Inter', sans-serif;
 }
 
-/* Neon Kart Tasarımı - Tamamen Renkli */
+/* Başlıkları Modernize Et */
+h1, h2, h3 {
+    font-weight: 700 !important;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+}
+
+/* Kartlar - Daha Modern ve Yumuşak */
 .task-card { 
-    padding: 16px; 
-    border-radius: 12px; 
-    margin-bottom: 15px; 
-    color: white;
-    transition: 0.3s; 
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 20px; 
+    border-radius: 16px; 
+    margin-bottom: 16px; 
+    background: rgba(30, 41, 59, 0.4); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .task-card:hover { 
-    transform: scale(1.02); 
-    filter: brightness(1.3);
+    transform: translateY(-5px);
+    background: rgba(30, 41, 59, 0.6);
 }
 
-/* Zorluğa göre renk dolguları */
-.difficulty-easy { background: rgba(16, 185, 129, 0.2); border-left: 6px solid #10b981; box-shadow: 0 0 10px #10b981; }
-.difficulty-medium { background: rgba(245, 158, 11, 0.2); border-left: 6px solid #f59e0b; box-shadow: 0 0 10px #f59e0b; }
-.difficulty-hard { background: rgba(239, 68, 68, 0.2); border-left: 6px solid #ef4444; box-shadow: 0 0 10px #ef4444; }
+/* Zorluk Renkleri - Neon Tonları */
+.difficulty-easy { border-left: 6px solid #10b981; box-shadow: 5px 0 15px -5px #10b981; }
+.difficulty-medium { border-left: 6px solid #f59e0b; box-shadow: 5px 0 15px -5px #f59e0b; }
+.difficulty-hard { border-left: 6px solid #ef4444; box-shadow: 5px 0 15px -5px #ef4444; }
 
-.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 10px; }
-.badge-easy { background:#10b981; }
-.badge-medium { background:#f59e0b; }
-.badge-hard { background:#ef4444; }
+/* Rozet ve Yazı Tipi */
+.badge { 
+    display: inline-block; 
+    padding: 4px 12px; 
+    border-radius: 8px; 
+    font-size: 11px; 
+    font-weight: 600; 
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
-.title { font-size: 18px; font-weight: 700; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
-.info { font-size: 13px; color: #f1f5f9; margin-top: 4px; }
+.title { font-size: 17px; font-weight: 600; color: #ffffff; }
+.info { font-size: 12px; color: #94a3b8; margin-top: 6px; }
+
+/* Progress Bar Modernizasyonu */
+.stProgress > div > div > div > div {
+    background-image: linear-gradient(90deg, #8b5cf6, #ec4899);
+    border-radius: 10px;
+}
 </style>
 """, unsafe_allow_html=True)
 
