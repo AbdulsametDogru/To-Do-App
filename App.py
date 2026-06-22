@@ -13,17 +13,32 @@ st.markdown("""
                 radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
     color: white;
 }
-.task-card { padding: 16px; border-radius: 14px; margin-bottom: 12px; background: rgba(15, 23, 42, 0.85); transition: 0.2s; }
-.task-card:hover { transform: scale(1.01); }
-.difficulty-easy { border-left: 5px solid #10b981; }
-.difficulty-medium { border-left: 5px solid #f59e0b; }
-.difficulty-hard { border-left: 5px solid #ef4444; }
-.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; color: white; }
-.badge-easy { background:#10b981; }
-.badge-medium { background:#f59e0b; }
-.badge-hard { background:#ef4444; }
-.title { font-size: 18px; font-weight: 600; }
-.info { font-size: 13px; color: #cbd5e1; margin-top: 4px; }
+/* Neon Kart Tasarımı */
+.task-card { 
+    padding: 16px; 
+    border-radius: 12px; 
+    margin-bottom: 15px; 
+    background: rgba(20, 20, 35, 0.6); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: 0.3s; 
+}
+.task-card:hover { 
+    transform: scale(1.02); 
+    filter: brightness(1.2);
+}
+
+/* Neon Zorluk Renkleri */
+.difficulty-easy { border: 2px solid #10b981; box-shadow: 0 0 15px #10b981; }
+.difficulty-medium { border: 2px solid #f59e0b; box-shadow: 0 0 15px #f59e0b; }
+.difficulty-hard { border: 2px solid #ef4444; box-shadow: 0 0 15px #ef4444; }
+
+.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; }
+.badge-easy { background:#10b981; color: white; }
+.badge-medium { background:#f59e0b; color: white; }
+.badge-hard { background:#ef4444; color: white; }
+
+.title { font-size: 18px; font-weight: 700; margin-bottom: 5px; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
+.info { font-size: 13px; color: #e2e8f0; margin-top: 4px; }
 </style>
 """, unsafe_allow_html=True)
 
