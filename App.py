@@ -109,6 +109,26 @@ with st.sidebar:
         del st.session_state.kullanici_adi
         st.rerun()
 
+# ---------------- METRİKLER VE İLERLEME ----------------
+# Verileri hesaplayalım
+toplam_gorev = len(yon.gorevler)
+yapilacak = len([g for g in yon.gorevler if g.durum == "Yapılacak"])
+yapiliyor = len([g for g in yon.gorevler if g.durum == "Yapılıyor"])
+tamamlanan = len([g for g in yon.gorevler if g.durum == "Tamamlandı"])
+
+# İlerleme oranı (0 ile 1 arası)
+ilerleme = tamamlanan / toplam_gorev if toplam_gorev > 0 else 0
+
+st.markdown("### 📊 Sprint Özeti")
+m1, m2, m3 = st.columns(3)
+m1.metric("Yapılacak", yapilacak)
+m2.metric("Yapılıyor", yapiliyor)
+m3.metric("Tamamlanan", tamamlanan)
+
+st.write(f"**Sprint Tamamlanma Oranı: %{int(ilerleme * 100)}**")
+st.progress(ilerleme)
+st.divider() # Görsel ayrım çizgisi
+
 # ---------------- BOARD ----------------
 st.title("SPRINT CONTROL CENTER")
 cols = st.columns(3)
