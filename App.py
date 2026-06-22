@@ -13,32 +13,34 @@ st.markdown("""
                 radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
     color: white;
 }
-/* Neon Kart Tasarımı */
+
+/* Neon Kart Tasarımı - Tamamen Renkli */
 .task-card { 
     padding: 16px; 
     border-radius: 12px; 
     margin-bottom: 15px; 
-    background: rgba(20, 20, 35, 0.6); 
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
     transition: 0.3s; 
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
+
 .task-card:hover { 
     transform: scale(1.02); 
-    filter: brightness(1.2);
+    filter: brightness(1.3);
 }
 
-/* Neon Zorluk Renkleri */
-.difficulty-easy { border: 2px solid #10b981; box-shadow: 0 0 15px #10b981; }
-.difficulty-medium { border: 2px solid #f59e0b; box-shadow: 0 0 15px #f59e0b; }
-.difficulty-hard { border: 2px solid #ef4444; box-shadow: 0 0 15px #ef4444; }
+/* Zorluğa göre renk dolguları */
+.difficulty-easy { background: rgba(16, 185, 129, 0.2); border-left: 6px solid #10b981; box-shadow: 0 0 10px #10b981; }
+.difficulty-medium { background: rgba(245, 158, 11, 0.2); border-left: 6px solid #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+.difficulty-hard { background: rgba(239, 68, 68, 0.2); border-left: 6px solid #ef4444; box-shadow: 0 0 10px #ef4444; }
 
-.badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: bold; }
-.badge-easy { background:#10b981; color: white; }
-.badge-medium { background:#f59e0b; color: white; }
-.badge-hard { background:#ef4444; color: white; }
+.badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 10px; }
+.badge-easy { background:#10b981; }
+.badge-medium { background:#f59e0b; }
+.badge-hard { background:#ef4444; }
 
-.title { font-size: 18px; font-weight: 700; margin-bottom: 5px; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
-.info { font-size: 13px; color: #e2e8f0; margin-top: 4px; }
+.title { font-size: 18px; font-weight: 700; text-shadow: 0 0 8px rgba(0,0,0,0.5); }
+.info { font-size: 13px; color: #f1f5f9; margin-top: 4px; }
 </style>
 """, unsafe_allow_html=True)
 
