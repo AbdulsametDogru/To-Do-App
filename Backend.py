@@ -16,6 +16,15 @@ class GorevYoneticisi:
         self.kullanici = kullanici_adi
         data = database.db_getir_gorevler()
         self.gorevler = [Gorev(**d) for d in data if d.get("user_id") == kullanici_adi]
+        
+        # Sıralama mantığı: 
+        # 1. Önce tarih (son_tarih)
+        # 2. Sonra zorluk (Kolay=1, Orta=2, Zor=3)
+        zorluk_sirasi = {"Kolay": 1, "Orta": 2, "Zor": 3}
+        
+        self.gorevler.sort(
+            key=lambda g: (g.son_tarih, zorluk_sirasi.get(g.zorluk, 2))
+        )
 
     def gorev_ekle(self, ad, durum, zorluk, son_tarih):
         if not ad.strip(): raise ValueError("Görev adı boş olamaz.")
