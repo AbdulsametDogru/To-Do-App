@@ -16,45 +16,46 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 .stApp {
-    /* Açık Mavi ve Pembe Gradient */
-    background: linear-gradient(135deg, #e0f2fe 0%, #fce7f3 100%);
-    color: #1e293b; /* Koyu lacivert yazı */
+    /* Orta tonlarda, ne çok açık ne çok koyu bir arka plan */
+    background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #334155;
     font-family: 'Inter', sans-serif;
 }
 
-/* Kartlar - Buzlu Cam Etkisi (Glassmorphism) */
+/* Kartlar - Tam Renkli Tasarım */
 .task-card { 
     padding: 20px; 
-    border-radius: 16px; 
+    border-radius: 14px; 
     margin-bottom: 16px; 
-    background: rgba(255, 255, 255, 0.6); 
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: all 0.3s ease;
+    border: none;
+    color: white; /* Kart içindeki yazılar beyaz olsun ki renkli arka planla okunsun */
+    transition: transform 0.2s ease;
 }
 
-.task-card:hover { 
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.8);
-}
+.task-card:hover { transform: scale(1.02); }
 
-/* Zorluk Renkleri - Pastel Neonlar */
-.difficulty-easy { border-left: 8px solid #34d399; box-shadow: 2px 0 10px rgba(52, 211, 153, 0.2); }
-.difficulty-medium { border-left: 8px solid #fbbf24; box-shadow: 2px 0 10px rgba(251, 191, 36, 0.2); }
-.difficulty-hard { border-left: 8px solid #f87171; box-shadow: 2px 0 10px rgba(248, 113, 113, 0.2); }
+/* Zorluk Renkleri - Tam Renk Dolgusu */
+.difficulty-easy { background: #10b981; }
+.difficulty-medium { background: #f59e0b; }
+.difficulty-hard { background: #ef4444; }
 
-/* Metin Renkleri */
-.title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
-.info { font-size: 12px; color: #475569; margin-top: 4px; }
+/* Okunabilirlik için başlık ve info stili */
+.title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.info { font-size: 13px; color: rgba(255, 255, 255, 0.9); margin-top: 4px; }
 
 /* Rozetler */
 .badge { 
-    display: inline-block; padding: 3px 10px; border-radius: 6px; 
-    font-size: 9px; font-weight: 800; text-transform: uppercase;
+    display: inline-block; padding: 2px 10px; border-radius: 6px; 
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    background: rgba(0,0,0,0.2);
 }
-.badge-easy { background:#34d399; color: white; }
-.badge-medium { background:#fbbf24; color: white; }
-.badge-hard { background:#f87171; color: white; }
+
+/* Tüm cihazlarda okunabilirlik için yazı boyutu ayarı */
+@media only screen and (max-width: 600px) {
+    .task-card { padding: 15px; }
+    .title { font-size: 16px; }
+    .info { font-size: 12px; }
+}
 </style>
 """, unsafe_allow_html=True)
 
