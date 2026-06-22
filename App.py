@@ -12,47 +12,49 @@ st.set_page_config(
 # ---------------- CSS ----------------
 st.markdown("""
 <style>
-/* Modern Font İçe Aktarımı */
+/* Modern Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 .stApp {
-    background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
-                radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
-    color: #f8fafc;
+    /* Açık Mavi ve Pembe Gradient */
+    background: linear-gradient(135deg, #e0f2fe 0%, #fce7f3 100%);
+    color: #1e293b; /* Koyu lacivert yazı */
     font-family: 'Inter', sans-serif;
 }
 
-/* Kartlar - Tam Renkli Neon Stil */
+/* Kartlar - Buzlu Cam Etkisi (Glassmorphism) */
 .task-card { 
     padding: 20px; 
     border-radius: 16px; 
     margin-bottom: 16px; 
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.6); 
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     transition: all 0.3s ease;
 }
 
 .task-card:hover { 
     transform: translateY(-5px);
-    filter: brightness(1.2);
+    background: rgba(255, 255, 255, 0.8);
 }
 
-/* Zorluk Renkleri - Arka Plan + Neon Glow */
-.difficulty-easy { background: rgba(16, 185, 129, 0.25); border-left: 8px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
-.difficulty-medium { background: rgba(245, 158, 11, 0.25); border-left: 8px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-.difficulty-hard { background: rgba(239, 68, 68, 0.25); border-left: 8px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+/* Zorluk Renkleri - Pastel Neonlar */
+.difficulty-easy { border-left: 8px solid #34d399; box-shadow: 2px 0 10px rgba(52, 211, 153, 0.2); }
+.difficulty-medium { border-left: 8px solid #fbbf24; box-shadow: 2px 0 10px rgba(251, 191, 36, 0.2); }
+.difficulty-hard { border-left: 8px solid #f87171; box-shadow: 2px 0 10px rgba(248, 113, 113, 0.2); }
 
-/* Rozet ve Yazı Tipi */
+/* Metin Renkleri */
+.title { font-size: 17px; font-weight: 700; color: #0f172a; margin-bottom: 5px; }
+.info { font-size: 12px; color: #475569; margin-top: 4px; }
+
+/* Rozetler */
 .badge { 
-    display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 10px; 
-    font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    display: inline-block; padding: 3px 10px; border-radius: 6px; 
+    font-size: 9px; font-weight: 800; text-transform: uppercase;
 }
-.badge-easy { background:#10b981; color: white; }
-.badge-medium { background:#f59e0b; color: white; }
-.badge-hard { background:#ef4444; color: white; }
-
-.title { font-size: 17px; font-weight: 600; color: #ffffff; margin-bottom: 5px; }
-.info { font-size: 12px; color: #e2e8f0; margin-top: 4px; }
+.badge-easy { background:#34d399; color: white; }
+.badge-medium { background:#fbbf24; color: white; }
+.badge-hard { background:#f87171; color: white; }
 </style>
 """, unsafe_allow_html=True)
 
