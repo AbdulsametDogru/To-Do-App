@@ -16,6 +16,7 @@ def db_getir_gorevler():
 
 def db_ekle_gorev(data):
     requests.post(TASKS_URL, json={"data": [data]})
+    st.write(data)
 
 def db_sil_gorev(task_id):
     requests.delete(f"{TASKS_URL}/id/{task_id}")
