@@ -35,6 +35,11 @@ class GorevYoneticisi:
 
     def gorev_ekle(self, ad, durum, zorluk, son_tarih):
 
+        son_tarih = datetime.strptime(son_tarih,"%Y-%m-%d").date()
+
+        if son_tarih < datetime.now().date():
+            raise ValueError("Geçmiş tarihli görev eklenemez.")
+
         yeni_data = {
             "id": str(uuid.uuid4()),
             "ad": ad,

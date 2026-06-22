@@ -167,7 +167,7 @@ with st.sidebar:
             ad = st.text_input("Görev İsmi")
             durum = st.selectbox("Aşama", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
             zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
-            tarih = st.date_input("Teslim Tarihi")
+            tarih = st.date_input("Teslim Tarihi",min_value=date.today())
             if st.form_submit_button("Veritabanına İşle"):
                 yon.gorev_ekle(ad, durum, zorluk, str(tarih))
                 st.rerun()
