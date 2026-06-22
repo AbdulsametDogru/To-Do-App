@@ -1,6 +1,7 @@
 import streamlit as st
 from Backend import GorevYoneticisi
 from datetime import date
+from auth import Auth
 
 # Sayfa Yapılandırması
 st.set_page_config(page_title="Neon Sprint Board Pro", layout="wide")
@@ -59,14 +60,100 @@ st.markdown("""
 
 # Giriş Kontrolü
 if "kullanici_adi" not in st.session_state:
-    st.markdown("<h1 style='text-align:center; color:#8b5cf6; margin-top:100px;'>⚡ Cyber-Sprint Login</h1>", unsafe_allow_html=True)
-    col_a, col_b, col_c = st.columns([1, 1.5, 1])
-    with col_b:
-        isim = st.text_input("Kimliğinizi Girin:")
-        if st.button("Sisteme Eriş"):
-            if isim:
-                st.session_state.kullanici_adi = isim
-                st.rerun()
+
+    st.markdown(
+        """
+        <h1 style='text-align:center;
+        color:#8b5cf6;
+        margin-top:80px;'>
+        ⚡ Cyber Sprint Login
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+
+    with col2:
+
+        giris_tab, kayit_tab = st.tabs(
+            ["Giriş Yap", "Kayıt Ol"]
+        )
+
+        with giris_tab:
+
+            kullanici = st.text_input(
+                "Kullanıcı Adı",
+                key="login_user"
+            )
+
+            sifre = st.text_input(
+                "Şifre",
+                type="password",
+                key="login_pass"
+            )
+
+            if st.button(
+                "Giriş Yap",
+                use_container_width=True
+            ):
+
+                if Auth.giris(
+                    kullanici,
+                    sifre
+                ):
+
+                    st.session_state.kullanici_adi = (
+                        kullanici
+                    )
+
+                    st.rerun()
+
+                else:
+
+                    st.error(
+                        "Kullanıcı adı veya şifre hatalı."
+                    )
+
+        with kayit_tab:
+
+            yeni_kullanici = st.text_input(
+                "Yeni Kullanıcı Adı",
+                key="register_user"
+            )
+
+            yeni_sifre = st.text_input(
+                "Şifre",
+                type="password",
+                key="register_pass"
+            )
+
+            if st.button(
+                "Kayıt Ol",
+                use_container_width=True
+            ):
+
+                if len(yeni_sifre) < 6:
+
+                    st.warning(
+                        "Şifre en az 6 karakter olmalıdır."
+                    )
+
+                elif Auth.kayit(
+                    yeni_kullanici,
+                    yeni_sifre
+                ):
+
+                    st.success(
+                        "Kayıt başarılı. Giriş yapabilirsiniz."
+                    )
+
+                else:
+
+                    st.error(
+                        "Bu kullanıcı adı zaten kullanılıyor."
+                    )
+
     st.stop()
 
 yon = GorevYoneticisi(st.session_state.kullanici_adi)
