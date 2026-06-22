@@ -36,12 +36,25 @@ if "kullanici_adi" not in st.session_state:
         with tab1:
             user = st.text_input("Kullanıcı")
             pw = st.text_input("Şifre", type="password")
+
             if st.button("Giriş"):
-                if Auth.giris(user, pw):
-                    st.session_state.kullanici_adi = user
-                    st.rerun()
+                if not user or not pw:
+                    st.error("Lütfen kullanıcı adı ve şifre giriniz.")
                 else:
-                    st.warning("Kullanıcı adı veya şifre yanlış")
+                    # Auth.giris metodu boolean döndürdüğü için 
+                    # burada veritabanı bağlantı hatalarını da yakalayabiliriz
+                    try:
+                        if Auth.giris(user, pw):
+                            st.session_state.kullanici_adi = user
+                            st.rerun()
+                        else:
+                            # Giriş başarısızsa spesifik hata mesajı
+                            st.error("Hatalı kullanıcı adı veya şifre.")
+                    except Exception as e:
+                        # Beklenmedik teknik bir hata oluşursa bunu loglarız
+                        st.error("Sistemsel bir hata oluştu, lütfen daha sonra tekrar deneyin.")
+                        # İsterseniz st.write(e) ile hatayı görebilirsiniz ancak
+                        # son kullanıcıya göstermek yerine sadece loglamak daha güvenlidir.
         with tab2:
             u = st.text_input("Yeni kullanıcı")
             p = st.text_input("Şifre", type="password")
