@@ -1,217 +1,215 @@
 import streamlit as st
 from Backend import GorevYoneticisi
-from datetime import date
+from datetime import date, datetime
 from auth import Auth
 
-# Sayfa Yapılandırması
 st.set_page_config(page_title="Neon Sprint Board Pro", layout="wide")
 
-# CSS - Gelişmiş Neon Tasarımı
+# ---------------- CSS ----------------
 st.markdown("""
 <style>
-    /* Arka Plan Gradient */
-    .stApp { 
-        background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
-                    radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
-        background-attachment: fixed;
-        color: #ffffff;
-    }
-    
-    /* Yan Panel - Cam Efekti */
-    [data-testid="stSidebar"] {
-        background: rgba(15, 23, 42, 0.7) !important;
-        backdrop-filter: blur(15px);
-        border-right: 1px solid #8b5cf6;
-    }
+.stApp {
+    background: radial-gradient(circle at 70% 30%, #581c87, #0f172a),
+                radial-gradient(circle at 20% 80%, #991b1b, #0f172a);
+    background-attachment: fixed;
+    color: #fff;
+}
 
-    /* Genel Kart Yapısı */
-    .task-card {
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 5px;
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: 0.3s;
-    }
+/* Card base */
+.task-card {
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    background: rgba(15, 23, 42, 0.85);
+}
 
-    /* Duruma Göre Renkli Neon Glow Efektleri */
-    .card-todo { box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); border-left: 5px solid #3b82f6; }
-    .card-doing { box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); border-left: 5px solid #ef4444; }
-    .card-done { box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); border-left: 5px solid #10b981; }
-    
-    /* Kart Başlıkları */
-    .task-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 8px; color: #f8fafc; }
-    .task-info { font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
+/* Difficulty colors */
+.difficulty-easy {
+    border-left: 5px solid #10b981;
+    box-shadow: 0 0 12px rgba(16,185,129,0.35);
+}
 
-    /* Kolon Başlıkları */
-    .col-header {
-        text-align: center; font-weight: 800; padding: 12px; border-radius: 10px;
-        margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;
-        color: white; font-size: 1.1rem;
-    }
-    .todo-h { background: linear-gradient(90deg, #1e40af, #3b82f6); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-    .doing-h { background: linear-gradient(90deg, #991b1b, #ef4444); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
-    .done-h { background: linear-gradient(90deg, #065f46, #10b981); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+.difficulty-medium {
+    border-left: 5px solid #f59e0b;
+    box-shadow: 0 0 12px rgba(245,158,11,0.35);
+}
 
-    /* Buton Tasarımları */
-    .stButton>button { width: 100%; border-radius: 8px; height: 35px; font-size: 0.8rem; }
+.difficulty-hard {
+    border-left: 5px solid #ef4444;
+    box-shadow: 0 0 12px rgba(239,68,68,0.35);
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: white;
+    display: inline-block;
+}
+
+.badge-easy { background:#10b981; }
+.badge-medium { background:#f59e0b; }
+.badge-hard { background:#ef4444; }
+
+.task-title {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.task-info {
+    font-size: 13px;
+    color: #cbd5e1;
+    margin-top: 4px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# Giriş Kontrolü
+
+# ---------------- LOGIN ----------------
 if "kullanici_adi" not in st.session_state:
 
-    st.markdown(
-        """
-        <h1 style='text-align:center;
-        color:#8b5cf6;
-        margin-top:80px;'>
+    st.markdown("""
+        <h1 style='text-align:center;color:#8b5cf6;margin-top:80px;'>
         ⚡ Cyber Sprint Login
         </h1>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 2, 1])
+    col1, col2, col3 = st.columns([1,2,1])
 
     with col2:
+        tab1, tab2 = st.tabs(["Giriş", "Kayıt"])
 
-        giris_tab, kayit_tab = st.tabs(
-            ["Giriş Yap", "Kayıt Ol"]
-        )
+        with tab1:
+            user = st.text_input("Kullanıcı")
+            pw = st.text_input("Şifre", type="password")
 
-        with giris_tab:
-
-            kullanici = st.text_input(
-                "Kullanıcı Adı",
-                key="login_user"
-            )
-
-            sifre = st.text_input(
-                "Şifre",
-                type="password",
-                key="login_pass"
-            )
-
-            if st.button(
-                "Giriş Yap",
-                use_container_width=True
-            ):
-
-                if Auth.giris(
-                    kullanici,
-                    sifre
-                ):
-
-                    st.session_state.kullanici_adi = (
-                        kullanici
-                    )
-
+            if st.button("Giriş"):
+                if Auth.giris(user, pw):
+                    st.session_state.kullanici_adi = user
                     st.rerun()
-
                 else:
+                    st.error("Hatalı giriş")
 
-                    st.error(
-                        "Kullanıcı adı veya şifre hatalı."
-                    )
+        with tab2:
+            u = st.text_input("Yeni kullanıcı")
+            p = st.text_input("Şifre", type="password")
 
-        with kayit_tab:
-
-            yeni_kullanici = st.text_input(
-                "Yeni Kullanıcı Adı",
-                key="register_user"
-            )
-
-            yeni_sifre = st.text_input(
-                "Şifre",
-                type="password",
-                key="register_pass"
-            )
-
-            if st.button(
-                "Kayıt Ol",
-                use_container_width=True
-            ):
-
-                if len(yeni_sifre) < 6:
-
-                    st.warning(
-                        "Şifre en az 6 karakter olmalıdır."
-                    )
-
-                elif Auth.kayit(
-                    yeni_kullanici,
-                    yeni_sifre
-                ):
-
-                    st.success(
-                        "Kayıt başarılı. Giriş yapabilirsiniz."
-                    )
-
+            if st.button("Kayıt"):
+                if Auth.kayit(u, p):
+                    st.success("Kayıt başarılı")
                 else:
-
-                    st.error(
-                        "Bu kullanıcı adı zaten kullanılıyor."
-                    )
+                    st.error("Kullanıcı mevcut")
 
     st.stop()
 
+
+# ---------------- BACKEND ----------------
 yon = GorevYoneticisi(st.session_state.kullanici_adi)
 
-# Sidebar
+
+def kalan_gun(t):
+    try:
+        return (datetime.strptime(t, "%Y-%m-%d").date() - date.today()).days
+    except:
+        return 0
+
+
+def zorluk_class(z):
+    return {
+        "Kolay": "easy",
+        "Orta": "medium",
+        "Zor": "hard"
+    }.get(z, "medium")
+
+
+# ---------------- SIDEBAR ----------------
 with st.sidebar:
     st.markdown(f"### 👤 {st.session_state.kullanici_adi}")
-    st.divider()
-    with st.expander("➕ Yeni Görev Tanımla", expanded=True):
-        with st.form("yeni_form"):
-            ad = st.text_input("Görev İsmi")
-            durum = st.selectbox("Aşama", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
-            zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
-            tarih = st.date_input("Teslim Tarihi",min_value=date.today())
-            if st.form_submit_button("Veritabanına İşle"):
-                yon.gorev_ekle(ad, durum, zorluk, str(tarih))
-                st.rerun()
-    if st.button("Güvenli Çıkış"):
+
+    with st.form("add"):
+        ad = st.text_input("Görev")
+        durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
+        zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
+        tarih = st.date_input("Tarih", min_value=date.today())
+
+        if st.form_submit_button("Ekle"):
+            yon.gorev_ekle(ad, durum, zorluk, str(tarih))
+            st.rerun()
+
+    if st.button("Çıkış"):
         del st.session_state.kullanici_adi
         st.rerun()
 
-# Ana Board
-st.markdown("<h1 style='text-align:center; letter-spacing:2px;'>SPRINT CONTROL CENTER</h1>", unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
+
+# ---------------- BOARD ----------------
+st.title("SPRINT CONTROL CENTER")
 
 cols = st.columns(3)
 durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
-css_headers = ["todo-h", "doing-h", "done-h"]
-card_colors = ["card-todo", "card-doing", "card-done"]
 
 for i, col in enumerate(cols):
+
     with col:
-        st.markdown(f"<div class='col-header {css_headers[i]}'>{durumlar[i]}</div>", unsafe_allow_html=True)
-        
-        # Kullanıcının görevlerini filtrele
+        st.subheader(durumlar[i])
+
         gorevler = [g for g in yon.gorevler if g.durum == durumlar[i]]
-        
+
         for g in gorevler:
-            # Kart Görünümü (HTML)
+
+            diff = zorluk_class(g.zorluk)
+            kalan = kalan_gun(g.son_tarih)
+
             st.markdown(f"""
-            <div class='task-card {card_colors[i]}'>
-                <div class='task-title'>{g.ad}</div>
-                <div class='task-info'>📅 Son Gün: {g.son_tarih}</div>
-                <div class='task-info'>🔥 Zorluk: {g.zorluk}</div>
+            <div class="task-card difficulty-{diff}">
+                <div class="task-title">{g.ad}</div>
+
+                <div class="task-info">📅 {g.son_tarih}</div>
+                <div class="task-info">⏳ {kalan} gün kaldı</div>
+
+                <span class="badge badge-{diff}">
+                    {g.zorluk}
+                </span>
             </div>
             """, unsafe_allow_html=True)
-            
-            # İşlem Butonları (Kartın hemen altında)
-            b_col1, b_col2 = st.columns(2)
-            with b_col1:
-                # Güncelleme/Taşıma Dropdown
-                yeni_dur = st.selectbox("Taşı", durumlar, index=durumlar.index(g.durum), key=f"m_{g.id}", label_visibility="collapsed")
-                if yeni_dur != g.durum:
-                    yon.gorev_guncelle(g.id, {"durum": yeni_dur})
-                    st.rerun()
-            with b_col2:
-                # Silme Butonu
-                if st.button("🗑️ Sil", key=f"d_{g.id}"):
-                    yon.gorev_sil(g.id)
-                    st.rerun()
-            st.markdown("<div style='margin-bottom:20px;'></div>", unsafe_allow_html=True)
+
+            # ---- EXPANDER ACTIONS ----
+            with st.expander("İşlemler", expanded=False):
+
+                new_ad = st.text_input("Ad", g.ad, key=f"a{g.id}")
+                new_durum = st.selectbox(
+                    "Durum",
+                    durumlar,
+                    index=durumlar.index(g.durum),
+                    key=f"d{g.id}"
+                )
+                new_zorluk = st.selectbox(
+                    "Zorluk",
+                    ["Kolay", "Orta", "Zor"],
+                    index=["Kolay","Orta","Zor"].index(g.zorluk),
+                    key=f"z{g.id}"
+                )
+                new_tarih = st.date_input(
+                    "Tarih",
+                    value=datetime.strptime(g.son_tarih, "%Y-%m-%d"),
+                    key=f"t{g.id}"
+                )
+
+                c1, c2 = st.columns(2)
+
+                with c1:
+                    if st.button("Güncelle", key=f"u{g.id}"):
+
+                        yon.gorev_guncelle(g.id, {
+                            "ad": new_ad,
+                            "durum": new_durum,
+                            "zorluk": new_zorluk,
+                            "son_tarih": str(new_tarih)
+                        })
+
+                        st.rerun()
+
+                with c2:
+                    if st.button("Sil", key=f"s{g.id}"):
+
+                        yon.gorev_sil(g.id)
+                        st.rerun()
