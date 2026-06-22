@@ -93,9 +93,18 @@ with st.sidebar:
         durum = st.selectbox("Durum", ["Yapılacak", "Yapılıyor", "Tamamlandı"])
         zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"])
         tarih = st.date_input("Tarih", min_value=date.today())
+        
+        # Görev ekleme mantığını try-except içine alıyoruz
         if st.form_submit_button("Ekle"):
-            yon.gorev_ekle(ad, durum, zorluk, str(tarih))
-            st.rerun()
+            if not ad or ad.strip() == "":
+                st.error("⚠️ Lütfen bir görev adı girin.")
+            else:
+                try:
+                    yon.gorev_ekle(ad, durum, zorluk, str(tarih))
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Hata: {str(e)}")
+
     if st.button("Çıkış"):
         del st.session_state.kullanici_adi
         st.rerun()
