@@ -35,25 +35,25 @@ class GorevYoneticisi:
 
     def gorev_ekle(self, ad, durum, zorluk, son_tarih):
 
-        son_tarih = datetime.strptime(son_tarih,"%Y-%m-%d").date()
+        tarih_obj = datetime.strptime(son_tarih,"%Y-%m-%d").date()
 
-        if son_tarih < datetime.now().date():
+        if tarih_obj < datetime.now().date():
             raise ValueError("Geçmiş tarihli görev eklenemez.")
 
         yeni_data = {
-            "id": str(uuid.uuid4()),
-            "ad": ad,
-            "durum": durum,
-            "zorluk": zorluk,
-            "son_tarih": son_tarih,
-            "user_id": self.kullanici
-        }
+        "id": str(uuid.uuid4()),
+        "ad": ad,
+        "durum": durum,
+        "zorluk": zorluk,
+        "son_tarih": son_tarih,  # string olarak kalıyor
+        "user_id": self.kullanici
+    }
 
         database.db_ekle_gorev(yeni_data)
 
         self.gorevler.append(
-            Gorev(**yeni_data)
-        )
+        Gorev(**yeni_data)
+    )
 
     def gorev_sil(self, task_id):
 
