@@ -18,21 +18,14 @@ class GorevYoneticisi:
         self.gorevler = [Gorev(**d) for d in data if d.get("user_id") == kullanici_adi]
         
         # Sıralama mantığı: 
-        # 1. Önce tarih (yakın tarihler başa gelir)
-        # 2. Sonra zorluk (Zor=3, Orta=2, Kolay=1 şeklinde büyükten küçüğe)
-        zorluk_sirasi = {"Zor": 3, "Orta": 2, "Kolay": 1}
+        # 1. Önce tarih (g.son_tarih) -> Eskiden yeniye (YYYY-MM-DD formatı gereği)
+        # 2. Aynı gün içinde: Zor (3) > Orta (2) > Kolay (1)
+        # Python'da -3, -2'den küçük olduğu için Zor olanlar en başa gelir.
+        
+        zorluk_puani = {"Zor": 3, "Orta": 2, "Kolay": 1}
         
         self.gorevler.sort(
-            key=lambda g: (g.son_tarih, -zorluk_sirasi.get(g.zorluk, 0))
-        )
-        
-        # Sıralama mantığı: 
-        # 1. Önce tarih (son_tarih)
-        # 2. Sonra zorluk (Kolay=1, Orta=2, Zor=3)
-        zorluk_sirasi = {"Kolay": 1, "Orta": 2, "Zor": 3}
-        
-        self.gorevler.sort(
-            key=lambda g: (g.son_tarih, zorluk_sirasi.get(g.zorluk, 2))
+            key=lambda g: (g.son_tarih, -zorluk_puani.get(g.zorluk, 0))
         )
 
     def gorev_ekle(self, ad, durum, zorluk, son_tarih):
