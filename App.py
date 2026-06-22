@@ -18,53 +18,37 @@ st.markdown("""
     font-family: 'Inter', sans-serif;
 }
 
-/* Başlıkları Modernize Et */
-h1, h2, h3 {
-    font-weight: 700 !important;
-    letter-spacing: -0.025em;
-    color: #ffffff;
-}
-
-/* Kartlar - Daha Modern ve Yumuşak */
+/* Kartlar - Tam Renkli Neon Stil */
 .task-card { 
     padding: 20px; 
     border-radius: 16px; 
     margin-bottom: 16px; 
-    background: rgba(30, 41, 59, 0.4); 
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
 }
 
 .task-card:hover { 
     transform: translateY(-5px);
-    background: rgba(30, 41, 59, 0.6);
+    filter: brightness(1.2);
 }
 
-/* Zorluk Renkleri - Neon Tonları */
-.difficulty-easy { border-left: 6px solid #10b981; box-shadow: 5px 0 15px -5px #10b981; }
-.difficulty-medium { border-left: 6px solid #f59e0b; box-shadow: 5px 0 15px -5px #f59e0b; }
-.difficulty-hard { border-left: 6px solid #ef4444; box-shadow: 5px 0 15px -5px #ef4444; }
+/* Zorluk Renkleri - Arka Plan + Neon Glow */
+.difficulty-easy { background: rgba(16, 185, 129, 0.25); border-left: 8px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); }
+.difficulty-medium { background: rgba(245, 158, 11, 0.25); border-left: 8px solid #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+.difficulty-hard { background: rgba(239, 68, 68, 0.25); border-left: 8px solid #ef4444; box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
 
 /* Rozet ve Yazı Tipi */
 .badge { 
-    display: inline-block; 
-    padding: 4px 12px; 
-    border-radius: 8px; 
-    font-size: 11px; 
-    font-weight: 600; 
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    display: inline-block; padding: 4px 12px; border-radius: 8px; font-size: 10px; 
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
 }
+.badge-easy { background:#10b981; color: white; }
+.badge-medium { background:#f59e0b; color: white; }
+.badge-hard { background:#ef4444; color: white; }
 
-.title { font-size: 17px; font-weight: 600; color: #ffffff; }
-.info { font-size: 12px; color: #94a3b8; margin-top: 6px; }
-
-/* Progress Bar Modernizasyonu */
-.stProgress > div > div > div > div {
-    background-image: linear-gradient(90deg, #8b5cf6, #ec4899);
-    border-radius: 10px;
-}
+.title { font-size: 17px; font-weight: 600; color: #ffffff; margin-bottom: 5px; }
+.info { font-size: 12px; color: #e2e8f0; margin-top: 4px; }
 </style>
 """, unsafe_allow_html=True)
 
