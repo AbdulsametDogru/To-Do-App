@@ -141,23 +141,25 @@ st.write(f"**Sprint Tamamlanma Oranı: %{int(ilerleme * 100)}**")
 st.progress(ilerleme)
 st.divider() # Görsel ayrım çizgisi
 
-# ---------------- BOARD ----------------
-st.title("SPRINT CONTROL CENTER")
+# ---------------- BOARD & METRİKLER ----------------
+st.markdown("<h2 style='text-align: left; margin-bottom: 20px;'>🚀 Sprint Dashboard</h2>", unsafe_allow_html=True)
 
-# Metrikleri ve İlerlemeyi en üste alalım
+# Metrikleri daha kompakt bir kutu içerisinde gösterelim
 toplam_gorev = len(yon.gorevler)
 yapilacak = len([g for g in yon.gorevler if g.durum == "Yapılacak"])
 yapiliyor = len([g for g in yon.gorevler if g.durum == "Yapılıyor"])
 tamamlanan = len([g for g in yon.gorevler if g.durum == "Tamamlandı"])
 
-m1, m2, m3 = st.columns(3)
-m1.metric("Yapılacak", yapilacak)
-m2.metric("Yapılıyor", yapiliyor)
-m3.metric("Tamamlanan", tamamlanan)
+col_m1, col_m2, col_m3, col_m4 = st.columns([1, 1, 1, 2])
+col_m1.metric("Yapılacak", yapilacak)
+col_m2.metric("Yapılıyor", yapiliyor)
+col_m3.metric("Tamamlanan", tamamlanan)
 
 ilerleme = tamamlanan / toplam_gorev if toplam_gorev > 0 else 0
-st.progress(ilerleme)
-st.markdown("---")
+col_m4.write(f"**Genel İlerleme**")
+col_m4.progress(ilerleme)
+
+st.markdown("<br>", unsafe_allow_html=True) # Hafif boşluk
 
 # Board Sütunları
 cols = st.columns(3)
@@ -165,35 +167,32 @@ durumlar = ["Yapılacak", "Yapılıyor", "Tamamlandı"]
 
 for i, col in enumerate(cols):
     with col:
-        st.subheader(durumlar[i])
+        # Alt başlık yerine daha şık bir stil
+        st.markdown(f"### {durumlar[i]}", unsafe_allow_html=True)
         
-        # Görevleri filtrele ve göster
         gorevler = [x for x in yon.gorevler if x.durum == durumlar[i]]
-        
         for g in gorevler:
             kalan = kalan_gun(g.son_tarih)
             diff = zorluk_class(g.zorluk)
             
-            # Kart Görünümü
             st.markdown(f"""
             <div class="task-card difficulty-{diff}">
                 <div class="title">{g.ad}</div>
-                <div class="info">📅 {g.son_tarih}</div>
-                <div class="info">⏳ {kalan if kalan >= 0 else "Gecikti"} gün</div>
-                <div style="margin-top:6px"><span class="badge badge-{diff}">{g.zorluk}</span></div>
+                <div class="info">📅 {g.son_tarih} | ⏳ {kalan if kalan >= 0 else "Gecikti"} gün</div>
+                <div style="margin-top:10px"><span class="badge badge-{diff}">{g.zorluk}</span></div>
             </div>""", unsafe_allow_html=True)
             
-            # İşlemler - Benzersiz key yapılarını koruduk
-            with st.expander("İşlemler"):
-                new_ad = st.text_input("Ad", g.ad, key=f"a_{g.id}")
-                new_durum = st.selectbox("Durum", durumlar, index=durumlar.index(g.durum), key=f"d_{g.id}")
-                new_zorluk = st.selectbox("Zorluk", ["Kolay","Orta","Zor"], index=["Kolay","Orta","Zor"].index(g.zorluk), key=f"z_{g.id}")
-                new_tarih = st.date_input("Tarih", datetime.strptime(g.son_tarih, "%Y-%m-%d"), key=f"t_{g.id}")
+            with st.expander("Düzenle"):
+                # İçerik daha düzenli
+                new_ad = st.text_input("Görev Adı", g.ad, key=f"a_{g.id}")
+                col_d1, col_d2 = st.columns(2)
+                new_durum = col_d1.selectbox("Durum", durumlar, index=durumlar.index(g.durum), key=f"d_{g.id}")
+                new_zorluk = col_d2.selectbox("Zorluk", ["Kolay","Orta","Zor"], index=["Kolay","Orta","Zor"].index(g.zorluk), key=f"z_{g.id}")
                 
                 c1, c2 = st.columns(2)
-                if c1.button("Güncelle", key=f"u_{g.id}"):
-                    yon.gorev_guncelle(g.id, {"ad": new_ad, "durum": new_durum, "zorluk": new_zorluk, "son_tarih": str(new_tarih)})
+                if c1.button("Güncelle", key=f"u_{g.id}", use_container_width=True):
+                    yon.gorev_guncelle(g.id, {"ad": new_ad, "durum": new_durum, "zorluk": new_zorluk, "son_tarih": g.son_tarih})
                     st.rerun()
-                if c2.button("Sil", key=f"s_{g.id}"):
+                if c2.button("Sil", key=f"s_{g.id}", use_container_width=True):
                     yon.gorev_sil(g.id)
                     st.rerun()
