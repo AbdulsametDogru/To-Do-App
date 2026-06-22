@@ -56,6 +56,15 @@ st.markdown("""
     .title { font-size: 16px; }
     .info { font-size: 12px; }
 }
+    /* Metriklerin başlık ve değer rengini koyulaştır */
+[data-testid="stMetricLabel"] {
+    color: #334155 !important;
+    font-weight: 600;
+}
+
+[data-testid="stMetricValue"] {
+    color: #0f172a !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
