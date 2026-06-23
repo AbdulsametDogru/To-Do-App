@@ -257,90 +257,59 @@ for i, col in enumerate(cols):
     with col:
         st.subheader(durumlar[i])
         
-        # Sadece ilgili durumdaki görevleri filtrele
-        for g in [x for x in yon.gorevler if x.durum == durumlar[i]]:
-            kalan = kalan_gun(g.son_tarih)
+        # İlgili durumdaki görevleri al
+        gorevler = [x for x in yon.gorevler if x.durum == durumlar[i]]
+        
+        for g in gorevler:
+            # Her kartı bir container içine alarak birbirinden ayırıyoruz
+            with st.container():
+                kalan = kalan_gun(g.son_tarih)
+                
+                # Kalan gün metni
+                if kalan < 0:
+                    kalan_text = f'<span style="color:#1e3a8a;font-weight:700">🔴 {abs(kalan)} Gün Gecikti</span>'
+                elif kalan == 0:
+                    kalan_text = '<span style="color:#1e3a8a;font-weight:700">🔴 Son Gün</span>'
+                else:
+                    kalan_text = f"⏳ {kalan} gün kaldı"
 
-        if kalan < 0:
-            kalan_text = f'<span style="color:#1e3a8a;font-weight:700">🔴 {abs(kalan)} Gün Gecikti</span>'
-        elif kalan == 0:
-            kalan_text = '<span style="color:#1e3a8a;font-weight:700">🔴 Son Gün</span>'
-        else:
-            kalan_text = f"⏳ {kalan} gün kaldı"
+                diff = zorluk_class(g.zorluk)
 
-        diff = zorluk_class(g.zorluk)
-
-        st.markdown(f"""
-        <div class="task-card difficulty-{diff}">
-            <div class="title">{g.ad}</div>
-            <div class="info">📅 {g.son_tarih}</div>
-            <div class="info">{kalan_text}</div>
-            <div style="margin-top:6px">
-                <span class="badge badge-{diff}">
-                    {g.zorluk}
-                </span>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-            
-            # İşlemler
-        with st.expander("İşlemler"):
-
-                c1, c2 = st.columns(2)
-
-                if c1.button("Güncelle", key=f"edit_{g.id}"):
-                    st.session_state[f"editing_{g.id}"] = True
-                    st.rerun()
-
-                if c2.button("Sil", key=f"sil_{g.id}"):
-                    yon.gorev_sil(g.id)
-                    st.rerun()
-
-                if st.session_state.get(f"editing_{g.id}", False):
-
-                    new_ad = st.text_input(
-                        "Görev Adı",
-                        g.ad,
-                        key=f"a_{g.id}"
-                    )
-
-                    new_durum = st.selectbox(
-                        "Durum",
-                        durumlar,
-                        index=durumlar.index(g.durum),
-                        key=f"d_{g.id}"
-                    )
-
-                    new_zorluk = st.selectbox(
-                        "Zorluk",
-                        ["Kolay", "Orta", "Zor"],
-                        index=["Kolay", "Orta", "Zor"].index(g.zorluk),
-                        key=f"z_{g.id}"
-                    )
-
-                    new_tarih = st.date_input(
-                        "Tarih",
-                        datetime.strptime(
-                            g.son_tarih,
-                            "%Y-%m-%d"
-                        ),
-                        key=f"t_{g.id}"
-                    )
-
-                    if st.button(
-                        "Değişiklikleri Kaydet",
-                        key=f"kaydet_{g.id}"
-                    ):
-
-                        yon.gorev_guncelle(
-                            g.id,
-                            {
-                                "ad": new_ad,
-                                "durum": new_durum,
-                                "zorluk": new_zorluk,
-                                "son_tarih": str(new_tarih)
-                            }
-                        )
-
-                        st.session_state[f"editing_{g.id}"] = False
+                # Kart tasarımı
+                st.markdown(f"""
+                <div class="task-card difficulty-{diff}">
+                    <div class="title">{g.ad}</div>
+                    <div class="info">📅 {g.son_tarih}</div>
+                    <div class="info">{kalan_text}</div>
+                    <div style="margin-top:6px">
+                        <span class="badge">{g.zorluk}</span>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                # İşlemler - Her kartın hemen altında yer alır
+                with st.expander("İşlemler"):
+                    c1, c2 = st.columns(2)
+                    if c1.button("Güncelle", key=f"edit_{g.id}"):
+                        st.session_state[f"editing_{g.id}"] = True
                         st.rerun()
+                    if c2.button("Sil", key=f"sil_{g.id}"):
+                        yon.gorev_sil(g.id)
+                        st.rerun()
+
+                    # Düzenleme Modu
+                    if st.session_state.get(f"editing_{g.id}", False):
+                        new_ad = st.text_input("Görev Adı", g.ad, key=f"a_{g.id}")
+                        new_durum = st.selectbox("Durum", durumlar, index=durumlar.index(g.durum), key=f"d_{g.id}")
+                        new_zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(g.zorluk), key=f"z_{g.id}")
+                        new_tarih = st.date_input("Tarih", datetime.strptime(g.son_tarih, "%Y-%m-%d"), key=f"t_{g.id}")
+
+                        if st.button("Değişiklikleri Kaydet", key=f"kaydet_{g.id}"):
+                            yon.gorev_guncelle(g.id, {
+                                "ad": new_ad, "durum": new_durum, 
+                                "zorluk": new_zorluk, "son_tarih": str(new_tarih)
+                            })
+                            st.session_state[f"editing_{g.id}"] = False
+                            st.rerun()
+                
+                st.write("") # Kartlar arasında boşluk bırakmak için
