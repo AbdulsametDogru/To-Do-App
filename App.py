@@ -17,19 +17,29 @@ st.markdown("""
 
 .stApp {
     background:
-        radial-gradient(circle at 15% 20%, rgba(255, 0, 128, 0.28) 0%, transparent 35%),
-        radial-gradient(circle at 85% 25%, rgba(0, 170, 255, 0.25) 0%, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(255, 50, 50, 0.22) 0%, transparent 40%),
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(255, 0, 140, 0.15) 0%,
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 85% 25%,
+            rgba(0, 180, 255, 0.12) 0%,
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 50% 85%,
+            rgba(255, 60, 60, 0.10) 0%,
+            transparent 40%
+        ),
         linear-gradient(
             135deg,
-            #0a0a12 0%,
-            #101625 35%,
-            #151122 65%,
-            #090909 100%
+            #f8fafc 0%,
+            #eef2ff 50%,
+            #f1f5f9 100%
         );
 
-    min-height: 100vh;
-    color: #f8fafc;
+    color: #0f172a;
 }
 
 /* Kartlar - Tam Renkli Tasarım */
