@@ -178,63 +178,63 @@ for i, col in enumerate(cols):
             </div>""", unsafe_allow_html=True)
             
             # İşlemler
-        with st.expander("İşlemler"):
+            with st.expander("İşlemler"):
 
-            c1, c2 = st.columns(2)
+                c1, c2 = st.columns(2)
 
-            if c1.button("Güncelle", key=f"edit_{g.id}"):
-                st.session_state[f"editing_{g.id}"] = True
-                st.rerun()
+                if c1.button("Güncelle", key=f"edit_{g.id}"):
+                    st.session_state[f"editing_{g.id}"] = True
+                    st.rerun()
 
-            if c2.button("Sil", key=f"sil_{g.id}"):
-                yon.gorev_sil(g.id)
-                st.rerun()
+                if c2.button("Sil", key=f"sil_{g.id}"):
+                    yon.gorev_sil(g.id)
+                    st.rerun()
 
-            if st.session_state.get(f"editing_{g.id}", False):
+                if st.session_state.get(f"editing_{g.id}", False):
 
-                new_ad = st.text_input(
-                    "Görev Adı",
-                    g.ad,
-                    key=f"a_{g.id}"
-                )
-
-                new_durum = st.selectbox(
-                    "Durum",
-                    durumlar,
-                    index=durumlar.index(g.durum),
-                    key=f"d_{g.id}"
-                )
-
-                new_zorluk = st.selectbox(
-                    "Zorluk",
-                    ["Kolay", "Orta", "Zor"],
-                    index=["Kolay", "Orta", "Zor"].index(g.zorluk),
-                    key=f"z_{g.id}"
-                )
-
-                new_tarih = st.date_input(
-                    "Tarih",
-                    datetime.strptime(
-                        g.son_tarih,
-                        "%Y-%m-%d"
-                    ),
-                    key=f"t_{g.id}"
-                )
-
-                if st.button(
-                    "Değişiklikleri Kaydet",
-                    key=f"kaydet_{g.id}"
-                ):
-
-                    yon.gorev_guncelle(
-                        g.id,
-                        {
-                            "ad": new_ad,
-                            "durum": new_durum,
-                            "zorluk": new_zorluk,
-                            "son_tarih": str(new_tarih)
-                        }
+                    new_ad = st.text_input(
+                        "Görev Adı",
+                        g.ad,
+                        key=f"a_{g.id}"
                     )
 
-                    st.session_state[f"editing_{g.id}"] = False
-                    st.rerun()
+                    new_durum = st.selectbox(
+                        "Durum",
+                        durumlar,
+                        index=durumlar.index(g.durum),
+                        key=f"d_{g.id}"
+                    )
+
+                    new_zorluk = st.selectbox(
+                        "Zorluk",
+                        ["Kolay", "Orta", "Zor"],
+                        index=["Kolay", "Orta", "Zor"].index(g.zorluk),
+                        key=f"z_{g.id}"
+                    )
+
+                    new_tarih = st.date_input(
+                        "Tarih",
+                        datetime.strptime(
+                            g.son_tarih,
+                            "%Y-%m-%d"
+                        ),
+                        key=f"t_{g.id}"
+                    )
+
+                    if st.button(
+                        "Değişiklikleri Kaydet",
+                        key=f"kaydet_{g.id}"
+                    ):
+
+                        yon.gorev_guncelle(
+                            g.id,
+                            {
+                                "ad": new_ad,
+                                "durum": new_durum,
+                                "zorluk": new_zorluk,
+                                "son_tarih": str(new_tarih)
+                            }
+                        )
+
+                        st.session_state[f"editing_{g.id}"] = False
+                        st.rerun()
