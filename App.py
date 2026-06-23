@@ -3,11 +3,7 @@ from Backend import GorevYoneticisi
 from datetime import date, datetime
 from auth import Auth
 
-st.set_page_config(
-    page_title="Neon Sprint Board Pro", 
-    layout="centered",
-    initial_sidebar_state="auto"
-)
+st.set_page_config(page_title="Neon Sprint Board Pro", layout="centered", initial_sidebar_state="auto", page_icon="✔️")
 
 # ---------------- CSS ----------------
 st.markdown("""
