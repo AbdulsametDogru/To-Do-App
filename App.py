@@ -65,6 +65,51 @@ st.markdown("""
 [data-testid="stMetricValue"] {
     color: #0f172a !important;
 }
+            
+/* Genel yazılar */
+html, body, p, span, label, div {
+    color: #0f172a;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] * {
+    color: #0f172a !important;
+}
+
+/* Expander */
+.streamlit-expanderHeader {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+/* Input etiketleri */
+label {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+/* Selectbox ve input */
+.stTextInput input,
+.stDateInput input,
+.stSelectbox div {
+    color: #0f172a !important;
+}
+
+/* Metric */
+[data-testid="stMetricLabel"] {
+    color: #334155 !important;
+    font-weight: 600;
+}
+
+[data-testid="stMetricValue"] {
+    color: #020617 !important;
+    font-weight: 700;
+}
+
+/* Başlıklar */
+h1, h2, h3, h4 {
+    color: #0f172a !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
