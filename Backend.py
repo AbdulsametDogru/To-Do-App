@@ -34,7 +34,7 @@ class GorevYoneticisi:
             )
         )
 
-    @st.cache_data(ttl=120)
+    @st.cache_data(ttl=300)
     def get_data_with_refresh(_self):
         return database.db_getir_gorevler()
     
