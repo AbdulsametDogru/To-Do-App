@@ -302,7 +302,7 @@ for i, col in enumerate(cols):
                         new_ad = st.text_input("Görev Adı", g.ad, key=f"a_{g.id}")
                         new_durum = st.selectbox("Durum", durumlar, index=durumlar.index(g.durum), key=f"d_{g.id}")
                         new_zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(g.zorluk), key=f"z_{g.id}")
-                        new_tarih = st.date_input("Tarih", datetime.strptime(g.son_tarih, "%Y-%m-%d"), key=f"t_{g.id}")
+                        new_tarih = st.date_input("Tarih",value=datetime.strptime(g.son_tarih, "%Y-%m-%d"),min_value=date.today(), key=f"t_{g.id}")
 
                         if st.button("Değişiklikleri Kaydet", key=f"kaydet_{g.id}"):
                             yon.gorev_guncelle(g.id, {
