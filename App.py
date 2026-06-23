@@ -229,7 +229,7 @@ with st.sidebar:
 
 
 # ---------------- BOARD & METRİKLER ----------------
-st.title("🚀 Sprint Dashboard")
+st.title("✔️ Sprint Dashboard")
 
 # Veri hesaplama
 toplam_gorev = len(yon.gorevler)

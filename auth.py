@@ -2,6 +2,7 @@ import hashlib
 import database
 
 class Auth:
+    """Auth sınıfı, kullanıcı kayıt ve giriş işlemlerini yönetir."""
     @staticmethod
     def sifrele(password):
         return hashlib.sha256(password.encode()).hexdigest()

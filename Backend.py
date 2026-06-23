@@ -4,6 +4,7 @@ from datetime import datetime
 import streamlit as st
 
 class Gorev:
+    """Görev sınıfı, görev bilgilerini saklar."""
     def __init__(self, ad, durum, zorluk, son_tarih, user_id, id=None):
         self.id = id if id else str(uuid.uuid4())
         self.ad = ad
@@ -13,6 +14,7 @@ class Gorev:
         self.user_id = user_id
 
 class GorevYoneticisi:
+    """Görev yöneticisi sınıfı, görevleri yönetmek için gerekli işlemleri yapar."""
     def __init__(self, kullanici_adi):
         self.kullanici = kullanici_adi
         # Veriyi her seferinde taze çekmesi için ttl=0 kullanıyoruz
