@@ -34,7 +34,7 @@ class GorevYoneticisi:
             )
         )
 
-    @st.cache_data(ttl=0) # ttl=0, verinin asla cache'lenmemesini sağlar
+    @st.cache_data(ttl=120)
     def get_data_with_refresh(_self):
         return database.db_getir_gorevler()
     
@@ -46,10 +46,12 @@ class GorevYoneticisi:
         }
         database.db_ekle_gorev(yeni_data)
         self.gorevler.append(Gorev(**yeni_data))
+        st.cache_data.clear()
 
     def gorev_sil(self, task_id):
         database.db_sil_gorev(task_id)
         self.gorevler = [g for g in self.gorevler if g.id != task_id]
+        st.cache_data.clear()
 
     def gorev_guncelle(self, task_id, yeni_data):
         database.db_guncelle_gorev(task_id, yeni_data)
@@ -60,3 +62,4 @@ class GorevYoneticisi:
                 g.zorluk = yeni_data.get("zorluk", g.zorluk)
                 g.son_tarih = yeni_data.get("son_tarih", g.son_tarih)
                 break
+        st.cache_data.clear()
