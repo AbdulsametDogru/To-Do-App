@@ -18,6 +18,7 @@ class GorevYoneticisi:
         # Veriyi her seferinde taze çekmesi için ttl=0 kullanıyoruz
         data = self.get_data_with_refresh()
         self.gorevler = [Gorev(**d) for d in data if d.get("user_id") == kullanici_adi]
+        self.gorevleri_sirala()
         
     def gorevleri_sirala(self):
         zorluk_oncelik = {
