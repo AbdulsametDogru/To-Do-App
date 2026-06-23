@@ -257,19 +257,31 @@ for i, col in enumerate(cols):
         # Sadece ilgili durumdaki görevleri filtrele
         for g in [x for x in yon.gorevler if x.durum == durumlar[i]]:
             kalan = kalan_gun(g.son_tarih)
-            diff = zorluk_class(g.zorluk)
-            
-            # Kart
-            st.markdown(f"""
-            <div class="task-card difficulty-{diff}">
-                <div class="title">{g.ad}</div>
-                <div class="info">📅 {g.son_tarih}</div>
-                <div class="info">⏳ {kalan if kalan >= 0 else "Gecikti"} gün</div>
-                <div style="margin-top:6px"><span class="badge badge-{diff}">{g.zorluk}</span></div>
-            </div>""", unsafe_allow_html=True)
+
+        if kalan < 0:
+            kalan_text = '<span style="color:#ff4d4f;font-weight:700">🔴 Gecikti</span>'
+        elif kalan == 0:
+            kalan_text = '<span style="color:#ff4d4f;font-weight:700">🔴 Son Gün</span>'
+        else:
+            kalan_text = f"⏳ {kalan} gün kaldı"
+
+        diff = zorluk_class(g.zorluk)
+
+        st.markdown(f"""
+        <div class="task-card difficulty-{diff}">
+            <div class="title">{g.ad}</div>
+            <div class="info">📅 {g.son_tarih}</div>
+            <div class="info">{kalan_text}</div>
+            <div style="margin-top:6px">
+                <span class="badge badge-{diff}">
+                    {g.zorluk}
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
             
             # İşlemler
-            with st.expander("İşlemler"):
+        with st.expander("İşlemler"):
 
                 c1, c2 = st.columns(2)
 
