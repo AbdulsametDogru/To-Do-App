@@ -180,7 +180,7 @@ if "kullanici_adi" not in st.session_state:
                         else:
                             st.error("Hatalı kullanıcı adı veya şifre.")
                     except Exception as e:
-                        st.error("Sistemsel bir hata oluştu, lütfen daha sonra tekrar deneyin.")
+                        st.error(f"Hata detayları: {str(e)}")
         with tab2:
             u = st.text_input("Yeni kullanıcı", key="reg_user")
             p = st.text_input("Şifre", type="password", key="reg_pw")
