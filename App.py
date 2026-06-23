@@ -16,10 +16,20 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 .stApp {
-    /* Orta tonlarda, ne çok açık ne çok koyu bir arka plan */
-    background: linear-gradient(145deg, #f1f5f9 0%, #e2e8f0 100%);
-    color: #334155;
-    font-family: 'Inter', sans-serif;
+    background:
+        radial-gradient(circle at 15% 20%, rgba(255, 0, 128, 0.28) 0%, transparent 35%),
+        radial-gradient(circle at 85% 25%, rgba(0, 170, 255, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255, 50, 50, 0.22) 0%, transparent 40%),
+        linear-gradient(
+            135deg,
+            #0a0a12 0%,
+            #101625 35%,
+            #151122 65%,
+            #090909 100%
+        );
+
+    min-height: 100vh;
+    color: #f8fafc;
 }
 
 /* Kartlar - Tam Renkli Tasarım */
