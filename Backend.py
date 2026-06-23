@@ -60,6 +60,7 @@ class GorevYoneticisi:
         for g in self.gorevler:
             if g.id == task_id:
                 g.ad = yeni_data.get("ad", g.ad)
+                if not g.ad.strip(): raise ValueError("Görev adı boş olamaz.")
                 g.durum = yeni_data.get("durum", g.durum)
                 g.zorluk = yeni_data.get("zorluk", g.zorluk)
                 g.son_tarih = yeni_data.get("son_tarih", g.son_tarih)
