@@ -302,8 +302,14 @@ for i, col in enumerate(cols):
                         new_ad = st.text_input("Görev Adı", g.ad, key=f"a_{g.id}")
                         new_durum = st.selectbox("Durum", durumlar, index=durumlar.index(g.durum), key=f"d_{g.id}")
                         new_zorluk = st.selectbox("Zorluk", ["Kolay", "Orta", "Zor"], index=["Kolay", "Orta", "Zor"].index(g.zorluk), key=f"z_{g.id}")
-                        new_tarih = st.date_input("Tarih",value=datetime.strptime(g.son_tarih, "%Y-%m-%d"),min_value=date.today(), key=f"t_{g.id}")
-                        # Düzenleme Modu içerisindeki güncelleme mantığı
+                        
+                        # Mevcut tarih ile bugünü kıyaslayarak min_value belirleme
+                        mevcut_tarih_obj = datetime.strptime(g.son_tarih, "%Y-%m-%d").date()
+                        min_tarih = min(mevcut_tarih_obj, date.today())
+                        
+                        new_tarih = st.date_input("Tarih", value=mevcut_tarih_obj, min_value=min_tarih, key=f"t_{g.id}")
+                        
+                        # BUTON TEK BİR KEZ TANIMLANDI
                         if st.button("Değişiklikleri Kaydet", key=f"kaydet_{g.id}"):
                             # 1. Boşluk kontrolü
                             if not new_ad or new_ad.strip() == "":
@@ -321,12 +327,5 @@ for i, col in enumerate(cols):
                                 )
                                 st.session_state[f"editing_{g.id}"] = False
                                 st.rerun()
-                        if st.button("Değişiklikleri Kaydet", key=f"kaydet_{g.id}"):
-                            yon.gorev_guncelle(g.id, {
-                                "ad": new_ad, "durum": new_durum, 
-                                "zorluk": new_zorluk, "son_tarih": str(new_tarih)
-                            })
-                            st.session_state[f"editing_{g.id}"] = False
-                            st.rerun()
                 
-                st.write("") # Kartlar arasında boşluk bırakmak için
+                                st.write("") # Kartlar arasında boşluk bırakmak için
