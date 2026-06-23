@@ -59,12 +59,15 @@ section[data-testid="stSidebar"] * {
 .task-card { 
     padding: 20px; 
     border-radius: 14px; 
-    margin-bottom: 16px; 
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Kenarlıklar daha belirgin olsun */
-    backdrop-filter: blur(12px);               /* Cam efekti (Bulanıklık) */
-    -webkit-backdrop-filter: blur(12px);       /* Safari desteği için */
+    margin-bottom: 20px; /* Kartlar arası boşluğu artırdık */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     transition: transform 0.2s ease;
-    color: white; 
+    color: white;
+    /* Kartların kutudan taşmasını veya üst üste binmesini engellemek için: */
+    display: block; 
+    width: 100%;
 }
 
 /* Zorluk Renkleri - Arka planı hafif şeffaf hale getirdik */
