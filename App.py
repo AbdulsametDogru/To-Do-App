@@ -259,9 +259,9 @@ for i, col in enumerate(cols):
             kalan = kalan_gun(g.son_tarih)
 
         if kalan < 0:
-            kalan_text = f'<span style="color:#ff4d4f;font-weight:700">🔴 {abs(kalan)} Gün Gecikti</span>'
+            kalan_text = f'<span style="color:#1e3a8a;font-weight:700">🔴 {abs(kalan)} Gün Gecikti</span>'
         elif kalan == 0:
-            kalan_text = '<span style="color:#ff4d4f;font-weight:700">🔴 Son Gün</span>'
+            kalan_text = '<span style="color:#1e3a8a;font-weight:700">🔴 Son Gün</span>'
         else:
             kalan_text = f"⏳ {kalan} gün kaldı"
 
