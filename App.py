@@ -55,22 +55,22 @@ section[data-testid="stSidebar"] * {
     border: 1px solid #cbd5e1 !important;
 }
             
-/* Kartlar - Tam Renkli Tasarım */
+/* Kartlar - Cam Tasarım */
 .task-card { 
     padding: 20px; 
     border-radius: 14px; 
     margin-bottom: 16px; 
-    border: none;
-    color: white; /* Kart içindeki yazılar beyaz olsun ki renkli arka planla okunsun */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Kenarlıklar daha belirgin olsun */
+    backdrop-filter: blur(12px);               /* Cam efekti (Bulanıklık) */
+    -webkit-backdrop-filter: blur(12px);       /* Safari desteği için */
     transition: transform 0.2s ease;
+    color: white; 
 }
 
-.task-card:hover { transform: scale(1.02); }
-
-/* Zorluk Renkleri - Tam Renk Dolgusu */
-.difficulty-easy { background: #10b981; }
-.difficulty-medium { background: #f59e0b; }
-.difficulty-hard { background: #ef4444; }
+/* Zorluk Renkleri - Arka planı hafif şeffaf hale getirdik */
+.difficulty-easy { background: rgba(16, 185, 129, 0.7); }
+.difficulty-medium { background: rgba(245, 158, 11, 0.7); }
+.difficulty-hard { background: rgba(239, 68, 68, 0.7); }
 
 /* Okunabilirlik için başlık ve info stili */
 .title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
