@@ -18,7 +18,20 @@ class GorevYoneticisi:
         # Veriyi her seferinde taze çekmesi için ttl=0 kullanıyoruz
         data = self.get_data_with_refresh()
         self.gorevler = [Gorev(**d) for d in data if d.get("user_id") == kullanici_adi]
-        # ... (Sıralama mantığınız)
+        
+    def gorevleri_sirala(self):
+        zorluk_oncelik = {
+            "Zor": 0,
+            "Orta": 1,
+            "Kolay": 2
+        }
+
+        self.gorevler.sort(
+            key=lambda g: (
+                datetime.strptime(g.son_tarih, "%Y-%m-%d"),
+                zorluk_oncelik.get(g.zorluk, 99)
+            )
+        )
 
     @st.cache_data(ttl=0) # ttl=0, verinin asla cache'lenmemesini sağlar
     def get_data_with_refresh(_self):
