@@ -17,21 +17,9 @@ st.markdown("""
 
 .stApp {
     background:
-        radial-gradient(
-            circle at 15% 20%,
-            rgba(255, 0, 140, 0.15) 0%,
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 85% 25%,
-            rgba(0, 180, 255, 0.12) 0%,
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at 50% 85%,
-            rgba(255, 60, 60, 0.10) 0%,
-            transparent 40%
-        ),
+        radial-gradient(circle at 15% 20%, rgba(255,0,140,0.12) 0%, transparent 35%),
+        radial-gradient(circle at 85% 25%, rgba(0,180,255,0.10) 0%, transparent 35%),
+        radial-gradient(circle at 50% 85%, rgba(255,60,60,0.08) 0%, transparent 40%),
         linear-gradient(
             135deg,
             #f8fafc 0%,
@@ -40,8 +28,33 @@ st.markdown("""
         );
 
     color: #0f172a;
+    font-family: 'Inter', sans-serif;
 }
 
+section[data-testid="stSidebar"] {
+    background:
+        linear-gradient(
+            180deg,
+            #e9d5ff 0%,
+            #ede9fe 40%,
+            #dbeafe 100%
+        );
+
+    border-right: 1px solid rgba(139,92,246,0.15);
+}
+            
+section[data-testid="stSidebar"] * {
+    color: #1e293b !important;
+}
+            
+.stTextInput input,
+.stDateInput input,
+.stSelectbox div[data-baseweb="select"] {
+    background: rgba(255,255,255,0.9) !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+}
+            
 /* Kartlar - Tam Renkli Tasarım */
 .task-card { 
     padding: 20px; 
@@ -128,6 +141,19 @@ label {
 
 /* Başlıklar */
 h1, h2, h3, h4 {
+    color: #0f172a !important;
+}
+
+label {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+[data-testid="stMetricLabel"] {
+    color: #334155 !important;
+}
+
+[data-testid="stMetricValue"] {
     color: #0f172a !important;
 }
 </style>
