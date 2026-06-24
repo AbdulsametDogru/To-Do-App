@@ -186,10 +186,10 @@ if "kullanici_adi" not in st.session_state:
             if st.button("Kayıt"):
                 if not u or not p:
                     st.warning("Kullanıcı adı ve şifre boş bırakılamaz.")
-                if Auth.kayit(u, p):
-                    st.success("Kayıt başarılı, giriş yapabilirsiniz.")
                 elif Auth.kayit(u, p) is None:
                     st.warning("Başka bir kullanıcı adı deneyin veya adınıza ekleme yapın.")
+                elif Auth.kayit(u, p):
+                    st.success("Kayıt başarılı, giriş yapabilirsiniz.")
                 else:
                     st.warning("Bu kullanıcı zaten var.")
     st.stop()
