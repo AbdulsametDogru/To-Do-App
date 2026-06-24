@@ -27,15 +27,15 @@ Uygulamanın mimari yapısı ve iş akışları aşağıdaki diyagramda gösteri
 
 ### Giriş Ekranı
 
-![Giriş Ekranı](docs/Ekran görüntüsü 2026-06-24 144538.png)
+![Giriş Ekranı](docs/login.png)
 
 ### Görev Yönetim Paneli
 
-![Dashboard](docs/Ekran görüntüsü 2026-06-24 144455.png)
+![Dashboard](docs/dashboard.png)
 
 ### Görev Güncelleme İşlemi
 
-![Görev Güncelleme](docs/Ekran görüntüsü 2026-06-24 144522.png)
+![Görev Güncelleme](docs/update-task.png)
 
 ---
 
