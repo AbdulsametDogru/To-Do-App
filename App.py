@@ -160,7 +160,7 @@ label {
 
 # ---------------- LOGIN ----------------
 if "kullanici_adi" not in st.session_state:
-    st.markdown("<h1 style='text-align:center;color:#8b5cf6;margin-top:80px;'>⚡ Görev Takip Uygulaması - Giriş</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:#8b5cf6;margin-top:80px;'>⚡Uygulama Giriş Ekranı</h1>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         tab1, tab2 = st.tabs(["Giriş", "Kayıt"])
