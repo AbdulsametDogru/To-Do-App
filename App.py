@@ -184,8 +184,12 @@ if "kullanici_adi" not in st.session_state:
             u = st.text_input("Yeni kullanıcı", key="reg_user")
             p = st.text_input("Şifre", type="password", key="reg_pw")
             if st.button("Kayıt"):
+                if not u or not p:
+                    st.warning("Kullanıcı adı ve şifre boş bırakılamaz.")
                 if Auth.kayit(u, p):
                     st.success("Kayıt başarılı, giriş yapabilirsiniz.")
+                elif Auth.kayit(u, p) is None:
+                    st.warning("Başka bir kullanıcı adı deneyin veya adınıza ekleme yapın.")
                 else:
                     st.warning("Bu kullanıcı zaten var.")
     st.stop()
