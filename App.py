@@ -193,7 +193,7 @@ if "kullanici_adi" not in st.session_state:
 
                 else:
                     st.warning("Bu kullanıcı adı zaten kullanılıyor.")
-        st.stop()
+    st.stop()
 # ---------------- LOGIC ----------------
 yon = GorevYoneticisi(st.session_state.kullanici_adi)
 
