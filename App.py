@@ -3,7 +3,7 @@ from Backend import GorevYoneticisi
 from datetime import date, datetime
 from auth import Auth
 
-st.set_page_config(page_title="Neon Sprint Board Pro", layout="centered", initial_sidebar_state="auto", page_icon="✔️")
+st.set_page_config(page_title="Görev Takip Uygulaması", layout="centered", initial_sidebar_state="auto", page_icon="✔️")
 
 # ---------------- CSS ----------------
 st.markdown("""
@@ -160,7 +160,7 @@ label {
 
 # ---------------- LOGIN ----------------
 if "kullanici_adi" not in st.session_state:
-    st.markdown("<h1 style='text-align:center;color:#8b5cf6;margin-top:80px;'>⚡ Cyber Sprint Login</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align:center;color:#8b5cf6;margin-top:80px;'>⚡ Görev Takip Uygulaması - Giriş</h1>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         tab1, tab2 = st.tabs(["Giriş", "Kayıt"])
@@ -229,7 +229,7 @@ with st.sidebar:
 
 
 # ---------------- BOARD & METRİKLER ----------------
-st.title("✔️ Sprint Dashboard")
+st.title("✔️ Görev Takip Uygulaması")
 
 # Veri hesaplama
 toplam_gorev = len(yon.gorevler)
